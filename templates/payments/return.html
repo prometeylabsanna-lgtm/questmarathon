@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<section class="qm-frame">
+  <h1 class="qm-title">{% trans "Статус оплати" %}</h1>
+
+  <p class="qm-status">
+    {% if profile.is_paid %}
+      {% blocktrans with level=profile.current_level %}Оплачено · Рівень {{ level }} / 5{% endblocktrans %}
+    {% elif profile.payment_status == "pending" %}
+      {% trans "Оплату обробляємо" %}
+    {% else %}
+      {% trans "Не оплачено" %}
+    {% endif %}
+  </p>
+
+  {% if profile.is_paid %}
+    <p class="qm-tagline">{% trans "Оплату підтверджено." %}</p>
+    <div class="qm-cta">
+      <a class="qm-btn qm-btn--primary" href="{% url 'quest:room' n=1 %}">{% trans "До першої кімнати" %}</a>
+    </div>
+  {% else %}
+    <p class="qm-tagline">{% trans "Оплату обробляємо. Якщо гроші списались — доступ відкриється автоматично після webhook LiqPay." %}</p>
+  {% endif %}
+
+  <div class="qm-cta">
+    <a class="qm-btn qm-btn--ghost" href="{% url 'accounts:cabinet' %}">{% trans "До кабінету" %}</a>
+  </div>
+</section>
+{% endblock %}

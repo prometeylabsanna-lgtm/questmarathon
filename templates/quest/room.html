@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body_class %}qm-body--quest{% endblock %}
+
+{% block content %}
+<section class="qm-quest">
+  <h1 class="qm-quest__title">{{ title }}</h1>
+
+  <div class="qm-quest__frame">
+    <div class="qm-quest__media">
+      <div class="qm-file-tags qm-file-tags--quest" role="list" aria-label="{% trans 'Тип завдання' %}">
+        <span class="qm-file-tag{% if room.media_type == 'pdf' or not room.media_type %} qm-file-tag--active{% endif %}" role="listitem">PDF</span>
+        <span class="qm-file-tag{% if room.media_type == 'png' %} qm-file-tag--active{% endif %}" role="listitem">PNG</span>
+        <span class="qm-file-tag{% if room.media_type == 'mp3' %} qm-file-tag--active{% endif %}" role="listitem">MP3</span>
+        <span class="qm-file-tag{% if room.media_type == 'mp4' %} qm-file-tag--active{% endif %}" role="listitem">MP4</span>
+      </div>
+      {% if room.media_file %}
+        {% if room.media_type == "png" %}
+          <img class="qm-media-img" src="{{ room.media_file.url }}" alt="{{ title }}">
+        {% elif room.media_type == "pdf" %}
+          <iframe class="qm-media-frame" src="{{ room.media_file.url }}" title="{{ title }}"></iframe>
+        {% elif room.media_type == "mp3" %}
+          <audio class="qm-media-audio" controls src="{{ room.media_file.url }}"></audio>
+        {% elif room.media_type == "mp4" %}
+          <video class="qm-media-video" controls src="{{ room.media_file.url }}"></video>
+        {% endif %}
+      {% else %}
+        <div class="qm-media-placeholder" role="img" aria-label="{{ room.get_media_type_display|default:'PDF' }}">
+          <span class="qm-media-placeholder__lock" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="11" width="14" height="10" rx="2"/>
+              <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+            </svg>
+          </span>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="qm-quest__bar">
+      <form
+        class="qm-quest__form"
+        method="post"
+        action="{% url 'quest_api:check' n=room_number %}"
+        hx-post="{% url 'quest_api:check' n=room_number %}"
+        hx-target="#qm-keyword-result"
+        hx-swap="innerHTML"
+      >
+        {% csrf_token %}
+        <div class="qm-quest__key-row">
+          <span class="qm-quest__key-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="9" r="3.2"/>
+              <path d="M10.4 10.8 20 20.4"/>
+              <path d="M16.2 16.6h2.6"/>
+              <path d="M18.4 18.8h2.4"/>
+            </svg>
+          </span>
+          <label class="qm-quest__sr" for="id_keyword">{% trans "Кодове слово" %}</label>
+          <input
+            class="qm-input qm-quest__input"
+            type="text"
+            name="keyword"
+            id="id_keyword"
+            placeholder="{% trans 'кодове слово' %}"
+            autocomplete="off"
+            required
+          >
+        </div>
+        <div class="qm-cta qm-quest__actions">
+          <button type="submit" class="qm-btn qm-btn--primary qm-quest__submit">{% trans "Перевірити" %}</button>
+          <a class="qm-btn qm-btn--ghost qm-quest__cabinet" href="{% url 'accounts:cabinet' %}">{% trans "До кабінету" %}</a>
+        </div>
+      </form>
+      <div id="qm-keyword-result" class="qm-keyword-result" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

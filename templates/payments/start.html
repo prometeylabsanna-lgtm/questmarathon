@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<section class="qm-frame">
+  <h1 class="qm-title">{% trans "Оплата" %}</h1>
+
+  <p class="qm-status">
+    {% if profile.payment_status == "pending" %}
+      {% trans "Оплату обробляємо" %}
+    {% else %}
+      {% trans "Не оплачено" %}
+    {% endif %}
+  </p>
+
+  {% if not_configured %}
+    <p class="qm-tagline">{% trans "LiqPay ще не підключено (немає ключів у .env)." %}</p>
+    {% if dev_bypass %}
+      <form method="post" class="qm-cta">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="dev_bypass">
+        <button type="submit" class="qm-btn qm-btn--primary">{% trans "Симулювати оплату (dev)" %}</button>
+      </form>
+    {% endif %}
+  {% else %}
+    <p class="qm-tagline">{% trans "Участь ще не оплачена. Оплатіть, щоб відкрити першу кімнату." %}</p>
+  {% endif %}
+
+  <div class="qm-cta">
+    <a class="qm-btn qm-btn--ghost" href="{% url 'accounts:cabinet' %}">{% trans "До кабінету" %}</a>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% trans "Квест-марафон" %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="qm-body">
+
+<header class="qm-header">
+  <div class="qm-header__counter">
+    {% block counter %}{% endblock %}
+  </div>
+
+  <div class="qm-header__right">
+    <nav class="qm-langs" aria-label="{% trans 'Мова' %}">
+      <a class="qm-lang-pill{% if LANGUAGE_CODE == 'uk' %} qm-lang-pill--active{% endif %}" href="/">UA</a>
+      <a class="qm-lang-pill{% if LANGUAGE_CODE == 'ru' %} qm-lang-pill--active{% endif %}" href="/ru/">RU</a>
+    </nav>
+
+    <button class="qm-burger" id="qm-burger" aria-label="{% trans 'Меню' %}" aria-expanded="false" aria-controls="qm-menu">
+      <span class="qm-burger__line"></span>
+      <span class="qm-burger__line"></span>
+      <span class="qm-burger__line"></span>
+    </button>
+
+    <a href="{% url 'pages:home' %}" class="qm-logo" aria-label="{% trans 'Квест-марафон' %}">
+      <span class="qm-logo__piece qm-logo__piece--a"></span>
+      <span class="qm-logo__piece qm-logo__piece--b"></span>
+    </a>
+  </div>
+</header>
+
+<div class="qm-menu-overlay" id="qm-menu-overlay" hidden>
+  <nav class="qm-menu" id="qm-menu">
+    <a class="qm-menu__link" href="{% url 'pages:about' %}">{% trans "Про нас" %}</a>
+    <a class="qm-menu__link" href="{% url 'pages:faq' %}">{% trans "FAQ" %}</a>
+    <a class="qm-menu__link" href="{% url 'pages:contacts' %}">{% trans "Контакти" %}</a>
+    <a class="qm-menu__link" href="{% url 'accounts:login' %}">{% trans "Увійти" %}</a>
+    <a class="qm-menu__link" href="{% url 'pages:terms' %}">{% trans "Користувацька угода" %}</a>
+    <a class="qm-menu__link" href="{% url 'pages:privacy' %}">{% trans "Політика конфіденційності" %}</a>
+  </nav>
+</div>
+
+<main class="qm-main">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="qm-footer">
+  <div class="qm-footer__links">
+    <a class="qm-footer__link" href="{% url 'pages:terms' %}">{% trans "Угода" %}</a>
+    <a class="qm-footer__link" href="{% url 'pages:privacy' %}">{% trans "Політика" %}</a>
+    <a class="qm-footer__link" href="{% url 'pages:contacts' %}">{% trans "Контакти" %}</a>
+  </div>
+  <div class="qm-footer__copy">&copy; 2026 {% trans "Квест-марафон" %}</div>
+</footer>
+
+<script src="{% static 'js/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

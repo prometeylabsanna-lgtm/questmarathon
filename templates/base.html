@@ -1,0 +1,29 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{% block title %}{% if page_title %}{{ page_title }} — {% endif %}{% trans "Квест-марафон" %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style2-quest.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style-glass.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="qm-body {% block body_class %}{% endblock %}">
+  <div class="qm-bg" aria-hidden="true"></div>
+  {% include "partials/header.html" %}
+  <div class="qm-shell">
+    <main class="qm-main">
+      {% block content %}{% endblock %}
+    </main>
+    {% include "partials/footer.html" %}
+  </div>
+  <script src="{% static 'js/htmx.min.js' %}" defer></script>
+  {% load django_htmx %}{% django_htmx_script %}
+  <script src="{% static 'js/main.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

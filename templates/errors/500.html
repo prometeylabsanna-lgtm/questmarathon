@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<section class="qm-frame">
+  <h1 class="qm-title">500</h1>
+  <p class="qm-tagline">{% trans "Сталася помилка сервера." %}</p>
+  <a class="qm-btn qm-btn--primary" href="{% url 'pages:home' %}">{% trans "На головну" %}</a>
+</section>
+{% endblock %}

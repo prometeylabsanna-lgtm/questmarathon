@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: #0d1b33; }
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+<div style="{{ page }}">
+
+  <header style="{{ header }}">
+    <a href="#" style="{{ brandGroup }}">
+      <img src="./assets/logo-quest-marathon.png" alt="Квест-марафон" style="{{ logoMark }}" />
+      <span style="{{ brandName }}">{{ t.brand }}</span>
+    </a>
+
+    <div style="{{ headerRight }}">
+      <div style="{{ langGroup }}">
+        <button style="{{ pillUA }}" onclick="{{ setLangUA }}">UA</button>
+        <button style="{{ pillRU }}" onclick="{{ setLangRU }}">RU</button>
+      </div>
+      <button style="{{ burgerBtn }}" onclick="{{ toggleMenu }}" aria-label="menu">
+        <span style="{{ burgerLine }}"></span>
+        <span style="{{ burgerLine }}"></span>
+        <span style="{{ burgerLine }}"></span>
+      </button>
+    </div>
+  </header>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ menuOverlay }}" onclick="{{ closeMenu }}">
+      <nav style="{{ menuPanel }}" onclick="{{ stopProp }}">
+        <sc-for list="{{ menuItems }}" as="item" hint-placeholder-count="5">
+          <a href="#" style="{{ menuLink }}">{{ item.text }}</a>
+        </sc-for>
+      </nav>
+    </div>
+  </sc-if>
+
+  <main style="{{ main }}">
+    <div style="{{ card }}">
+      <h1 style="{{ titleStyle }}">{{ t.title }}</h1>
+      <p style="{{ userLine }}">{{ userName }} · {{ userEmail }}</p>
+
+      <div style="{{ statusRow }}">
+        <span style="{{ statusDot }}"></span>
+        <span style="{{ statusText }}">{{ statusLabel }}</span>
+      </div>
+
+      <sc-if value="{{ isUnpaid }}" hint-placeholder-val="{{ false }}">
+        <p style="{{ helperText }}">{{ t.unpaidHelp }}</p>
+        <a href="#" style="{{ btnPrimary }}">{{ t.ctaPay }}</a>
+      </sc-if>
+
+      <sc-if value="{{ isPending }}" hint-placeholder-val="{{ false }}">
+        <p style="{{ helperText }}">{{ t.pendingHelp }}</p>
+        <button style="{{ btnPrimaryDisabled }}" disabled="{{ true }}">{{ t.ctaPending }}</button>
+      </sc-if>
+
+      <sc-if value="{{ isPaid }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ roomsList }}">
+          <sc-for list="{{ rooms }}" as="room" hint-placeholder-count="5">
+            <div style="{{ room.rowStyle }}">
+              <span style="{{ room.numberStyle }}">{{ room.number }}</span>
+              <span style="{{ room.labelStyle }}">{{ room.title }}</span>
+              <span style="{{ room.statusStyle }}">{{ room.statusLabel }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <a href="#" style="{{ btnPrimary }}">{{ ctaGameLabel }}</a>
+      </sc-if>
+
+      <button style="{{ btnLogout }}" onclick="{{ noop }}">{{ t.ctaLogout }}</button>
+    </div>
+  </main>
+
+  <footer style="{{ footer }}">
+    <div style="{{ footerLinks }}">
+      <a href="#" style="{{ footerLink }}">{{ t.termsLabel }}</a>
+      <a href="#" style="{{ footerLink }}">{{ t.privacyLabel }}</a>
+    </div>
+    <div style="{{ footerCopy }}">{{ t.footerCopy }}</div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 960, &quot;height&quot;: 720}, &quot;status&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;in_progress&quot;, &quot;options&quot;: [&quot;unpaid&quot;, &quot;pending&quot;, &quot;in_progress&quot;, &quot;completed&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Cabinet state&quot;}, &quot;currentLevel&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 2, &quot;min&quot;: 0, &quot;max&quot;: 5, &quot;step&quot;: 1, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Cabinet state&quot;}}">
+const COPY = {
+  ua: {
+    brand: 'КВЕСТ-МАРАФОН',
+    title: 'Кабінет',
+    unpaidHelp: 'Участь ще не оплачена. Оплатіть, щоб відкрити першу кімнату.',
+    pendingHelp: 'Оплату обробляємо. Це займає кілька хвилин — оновіть сторінку пізніше.',
+    ctaPay: 'Оплатити участь',
+    ctaPending: 'Оплата в обробці…',
+    ctaStart: 'Почати гру',
+    ctaContinue: 'Продовжити гру',
+    ctaReview: 'Переглянути кімнати',
+    ctaLogout: 'Вийти',
+    termsLabel: 'Користувацька угода',
+    privacyLabel: 'Політика конфіденційності',
+    footerCopy: '© 2026 Квест-марафон',
+    statusUnpaid: 'Не оплачено',
+    statusPending: 'Оплату обробляємо',
+    statusPaid: (n) => `Оплачено · Рівень ${n} / 5`,
+    roomDone: 'Пройдено',
+    roomCurrent: 'Поточна',
+    roomLocked: 'Заблоковано',
+    menu: ['Головна', 'Про нас', 'FAQ', 'Контакти', 'Вийти']
+  },
+  ru: {
+    brand: 'КВЕСТ-МАРАФОН',
+    title: 'Кабинет',
+    unpaidHelp: 'Участие ещё не оплачено. Оплатите, чтобы открыть первую комнату.',
+    pendingHelp: 'Оплату обрабатываем. Это займёт пару минут — обновите страницу позже.',
+    ctaPay: 'Оплатить участие',
+    ctaPending: 'Оплата в обработке…',
+    ctaStart: 'Начать игру',
+    ctaContinue: 'Продолжить игру',
+    ctaReview: 'Просмотреть комнаты',
+    ctaLogout: 'Выйти',
+    termsLabel: 'Пользовательское соглашение',
+    privacyLabel: 'Политика конфиденциальности',
+    footerCopy: '© 2026 Квест-марафон',
+    statusUnpaid: 'Не оплачено',
+    statusPending: 'Оплату обрабатываем',
+    statusPaid: (n) => `Оплачено · Уровень ${n} / 5`,
+    roomDone: 'Пройдена',
+    roomCurrent: 'Текущая',
+    roomLocked: 'Заблокирована',
+    menu: ['Главная', 'О нас', 'FAQ', 'Контакты', 'Выйти']
+  }
+};
+
+const NAVY = '#0d1b33';
+const NAVY_ELEV = '#142a4d';
+const LINE = 'rgba(255,255,255,0.28)';
+const LINE_SOFT = 'rgba(255,255,255,0.14)';
+const TEXT = '#eef2fa';
+const MUTED = '#9fb0cc';
+const HEAD_FONT = "'Space Grotesk', sans-serif";
+const BODY_FONT = "'IBM Plex Sans', sans-serif";
+
+class Component extends DCLogic {
+  state = { lang: 'ua', isMobile: typeof window !== 'undefined' ? window.innerWidth < 760 : false, menuOpen: false };
+
+  componentDidMount() {
+    this._onResize = () => this.setState({ isMobile: window.innerWidth < 760 });
+    window.addEventListener('resize', this._onResize);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._onResize);
+  }
+
+  renderVals() {
+    const isMobile = this.state.isMobile;
+    const t = COPY[this.state.lang];
+    const status = this.props.status ?? 'in_progress';
+    const currentLevel = this.props.currentLevel ?? 2;
+
+    const isUnpaid = status === 'unpaid';
+    const isPending = status === 'pending';
+    const isPaid = status === 'in_progress' || status === 'completed';
+    const level = status === 'completed' ? 5 : currentLevel;
+
+    const statusLabel = isUnpaid ? t.statusUnpaid : isPending ? t.statusPending : t.statusPaid(level);
+    const ctaGameLabel = level === 0 ? t.ctaStart : level >= 5 ? t.ctaReview : t.ctaContinue;
+
+    const pillBase = {
+      fontFamily: BODY_FONT, fontSize: '13px', fontWeight: 600, letterSpacing: '0.04em',
+      padding: '7px 14px', borderRadius: '999px', border: `1px solid ${LINE}`,
+      background: 'transparent', color: MUTED, cursor: 'pointer'
+    };
+    const pillActive = { ...pillBase, background: TEXT, color: NAVY, border: `1px solid ${TEXT}` };
+
+    const rooms = [1, 2, 3, 4, 5].map((n) => {
+      const done = n <= level;
+      const current = n === level + 1 && level < 5;
+      const locked = !done && !current;
+      const statusLabelRoom = done ? t.roomDone : current ? t.roomCurrent : t.roomLocked;
+      return {
+        number: String(n).padStart(2, '0'),
+        title: `${isMobile ? '' : ''}${t.title === 'Кабінет' ? 'Кімната' : 'Комната'} ${n}`,
+        statusLabel: statusLabelRoom,
+        rowStyle: {
+          display: 'flex', alignItems: 'center', gap: '14px',
+          padding: isMobile ? '14px 4px' : '14px 6px',
+          borderBottom: n < 5 ? `1px solid ${LINE_SOFT}` : 'none',
+          opacity: locked ? 0.5 : 1
+        },
+        numberStyle: {
+          fontFamily: HEAD_FONT, fontSize: '13px', color: MUTED, width: '22px', flexShrink: 0
+        },
+        labelStyle: {
+          fontSize: isMobile ? '15px' : '16px', flex: 1,
+          fontWeight: current ? 600 : 400
+        },
+        statusStyle: {
+          fontSize: '12px', color: current ? TEXT : MUTED, letterSpacing: '0.04em', flexShrink: 0
+        }
+      };
+    });
+
+    return {
+      t,
+      isUnpaid, isPending, isPaid,
+      statusLabel,
+      ctaGameLabel,
+      rooms,
+      userName: 'Гравець',
+      userEmail: 'player@example.com',
+      menuOpen: this.state.menuOpen,
+      setLangUA: () => this.setState({ lang: 'ua' }),
+      setLangRU: () => this.setState({ lang: 'ru' }),
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      stopProp: (e) => e.stopPropagation(),
+      noop: () => {},
+
+      menuItems: t.menu.map((text, i) => ({ text, key: i })),
+
+      page: {
+        minHeight: '100vh', background: NAVY, color: TEXT, fontFamily: BODY_FONT,
+        padding: isMobile ? '10px' : '14px 20px', display: 'flex', flexDirection: 'column', gap: isMobile ? '8px' : '10px'
+      },
+
+      header: {
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', flexShrink: 0
+      },
+      brandGroup: { display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: TEXT },
+      logoMark: { width: isMobile ? '32px' : '36px', height: isMobile ? '32px' : '36px', objectFit: 'contain', display: 'block' },
+      brandName: { fontFamily: HEAD_FONT, fontWeight: 700, fontSize: isMobile ? '14px' : '16px', letterSpacing: '0.02em' },
+
+      headerRight: { display: 'flex', alignItems: 'center', gap: isMobile ? '10px' : '16px' },
+      langGroup: { display: 'flex', gap: '6px' },
+      pillUA: this.state.lang === 'ua' ? pillActive : pillBase,
+      pillRU: this.state.lang === 'ru' ? pillActive : pillBase,
+
+      burgerBtn: {
+        display: 'flex', flexDirection: 'column', gap: '4px', width: '34px', height: '34px',
+        alignItems: 'center', justifyContent: 'center', border: `1px solid ${LINE}`, borderRadius: '999px',
+        background: 'transparent', cursor: 'pointer'
+      },
+      burgerLine: { width: '14px', height: '1.5px', background: TEXT, display: 'block' },
+
+      menuOverlay: {
+        position: 'fixed', inset: 0, background: 'rgba(6,12,24,0.6)', zIndex: 50,
+        display: 'flex', justifyContent: 'flex-end'
+      },
+      menuPanel: {
+        width: isMobile ? '78%' : '320px', height: '100%', background: NAVY_ELEV,
+        borderLeft: `1px solid ${LINE}`, padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: '18px'
+      },
+      menuLink: { color: TEXT, textDecoration: 'none', fontSize: '16px', fontFamily: BODY_FONT, borderBottom: `1px solid ${LINE_SOFT}`, paddingBottom: '10px' },
+
+      main: { flex: 1, display: 'flex' },
+      card: {
+        width: '100%', border: `1px solid ${LINE}`, borderRadius: '14px',
+        padding: isMobile ? '28px 28px' : '56px 96px', display: 'flex', flexDirection: 'column',
+        gap: isMobile ? '18px' : '22px'
+      },
+
+      titleStyle: { fontFamily: HEAD_FONT, fontWeight: 700, fontSize: isMobile ? '30px' : '38px', margin: 0 },
+      userLine: { fontSize: isMobile ? '14px' : '15px', color: MUTED, margin: 0 },
+
+      statusRow: { display: 'flex', alignItems: 'center', gap: '8px' },
+      statusDot: {
+        width: '8px', height: '8px', borderRadius: '50%',
+        background: isPending ? MUTED : isUnpaid ? MUTED : TEXT, display: 'inline-block'
+      },
+      statusText: { fontSize: '14px', color: isPaid ? TEXT : MUTED, fontWeight: 500 },
+
+      helperText: { fontSize: '14px', color: MUTED, margin: 0, lineHeight: 1.5 },
+
+      roomsList: { border: `1px solid ${LINE_SOFT}`, borderRadius: '10px', padding: isMobile ? '4px 14px' : '4px 18px' },
+
+      btnPrimary: {
+        fontFamily: BODY_FONT, fontWeight: 600, fontSize: isMobile ? '15px' : '15px', textAlign: 'center', textDecoration: 'none',
+        background: TEXT, color: NAVY, borderRadius: '10px', padding: isMobile ? '13px 22px' : '13px 26px',
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'flex-end', minWidth: '220px', height: '48px', boxSizing: 'border-box'
+      },
+      btnPrimaryDisabled: {
+        fontFamily: BODY_FONT, fontWeight: 600, fontSize: isMobile ? '15px' : '15px', textAlign: 'center',
+        background: NAVY_ELEV, color: MUTED, border: `1px solid ${LINE_SOFT}`, borderRadius: '10px',
+        padding: isMobile ? '13px 22px' : '13px 26px', alignSelf: 'flex-end', cursor: 'not-allowed',
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: '220px', height: '48px', boxSizing: 'border-box'
+      },
+      btnLogout: {
+        fontFamily: BODY_FONT, fontWeight: 600, fontSize: isMobile ? '15px' : '15px', textAlign: 'center',
+        background: 'transparent', color: TEXT, border: `1px solid ${LINE}`, borderRadius: '10px',
+        padding: isMobile ? '13px 22px' : '13px 26px', alignSelf: 'flex-end',
+        cursor: 'pointer', marginTop: isMobile ? '4px' : '8px',
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: '220px', height: '48px', boxSizing: 'border-box'
+      },
+
+      footer: {
+        display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between',
+        gap: '6px', color: MUTED, fontSize: '11px', padding: '2px 4px', flexShrink: 0
+      },
+      footerLinks: { display: 'flex', gap: '18px', flexWrap: 'wrap' },
+      footerLink: { color: MUTED, textDecoration: 'none' },
+      footerCopy: { color: MUTED }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{% load i18n %}
+<footer class="qm-footer">
+  <nav class="qm-footer__links" aria-label="{% trans 'Юридичні посилання' %}">
+    <a class="qm-footer__link" href="{% url 'pages:terms' %}">{% trans "Користувацька угода" %}</a>
+    <a class="qm-footer__link" href="{% url 'pages:privacy' %}">{% trans "Політика конфіденційності" %}</a>
+  </nav>
+  <div class="qm-footer__copy">© {% now "Y" %} {% trans "Квест-марафон" %}</div>
+</footer>

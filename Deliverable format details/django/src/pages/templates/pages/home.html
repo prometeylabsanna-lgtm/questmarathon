@@ -1,0 +1,56 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Квест-марафон — головна" %}{% endblock %}
+
+{% block counter %}
+  <div class="qm-counter">
+    <div class="qm-counter__value">{{ counter_display }}</div>
+    <div class="qm-counter__label">{% trans "ЛІЧИЛЬНИК" %}</div>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="qm-frame">
+  <div class="qm-arrow qm-arrow--up" aria-hidden="true">^</div>
+  <div class="qm-side-label" aria-hidden="true">{% trans "ГОЛОВНА" %}</div>
+
+  <div class="qm-content">
+    <section class="qm-intro">
+      <h1 class="qm-title">{% trans "КВЕСТ-МАРАФОН" %}</h1>
+      <p class="qm-tagline">{% trans "Онлайн-квест на 5 кімнат. Одна лінія, одна загадка за раз." %}</p>
+
+      <h2 class="qm-rules-heading">{% trans "Короткі правила" %}</h2>
+      <ol class="qm-rules-list">
+        <li class="qm-rules-list__item">{% trans "Реєструйтесь і оплачуйте участь." %}</li>
+        <li class="qm-rules-list__item">{% trans "Проходьте кімнати по черзі — від 1 до 5." %}</li>
+        <li class="qm-rules-list__item">{% trans "У кожній кімнаті своя загадка і ключове слово." %}</li>
+        <li class="qm-rules-list__item">{% trans "Прогрес зберігається: можна вийти і повернутись." %}</li>
+      </ol>
+    </section>
+
+    <section class="qm-preview">
+      <div class="qm-preview__inner">
+        <div class="qm-preview__thumb" aria-hidden="true"></div>
+        <div class="qm-preview__body">
+          <h3 class="qm-preview__heading">{% trans "Перегляд завдання" %}</h3>
+          <p class="qm-preview__text">{% trans "Кожна кімната — це текст, зображення, PDF, аудіо чи відео. Розгадайте загадку і введіть ключове слово, щоб відкрити наступну." %}</p>
+          <div class="qm-file-tags">
+            <span class="qm-file-tag">PDF</span>
+            <span class="qm-file-tag">PNG</span>
+            <span class="qm-file-tag">MP3</span>
+            <span class="qm-file-tag">MP4</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="qm-cta">
+    <a href="{% url 'accounts:register' %}" class="qm-btn qm-btn--primary">{% trans "Реєстрація" %}</a>
+    <a href="{% url 'accounts:login' %}" class="qm-btn qm-btn--outline">{% trans "Увійти" %}</a>
+  </div>
+
+  <div class="qm-arrow qm-arrow--down" aria-hidden="true">v</div>
+</div>
+{% endblock %}

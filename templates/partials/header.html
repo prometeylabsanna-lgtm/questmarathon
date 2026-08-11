@@ -1,0 +1,91 @@
+{% load i18n static %}
+<header class="qm-header">
+  <div class="qm-header__brand">
+    <a href="{% url 'pages:home' %}" class="qm-logo" aria-label="{% trans 'Квест-марафон' %}">
+      <img src="{% static 'images/logo-quest-marathon.png' %}" alt="" class="qm-logo__img" width="64" height="64" decoding="async" fetchpriority="high">
+    </a>
+    <a href="{% url 'pages:home' %}" class="qm-brand-name" aria-label="{% trans 'Квест-марафон' %}">
+      <img src="{% static 'images/logo-quest-wordmark.png' %}" alt="{% trans 'Квест-марафон' %}" class="qm-brand-name__img" width="220" height="26" decoding="async">
+      <span class="qm-brand-bars" aria-hidden="true">
+        <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>
+        <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>
+        <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>
+        <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>
+        <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>
+      </span>
+    </a>
+  </div>
+
+  <nav class="qm-nav qm-nav--desktop" aria-label="{% trans 'Основні сторінки' %}">
+    <a class="qm-nav__link{% if request.resolver_match.namespace == 'pages' and request.resolver_match.url_name == 'home' %} qm-nav__link--active{% endif %}" href="{% url 'pages:home' %}">{% trans "Головна" %}</a>
+    <a class="qm-nav__link{% if request.resolver_match.url_name == 'about' %} qm-nav__link--active{% endif %}" href="{% url 'pages:about' %}">{% trans "Про нас" %}</a>
+    <a class="qm-nav__link{% if request.resolver_match.url_name == 'contacts' %} qm-nav__link--active{% endif %}" href="{% url 'pages:contacts' %}">{% trans "Контакти" %}</a>
+    <a class="qm-nav__link{% if request.resolver_match.url_name == 'faq' %} qm-nav__link--active{% endif %}" href="{% url 'pages:faq' %}">{% trans "FAQ" %}</a>
+  </nav>
+
+  <div class="qm-header__actions">
+    <div class="qm-auth-icons" aria-label="{% trans 'Акаунт' %}">
+      {% if user.is_authenticated %}
+        <a class="qm-icon-btn" href="{% url 'accounts:cabinet' %}" aria-label="{% trans 'Кабінет' %}" title="{% trans 'Кабінет' %}">
+          <svg class="qm-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="8" r="3.25" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M5.5 19.2c1.6-3.1 4-4.7 6.5-4.7s4.9 1.6 6.5 4.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </a>
+      {% else %}
+        <a class="qm-icon-btn" href="{% url 'accounts:login' %}" aria-label="{% trans 'Увійти' %}" title="{% trans 'Увійти' %}">
+          <svg class="qm-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M10 12h9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M15.5 8.5 19 12l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M13 5.5H7.8A2.3 2.3 0 0 0 5.5 7.8v8.4A2.3 2.3 0 0 0 7.8 18.5H13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </a>
+        <a class="qm-icon-btn" href="{% url 'accounts:register' %}" aria-label="{% trans 'Реєстрація' %}" title="{% trans 'Реєстрація' %}">
+          <svg class="qm-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="10" cy="8" r="3.25" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M3.8 19.2c1.5-3 3.7-4.5 6.2-4.5 1.4 0 2.7.5 3.8 1.3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M18 10v6M15 13h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </a>
+      {% endif %}
+    </div>
+
+    <nav class="qm-langs" aria-label="{% trans 'Мова' %}">
+      <a class="qm-lang{% if LANGUAGE_CODE == 'uk' %} qm-lang--active{% endif %}" href="/">UA</a>
+      <span class="qm-langs__sep" aria-hidden="true">/</span>
+      <a class="qm-lang{% if LANGUAGE_CODE == 'ru' %} qm-lang--active{% endif %}" href="/ru/">RU</a>
+    </nav>
+
+    <button class="qm-burger" id="qm-burger" type="button" aria-label="{% trans 'Меню' %}" data-label-close="{% trans 'Закрити меню' %}" aria-expanded="false" aria-controls="qm-menu">
+      <span class="qm-burger__lines" aria-hidden="true">
+        <span class="qm-burger__line"></span>
+        <span class="qm-burger__line"></span>
+        <span class="qm-burger__line"></span>
+      </span>
+      <svg class="qm-burger__close" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+        <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<div class="qm-menu-overlay" id="qm-menu-overlay" hidden>
+  <nav class="qm-menu" id="qm-menu" aria-label="{% trans 'Головне меню' %}">
+    <a class="qm-menu__link{% if request.resolver_match.namespace == 'pages' and request.resolver_match.url_name == 'home' %} qm-menu__link--active{% endif %}" href="{% url 'pages:home' %}">{% trans "Головна" %}</a>
+    <a class="qm-menu__link{% if request.resolver_match.url_name == 'about' %} qm-menu__link--active{% endif %}" href="{% url 'pages:about' %}">{% trans "Про нас" %}</a>
+    <a class="qm-menu__link{% if request.resolver_match.url_name == 'contacts' %} qm-menu__link--active{% endif %}" href="{% url 'pages:contacts' %}">{% trans "Контакти" %}</a>
+    <a class="qm-menu__link{% if request.resolver_match.url_name == 'faq' %} qm-menu__link--active{% endif %}" href="{% url 'pages:faq' %}">{% trans "FAQ" %}</a>
+    {% if user.is_authenticated %}
+      <a class="qm-menu__link" href="{% url 'accounts:cabinet' %}">{% trans "Кабінет" %}</a>
+      <form method="post" action="{% url 'accounts:logout' %}" class="qm-menu__form">
+        {% csrf_token %}
+        <button type="submit" class="qm-menu__link qm-menu__button">{% trans "Вийти" %}</button>
+      </form>
+    {% else %}
+      <a class="qm-menu__link" href="{% url 'accounts:login' %}">{% trans "Увійти" %}</a>
+      <a class="qm-menu__link" href="{% url 'accounts:register' %}">{% trans "Реєстрація" %}</a>
+    {% endif %}
+    <a class="qm-menu__link" href="{% url 'pages:terms' %}">{% trans "Користувацька угода" %}</a>
+    <a class="qm-menu__link" href="{% url 'pages:privacy' %}">{% trans "Політика конфіденційності" %}</a>
+  </nav>
+</div>

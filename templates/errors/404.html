@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<section class="qm-frame">
+  <h1 class="qm-title">404</h1>
+  <p class="qm-tagline">{% trans "Сторінку не знайдено." %}</p>
+  <a class="qm-btn qm-btn--primary" href="{% url 'pages:home' %}">{% trans "На головну" %}</a>
+</section>
+{% endblock %}

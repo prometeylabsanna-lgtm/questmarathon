@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<section class="qm-frame">
+  <h1 class="qm-title">{% trans "Кабінет" %}</h1>
+  <p class="qm-tagline">{{ profile.full_name }} · {{ user.email }}</p>
+
+  <p class="qm-status">
+    {% if profile.payment_status == "unpaid" %}
+      {% trans "Не оплачено" %}
+    {% elif profile.payment_status == "pending" %}
+      {% trans "Оплату обробляємо" %}
+    {% else %}
+      {% blocktrans with level=profile.current_level %}Оплачено · Рівень {{ level }} / 5{% endblocktrans %}
+    {% endif %}
+  </p>
+
+  {% if profile.payment_status == "unpaid" %}
+    <p class="qm-tagline">{% trans "Участь ще не оплачена. Оплатіть, щоб відкрити першу кімнату." %}</p>
+  {% elif profile.payment_status == "pending" %}
+    <p class="qm-tagline">{% trans "Оплату обробляємо. Це займає кілька хвилин — оновіть сторінку пізніше." %}</p>
+  {% else %}
+    <ul class="qm-room-list">
+      {% for room in rooms %}
+        <li{% if room.state == "locked" %} data-state="locked"{% elif room.state == "current" %} data-state="current"{% endif %}>
+          <span>{{ room.number }}</span>
+          {% if room.url %}
+            <a href="{{ room.url }}">{% trans "Кімната" %} {{ room.n }}</a>
+          {% else %}
+            <span>{% trans "Кімната" %} {{ room.n }}</span>
+          {% endif %}
+          <span>{{ room.status_label }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <div class="qm-cta">
+    {% if profile.payment_status == "unpaid" %}
+      <a class="qm-btn qm-btn--primary" href="{% url 'payments:start' %}">{% trans "Оплатити участь" %}</a>
+    {% elif profile.payment_status == "pending" %}
+      <button type="button" class="qm-btn qm-btn--ghost" disabled>{% trans "Оплата в обробці…" %}</button>
+    {% else %}
+      <a class="qm-btn qm-btn--primary" href="{{ game_cta_url }}">{{ game_cta_label }}</a>
+    {% endif %}
+    <form method="post" action="{% url 'accounts:logout' %}" class="qm-logout">
+      {% csrf_token %}
+      <button type="submit" class="qm-btn qm-btn--ghost">{% trans "Вийти" %}</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

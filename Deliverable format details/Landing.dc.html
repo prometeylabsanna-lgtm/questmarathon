@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; background: #0d1b33; }
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+<div style="{{ page }}">
+
+  <header style="{{ header }}">
+    <div style="{{ logoGroup }}">
+      <img src="./assets/logo-quest-marathon.png" alt="Квест-марафон" style="{{ logoMark }}" />
+      <div style="{{ pageLabel }}">{{ t.sideLabel }}</div>
+    </div>
+
+    <div style="{{ langGroup }}">
+      <button style="{{ pillUA }}" onclick="{{ setLangUA }}">UA</button>
+      <button style="{{ pillRU }}" onclick="{{ setLangRU }}">RU</button>
+    </div>
+
+    <button style="{{ burgerBtn }}" onclick="{{ toggleMenu }}" aria-label="menu">
+      <span style="{{ burgerLine }}"></span>
+      <span style="{{ burgerLine }}"></span>
+      <span style="{{ burgerLine }}"></span>
+    </button>
+  </header>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ menuOverlay }}" onclick="{{ closeMenu }}">
+      <nav style="{{ menuPanel }}" onclick="{{ stopProp }}">
+        <sc-for list="{{ menuItems }}" as="item" hint-placeholder-count="6">
+          <a href="#" style="{{ menuLink }}">{{ item.text }}</a>
+        </sc-for>
+      </nav>
+    </div>
+  </sc-if>
+
+  <main style="{{ frame }}">
+    <div style="{{ arrowLeft }}">‹</div>
+    <div style="{{ arrowRight }}">›</div>
+
+    <section style="{{ introBlock }}">
+      <image-slot id="qm-intro-pdf" shape="rect" placeholder="Перегляд правил / PDF" style="{{ slotFill }}"></image-slot>
+      <div style="{{ introScrim }}"></div>
+      <div style="{{ introContent }}">
+        <h1 style="{{ titleStyle }}">{{ t.title }}</h1>
+        <p style="{{ taglineStyle }}">{{ t.tagline }}</p>
+        <h2 style="{{ rulesHeadingStyle }}">{{ t.rulesHeading }}</h2>
+        <ol style="{{ rulesListStyle }}">
+          <sc-for list="{{ rulesList }}" as="rule" hint-placeholder-count="4">
+            <li style="{{ ruleItemStyle }}">{{ rule.text }}</li>
+          </sc-for>
+        </ol>
+      </div>
+    </section>
+
+    <div style="{{ counterChip }}">
+      <div style="{{ counterValueStyle }}">{{ counterValue }}</div>
+      <div style="{{ counterLabelStyle }}">{{ t.counterLabel }}</div>
+    </div>
+
+    <section style="{{ previewBlock }}">
+      <image-slot id="qm-preview-pdf" shape="rect" placeholder="Перегляд завдання / PDF" style="{{ slotFill }}"></image-slot>
+      <div style="{{ previewScrim }}"></div>
+      <div style="{{ previewContent }}">
+        <div>
+          <h3 style="{{ previewHeadingStyle }}">{{ t.previewHeading }}</h3>
+          <p style="{{ previewTextStyle }}">{{ t.previewText }}</p>
+          <div style="{{ fileTags }}">
+            <span style="{{ fileTag }}">PDF</span>
+            <span style="{{ fileTag }}">PNG</span>
+            <span style="{{ fileTag }}">MP3</span>
+            <span style="{{ fileTag }}">MP4</span>
+          </div>
+        </div>
+        <div style="{{ ctaBand }}">
+          <a href="#" style="{{ btnPrimary }}">{{ t.ctaRegister }}</a>
+          <a href="#" style="{{ btnOutline }}">{{ t.ctaLogin }}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="{{ footer }}">
+    <div style="{{ footerLinks }}">
+      <a href="#" style="{{ footerLink }}">{{ footerTermsLabel }}</a>
+      <a href="#" style="{{ footerLink }}">{{ footerPrivacyLabel }}</a>
+    </div>
+    <div style="{{ footerCopy }}">{{ t.footerCopy }}</div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const COPY = {
+  ua: {
+    title: 'КВЕСТ-МАРАФОН',
+    tagline: 'Онлайн-квест на 5 кімнат. Одна лінія, одна загадка за раз.',
+    rulesHeading: 'Короткі правила',
+    rules: [
+      'Реєструйтесь і оплачуйте участь.',
+      'Проходьте кімнати по черзі — від 1 до 5.',
+      'У кожній кімнаті своя загадка і ключове слово.',
+      'Прогрес зберігається: можна вийти і повернутись.'
+    ],
+    previewHeading: 'Перегляд завдання',
+    previewText: 'Кожна кімната — це текст, зображення, PDF, аудіо чи відео. Розгадайте загадку і введіть ключове слово, щоб відкрити наступну.',
+    counterLabel: 'ЛІЧИЛЬНИК',
+    ctaRegister: 'Реєстрація',
+    ctaLogin: 'Увійти',
+    sideLabel: 'ГОЛОВНА',
+    footerCopy: '© 2026 Квест-марафон',
+    menu: ['Про нас', 'FAQ', 'Контакти', 'Увійти', 'Користувацька угода', 'Політика конфіденційності']
+  },
+  ru: {
+    title: 'КВЕСТ-МАРАФОН',
+    tagline: 'Онлайн-квест на 5 комнат. Одна линия, одна загадка за раз.',
+    rulesHeading: 'Короткие правила',
+    rules: [
+      'Зарегистрируйтесь и оплатите участие.',
+      'Проходите комнаты по очереди — от 1 до 5.',
+      'В каждой комнате своя загадка и ключевое слово.',
+      'Прогресс сохраняется: можно выйти и вернуться.'
+    ],
+    previewHeading: 'Просмотр задания',
+    previewText: 'Каждая комната — это текст, изображение, PDF, аудио или видео. Разгадайте загадку и введите ключевое слово, чтобы открыть следующую.',
+    counterLabel: 'СЧЁТЧИК',
+    ctaRegister: 'Регистрация',
+    ctaLogin: 'Войти',
+    sideLabel: 'ГЛАВНАЯ',
+    footerCopy: '© 2026 Квест-марафон',
+    menu: ['О нас', 'FAQ', 'Контакты', 'Войти', 'Пользовательское соглашение', 'Политика конфиденциальности']
+  }
+};
+
+const NAVY = '#0d1b33';
+const NAVY_ELEV = '#142a4d';
+const LINE = 'rgba(255,255,255,0.28)';
+const LINE_SOFT = 'rgba(255,255,255,0.14)';
+const TEXT = '#eef2fa';
+const MUTED = '#9fb0cc';
+const HEAD_FONT = "'Space Grotesk', sans-serif";
+const BODY_FONT = "'IBM Plex Sans', sans-serif";
+
+class Component extends DCLogic {
+  state = { lang: 'ua', isMobile: typeof window !== 'undefined' ? window.innerWidth < 760 : false, menuOpen: false };
+
+  componentDidMount() {
+    this._onResize = () => this.setState({ isMobile: window.innerWidth < 760 });
+    window.addEventListener('resize', this._onResize);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._onResize);
+  }
+
+  renderVals() {
+    const isMobile = this.state.isMobile;
+    const t = COPY[this.state.lang];
+    const counterValue = String(3057).padStart(7, '0');
+
+    const pillBase = {
+      fontFamily: BODY_FONT, fontSize: '13px', fontWeight: 600, letterSpacing: '0.04em',
+      padding: '7px 14px', borderRadius: '999px', border: `1px solid ${LINE}`,
+      background: 'transparent', color: MUTED, cursor: 'pointer'
+    };
+    const pillActive = { ...pillBase, background: TEXT, color: NAVY, border: `1px solid ${TEXT}` };
+
+    return {
+      t,
+      counterValue,
+      isMobile,
+      menuOpen: this.state.menuOpen,
+      setLangUA: () => this.setState({ lang: 'ua' }),
+      setLangRU: () => this.setState({ lang: 'ru' }),
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      stopProp: (e) => e.stopPropagation(),
+
+      rulesList: t.rules.map((text, i) => ({ text, key: i })),
+      menuItems: t.menu.map((text, i) => ({ text, key: i })),
+      footerTermsLabel: t.menu[4],
+      footerPrivacyLabel: t.menu[5],
+
+      page: {
+        height: '100vh', background: NAVY, color: TEXT, fontFamily: BODY_FONT,
+        padding: isMobile ? '10px' : '14px 20px', display: 'flex', flexDirection: 'column', gap: isMobile ? '8px' : '10px',
+        overflow: 'hidden'
+      },
+
+      header: {
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px',
+        flexWrap: 'wrap', flexShrink: 0
+      },
+      counterChip: {
+        display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2px',
+        borderRight: isMobile ? 'none' : `1px solid ${LINE}`, borderTop: `1px solid ${LINE}`,
+        padding: isMobile ? '14px 16px' : '14px 24px',
+        gridColumn: 1, gridRow: 2
+      },
+      counterValueStyle: {
+        fontFamily: HEAD_FONT, fontWeight: 700, fontSize: isMobile ? '22px' : '26px',
+        letterSpacing: '0.05em', fontVariantNumeric: 'tabular-nums'
+      },
+      counterLabelStyle: { fontSize: '11px', letterSpacing: '0.12em', color: MUTED },
+
+      logoGroup: { display: 'flex', alignItems: 'center', gap: '10px' },
+      langGroup: { display: 'flex', gap: '6px', flex: isMobile ? 'none' : '1', justifyContent: 'center' },
+      pillUA: this.state.lang === 'ua' ? pillActive : pillBase,
+      pillRU: this.state.lang === 'ru' ? pillActive : pillBase,
+
+      burgerBtn: {
+        display: 'flex', flexDirection: 'column', gap: '4px', width: '34px', height: '34px',
+        alignItems: 'center', justifyContent: 'center', border: `1px solid ${LINE}`, borderRadius: '999px',
+        background: 'transparent', cursor: 'pointer'
+      },
+      burgerLine: { width: '14px', height: '1.5px', background: TEXT, display: 'block' },
+
+      logoMark: { width: isMobile ? '38px' : '46px', height: isMobile ? '38px' : '46px', objectFit: 'contain', display: 'block' },
+
+      menuOverlay: {
+        position: 'fixed', inset: 0, background: 'rgba(6,12,24,0.6)', zIndex: 50,
+        display: 'flex', justifyContent: 'flex-end'
+      },
+      menuPanel: {
+        width: isMobile ? '78%' : '320px', height: '100%', background: NAVY_ELEV,
+        borderLeft: `1px solid ${LINE}`, padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: '18px'
+      },
+      menuLink: { color: TEXT, textDecoration: 'none', fontSize: '16px', fontFamily: BODY_FONT, borderBottom: `1px solid ${LINE_SOFT}`, paddingBottom: '10px' },
+
+      frame: isMobile ? {
+        border: `1px solid ${LINE}`, borderRadius: '14px', position: 'relative',
+        display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'auto'
+      } : {
+        border: `1px solid ${LINE}`, borderRadius: '14px', position: 'relative',
+        display: 'grid', gridTemplateColumns: '300px 1fr', gridTemplateRows: 'minmax(440px, 1fr) auto',
+        flex: 1, minHeight: 0, overflow: 'hidden'
+      },
+      arrowLeft: isMobile ? { display: 'none' } : {
+        position: 'absolute', left: '-30px', top: '50%', transform: 'translateY(-50%)',
+        color: MUTED, fontSize: '22px'
+      },
+      arrowRight: isMobile ? { display: 'none' } : {
+        position: 'absolute', right: '-30px', top: '50%', transform: 'translateY(-50%)',
+        color: MUTED, fontSize: '22px'
+      },
+      pageLabel: {
+        color: MUTED, fontSize: '12px', letterSpacing: '0.2em', fontFamily: HEAD_FONT
+      },
+
+      slotFill: { position: 'absolute', inset: 0, width: '100%', height: '100%' },
+
+      introBlock: {
+        position: 'relative', overflow: 'hidden',
+        borderRight: isMobile ? 'none' : `1px solid ${LINE}`,
+        borderBottom: isMobile ? `1px solid ${LINE}` : 'none',
+        gridColumn: 1, gridRow: 1, minHeight: isMobile ? '340px' : 'auto', flexShrink: 0
+      },
+      introScrim: {
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(180deg, rgba(13,27,51,0.55) 0%, rgba(13,27,51,0.88) 40%, rgba(13,27,51,0.94) 100%)',
+        pointerEvents: 'none'
+      },
+      introContent: {
+        position: 'relative', display: 'flex', flexDirection: 'column', gap: '10px',
+        padding: isMobile ? '24px 18px' : '28px 26px', height: '100%', justifyContent: 'flex-start',
+        overflowY: 'auto'
+      },
+      titleStyle: { fontFamily: HEAD_FONT, fontWeight: 700, fontSize: isMobile ? '30px' : '42px', margin: 0, letterSpacing: '0.01em' },
+      taglineStyle: { fontSize: isMobile ? '15px' : '16px', color: MUTED, margin: 0, lineHeight: 1.5 },
+      rulesHeadingStyle: { fontFamily: HEAD_FONT, fontSize: '14px', letterSpacing: '0.1em', color: MUTED, margin: '10px 0 0' },
+      rulesListStyle: { margin: 0, padding: '0 0 0 20px', display: 'flex', flexDirection: 'column', gap: '8px' },
+      ruleItemStyle: { fontSize: isMobile ? '14px' : '15px', lineHeight: 1.5 },
+
+      previewBlock: {
+        position: 'relative', overflow: 'hidden',
+        borderBottom: isMobile ? `1px solid ${LINE}` : 'none',
+        gridColumn: isMobile ? 'auto' : 2, gridRow: isMobile ? 'auto' : '1 / 3',
+        minHeight: isMobile ? '340px' : 'auto', flexShrink: 0
+      },
+      previewScrim: {
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(180deg, rgba(13,27,51,0.1) 0%, rgba(13,27,51,0.55) 45%, rgba(13,27,51,0.92) 100%)',
+        pointerEvents: 'none'
+      },
+      previewContent: {
+        position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+        height: '100%', padding: isMobile ? '24px 18px' : '32px 28px', gap: '20px'
+      },
+      previewHeadingStyle: { fontFamily: HEAD_FONT, fontSize: isMobile ? '18px' : '22px', margin: '0 0 8px' },
+      previewTextStyle: { fontSize: '14px', color: MUTED, margin: 0, lineHeight: 1.55 },
+      fileTags: { display: 'flex', gap: '8px', marginTop: '14px', flexWrap: 'wrap' },
+      fileTag: { fontSize: '11px', letterSpacing: '0.08em', color: MUTED, border: `1px solid ${LINE_SOFT}`, borderRadius: '999px', padding: '4px 10px' },
+
+      ctaBand: {
+        display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '12px',
+        alignItems: 'center', justifyContent: isMobile ? 'stretch' : 'flex-end'
+      },
+      btnPrimary: {
+        fontFamily: BODY_FONT, fontWeight: 600, fontSize: '15px', textAlign: 'center', textDecoration: 'none',
+        background: TEXT, color: NAVY, borderRadius: '999px', padding: '14px 28px'
+      },
+      btnOutline: {
+        fontFamily: BODY_FONT, fontWeight: 600, fontSize: '15px', textAlign: 'center', textDecoration: 'none',
+        background: 'transparent', color: TEXT, border: `1px solid ${LINE}`, borderRadius: '999px', padding: '14px 28px'
+      },
+
+      arrowDown: { textAlign: 'center', color: MUTED, fontSize: '18px' },
+
+      footer: {
+        display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between',
+        gap: '6px', color: MUTED, fontSize: '11px', padding: '2px 4px', flexShrink: 0
+      },
+      footerLinks: { display: 'flex', gap: '18px', flexWrap: 'wrap' },
+      footerLink: { color: MUTED, textDecoration: 'none' },
+      footerCopy: { color: MUTED }
+    };
+  }
+}
+</script>
+</body>
+</html>

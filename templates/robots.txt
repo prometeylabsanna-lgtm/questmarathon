@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /cabinet/
+Disallow: /quest/
+Disallow: /payment/
+Disallow: /auth/
+Disallow: /api/
+Sitemap: /sitemap.xml

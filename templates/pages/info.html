@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article class="qm-frame qm-prose">
+  <h1 class="qm-title">{{ page.title }}</h1>
+  <div class="qm-body-text">{{ page.body|linebreaks }}</div>
+</article>
+{% endblock %}
