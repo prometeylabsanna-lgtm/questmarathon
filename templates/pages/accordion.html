@@ -9,7 +9,9 @@
 <article class="qm-frame qm-faq">
   <header class="qm-faq__head">
     <h1 class="qm-title">{{ page.title }}</h1>
-    <p class="qm-faq__lead">{% trans "Короткі відповіді про участь, кімнати та прогрес." %}</p>
+    {% if page_lead %}
+      <p class="qm-faq__lead">{{ page_lead }}</p>
+    {% endif %}
   </header>
 
   <div class="qm-faq__panel">
@@ -19,7 +21,13 @@
           <span class="qm-faq__q-text">{{ item.question }}</span>
           <span class="qm-faq__icon" aria-hidden="true"></span>
         </summary>
-        <p class="qm-faq__a">{{ item.answer }}</p>
+        {% if item.is_email %}
+          <p class="qm-faq__a">
+            <a class="qm-faq__mail" href="mailto:{{ item.answer }}">{{ item.answer }}</a>
+          </p>
+        {% else %}
+          <p class="qm-faq__a">{{ item.answer }}</p>
+        {% endif %}
       </details>
     {% empty %}
       <div class="qm-body-text">{{ page.body|linebreaks }}</div>

@@ -27,7 +27,16 @@ def info_page(request, slug: str):
     context = {"page": page, "page_title": page.title}
     if slug == "faq":
         context["faq_items"] = parse_faq_items(page.body)
-        template = "pages/faq.html"
+        context["page_lead"] = _("Короткі відповіді про участь, кімнати та прогрес.")
+        template = "pages/accordion.html"
+    elif slug == "about":
+        context["faq_items"] = parse_faq_items(page.body)
+        context["page_lead"] = _("Хто ми і як влаштований квест.")
+        template = "pages/accordion.html"
+    elif slug == "contacts":
+        context["faq_items"] = parse_faq_items(page.body)
+        context["page_lead"] = _("Напишіть нам щодо участі, оплати чи доступу.")
+        template = "pages/accordion.html"
     else:
         template = "pages/info.html"
     return render(request, template, context)

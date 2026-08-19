@@ -390,6 +390,14 @@ msgstr "Проверить"
 msgid "Розроблено командою PrometeyLabs"
 msgstr "Разработано командой PrometeyLabs"
 
-#: templates/pages/faq.html:12
+#: templates/pages/accordion.html src/pages/views.py
 msgid "Короткі відповіді про участь, кімнати та прогрес."
 msgstr "Краткие ответы об участии, комнатах и прогрессе."
+
+#: src/pages/views.py
+msgid "Хто ми і як влаштований квест."
+msgstr "Кто мы и как устроен квест."
+
+#: src/pages/views.py
+msgid "Напишіть нам щодо участі, оплати чи доступу."
+msgstr "Напишите нам по вопросам участия, оплаты или доступа."

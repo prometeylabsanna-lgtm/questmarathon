@@ -135,6 +135,23 @@
   overflow-wrap: anywhere;
 }
 
+.qm-faq__mail {
+  color: var(--qm-cyan);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.qm-faq__mail:hover,
+.qm-faq__mail:focus-visible {
+  color: var(--qm-accent);
+}
+
+.qm-faq__mail:focus-visible {
+  outline: 1px solid var(--qm-accent-soft);
+  outline-offset: 2px;
+}
+
 @media (min-width: 768px) {
   .qm-faq__head {
     gap: 12px;
