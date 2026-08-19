@@ -1,10 +1,10 @@
 {% load i18n static %}
 <header class="qm-header">
-  <div class="qm-header__brand">
-    <a href="{% url 'pages:home' %}" class="qm-logo" aria-label="kvest-marafon">
+  <a href="{% url 'pages:home' %}" class="qm-header__brand" aria-label="kvest-marafon">
+    <span class="qm-logo">
       <img src="{% static 'images/logo-quest-marathon.png' %}" alt="" class="qm-logo__img" width="64" height="64" decoding="async" fetchpriority="high">
-    </a>
-    <a href="{% url 'pages:home' %}" class="qm-brand-name" aria-label="kvest-marafon">
+    </span>
+    <span class="qm-brand-name">
       <span class="qm-brand-name__text">kvest-marafon</span>
       <span class="qm-brand-bars" aria-hidden="true">
         <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>
@@ -13,8 +13,8 @@
         <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>
         <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>
       </span>
-    </a>
-  </div>
+    </span>
+  </a>
 
   <nav class="qm-nav qm-nav--desktop" aria-label="{% trans 'Основні сторінки' %}">
     <a class="qm-nav__link{% if request.resolver_match.namespace == 'pages' and request.resolver_match.url_name == 'home' %} qm-nav__link--active{% endif %}" href="{% url 'pages:home' %}">{% trans "Головна" %}</a>

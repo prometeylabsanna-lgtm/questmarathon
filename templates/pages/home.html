@@ -44,16 +44,6 @@
     >
     <div class="qm-preview__scrim" aria-hidden="true"></div>
     <div class="qm-preview__content">
-      <div class="qm-preview__copy">
-        <h3 class="qm-preview__heading">{% trans "Перегляд завдання" %}</h3>
-        <p class="qm-preview__text">{% trans "Кожна кімната — це текст, зображення, PDF, аудіо чи відео. Розгадайте загадку і введіть ключове слово, щоб відкрити наступну." %}</p>
-        <div class="qm-file-tags" role="list">
-          <span class="qm-file-tag qm-file-tag--active" role="listitem">PDF</span>
-          <span class="qm-file-tag" role="listitem">PNG</span>
-          <span class="qm-file-tag" role="listitem">MP3</span>
-          <span class="qm-file-tag" role="listitem">MP4</span>
-        </div>
-      </div>
       <div class="qm-cta">
         {% if user.is_authenticated %}
           <a href="{% url 'accounts:cabinet' %}" class="qm-btn qm-btn--primary">{% trans "До кабінету" %}</a>

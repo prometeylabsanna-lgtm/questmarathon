@@ -79,13 +79,20 @@ html {
   z-index: 2;
 }
 
-.qm-header__brand {
+a.qm-header__brand,
+a.qm-header__brand:visited,
+a.qm-header__brand:hover {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
   min-width: 0;
   flex: 1 1 auto;
   height: var(--qm-header-h);
+  color: var(--qm-text);
+  text-decoration: none;
+  -webkit-text-decoration: none;
 }
 
 .qm-brand-name {
@@ -98,7 +105,7 @@ html {
   flex-shrink: 1;
   min-width: 0;
   max-width: min(160px, 42vw);
-  height: var(--qm-header-h);
+  height: auto;
 }
 
 .qm-brand-name__text {
@@ -417,8 +424,8 @@ html {
   line-height: 0;
   text-decoration: none;
   flex-shrink: 0;
-  width: 44px;
-  height: var(--qm-header-h);
+  width: 56px;
+  height: 28px;
   overflow: visible;
   position: relative;
 }
@@ -427,13 +434,13 @@ html {
   position: absolute;
   left: 50%;
   top: 50%;
-  height: calc(var(--qm-header-h) + 6px);
+  height: 52px;
   width: auto;
   max-width: none;
   object-fit: contain;
   display: block;
-  -webkit-transform: translate(-50%, -50%) scaleX(-1);
-  transform: translate(-50%, -50%) scaleX(-1);
+  -webkit-transform: translate(-50%, -50%) rotate(90deg);
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 .qm-nav--desktop {
@@ -841,7 +848,7 @@ h3, h4, h5, h6 {
   z-index: 2;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 20px 16px;
   gap: 20px;
   min-width: 0;
