@@ -53,41 +53,33 @@
     }, isCompact() ? 220 : 140);
   }
 
-  function mostVisibleCard() {
+  var frame = document.querySelector(".qm-frame.qm-about");
+
+  function scrollHost() {
+    return isCompact() && frame ? frame : track;
+  }
+
+  function focusCard() {
+    var host = scrollHost();
     var lastIndex = cards.length - 1;
-    var max = track.scrollHeight - track.clientHeight;
-    if (track.scrollTop <= 12) return 0;
-    if (max > 0 && track.scrollTop >= max - 28) return lastIndex;
+    var max = host.scrollHeight - host.clientHeight;
+    if (host.scrollTop <= 16) return 0;
+    if (max > 0 && host.scrollTop >= max - 20) return lastIndex;
 
-    var root = track.getBoundingClientRect();
-    var lastRect = cards[lastIndex].getBoundingClientRect();
-    var lastSeen = Math.min(lastRect.bottom, root.bottom) - Math.max(lastRect.top, root.top);
-    if (lastSeen > lastRect.height * 0.5) return lastIndex;
-
+    var root = host.getBoundingClientRect();
+    var bandTop = root.top + Math.min(56, root.height * 0.1);
+    var bandBottom = root.top + root.height * 0.48;
     var best = 0;
-    var bestDist = Infinity;
+    var bestScore = -1;
     cards.forEach(function (card, n) {
-      var dist = Math.abs(card.getBoundingClientRect().top - (root.top + 10));
-      if (dist < bestDist) {
-        bestDist = dist;
+      var rect = card.getBoundingClientRect();
+      var overlap = Math.min(rect.bottom, bandBottom) - Math.max(rect.top, bandTop);
+      if (overlap > bestScore) {
+        bestScore = overlap;
         best = n;
       }
     });
     return best;
-  }
-
-  function pickMobileCard() {
-    var lastIndex = cards.length - 1;
-    var raw = mostVisibleCard();
-    if (raw > index + 1) return index + 1;
-    if (raw < index - 1) return index - 1;
-    if (raw === lastIndex) return raw;
-    if (raw > index) {
-      var root = track.getBoundingClientRect();
-      var chosen = cards[raw].getBoundingClientRect();
-      if (chosen.top > root.top + root.height * 0.3) return index;
-    }
-    return raw;
   }
 
   cards.forEach(function (card, n) {
@@ -133,31 +125,33 @@
 
   var ticking = false;
   var switchLock = false;
-  var settleTimer;
-  track.addEventListener(
+  var lockMs = reduced ? 80 : 1900;
+  var host = frame || track;
+
+  function stepMobileToward(target) {
+    if (target === index) return;
+    var next = target > index ? index + 1 : index - 1;
+    switchLock = true;
+    setActive(next, true);
+    window.setTimeout(function () {
+      switchLock = false;
+      var again = focusCard();
+      if (again !== index) stepMobileToward(again);
+    }, lockMs);
+  }
+
+  host.addEventListener(
     "scroll",
     function () {
       if (!isCompact()) return;
-      window.clearTimeout(settleTimer);
-      settleTimer = window.setTimeout(function () {
-        switchLock = false;
-        var settled = mostVisibleCard();
-        if (settled === index) return;
-        setActive(settled, settled > index);
-      }, 280);
-
       if (ticking || switchLock) return;
       ticking = true;
       window.requestAnimationFrame(function () {
         ticking = false;
         if (switchLock) return;
-        var next = pickMobileCard();
-        if (next === index) return;
-        switchLock = true;
-        setActive(next, next > index);
-        window.setTimeout(function () {
-          switchLock = false;
-        }, reduced ? 80 : 680);
+        var target = focusCard();
+        if (target === index) return;
+        stepMobileToward(target);
       });
     },
     { passive: true }

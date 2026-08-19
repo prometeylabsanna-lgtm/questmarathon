@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 
 from django.conf import settings
 from django.utils import translation
@@ -17,11 +17,40 @@ def _normalize_lang(code: str | None) -> str | None:
 
 
 def language_from_path(path: str) -> str | None:
-    path = path or "/"
+    pathname = urlparse(path or "/").path or "/"
     for code, _name in settings.LANGUAGES:
-        if path == f"/{code}" or path.startswith(f"/{code}/"):
+        if pathname == f"/{code}" or pathname.startswith(f"/{code}/"):
             return code
     return None
+
+
+def path_without_language(path: str) -> str:
+    parsed = urlparse(path or "/")
+    pathname = parsed.path or "/"
+    for code, _name in settings.LANGUAGES:
+        if pathname == f"/{code}":
+            pathname = "/"
+            break
+        prefix = f"/{code}/"
+        if pathname.startswith(prefix):
+            pathname = pathname[len(code) + 1 :]
+            if not pathname.startswith("/"):
+                pathname = f"/{pathname}"
+            break
+    return urlunparse(("", "", pathname, "", parsed.query, parsed.fragment))
+
+
+def path_for_language(path: str, code: str) -> str:
+    stripped = path_without_language(path)
+    parsed = urlparse(stripped)
+    pathname = parsed.path or "/"
+    if code == settings.LANGUAGE_CODE:
+        new_path = pathname
+    elif pathname == "/":
+        new_path = f"/{code}/"
+    else:
+        new_path = f"/{code}{pathname}"
+    return urlunparse(("", "", new_path, "", parsed.query, parsed.fragment))
 
 
 def activate_ui_language(request, profile=None) -> str:

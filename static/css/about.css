@@ -10,8 +10,8 @@
 .qm-about .qm-faq__head {
   width: min(100%, 42rem);
   flex-shrink: 0;
-  position: relative;
-  z-index: 2;
+  position: static;
+  z-index: 0;
 }
 
 .qm-about-track {
@@ -117,23 +117,19 @@
   .qm-frame.qm-about {
     gap: 0;
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
   }
 
   .qm-about-track {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-height: 0;
     align-items: center;
     gap: 28px;
     padding: 12px 18px 16px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: visible;
     touch-action: pan-y;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: y mandatory;
-    scroll-snap-stop: always;
-    scroll-behavior: auto;
-    overscroll-behavior-y: contain;
   }
 
   .qm-about-card {
@@ -145,8 +141,6 @@
     min-height: 0;
     max-height: none;
     padding: 18px 16px;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
     transform: perspective(1100px) scale(1) rotateY(0deg);
     -webkit-transform: perspective(1100px) scale(1) rotateY(0deg);
     transition:

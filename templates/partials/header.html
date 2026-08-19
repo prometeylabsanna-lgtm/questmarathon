@@ -50,22 +50,20 @@
       {% endif %}
     </div>
 
-    <form class="qm-langs" action="{% url 'set_language' %}" method="post" aria-label="{% trans 'Мова' %}">
-      {% csrf_token %}
-      <input type="hidden" name="next" value="{{ request.get_full_path }}">
-      <button type="submit" name="language" value="uk" class="qm-lang{% if LANGUAGE_CODE == 'uk' %} qm-lang--active{% endif %}"{% if LANGUAGE_CODE == 'uk' %} aria-current="true"{% endif %}>
+    <nav class="qm-langs" aria-label="{% trans 'Мова' %}">
+      <a href="{{ language_urls.uk }}" hreflang="uk" class="qm-lang{% if LANGUAGE_CODE == 'uk' %} qm-lang--active{% endif %}"{% if LANGUAGE_CODE == 'uk' %} aria-current="true"{% endif %}>
         <svg class="qm-lang__piece" viewBox="0 0 56 32" overflow="visible" aria-hidden="true" focusable="false">
           <path d="M12 5h32a4 4 0 0 1 4 4v3.8a3.2 3.2 0 0 1 0 6.4V23a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4v-3.8a3.2 3.2 0 1 0 0-6.4V9a4 4 0 0 1 4-4z"/>
         </svg>
         <span class="qm-lang__code">UA</span>
-      </button>
-      <button type="submit" name="language" value="ru" class="qm-lang{% if LANGUAGE_CODE == 'ru' %} qm-lang--active{% endif %}"{% if LANGUAGE_CODE == 'ru' %} aria-current="true"{% endif %}>
+      </a>
+      <a href="{{ language_urls.ru }}" hreflang="ru" class="qm-lang{% if LANGUAGE_CODE == 'ru' %} qm-lang--active{% endif %}"{% if LANGUAGE_CODE == 'ru' %} aria-current="true"{% endif %}>
         <svg class="qm-lang__piece" viewBox="0 0 56 32" overflow="visible" aria-hidden="true" focusable="false">
           <path d="M12 5h32a4 4 0 0 1 4 4v3.8a3.2 3.2 0 0 1 0 6.4V23a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4v-3.8a3.2 3.2 0 1 0 0-6.4V9a4 4 0 0 1 4-4z"/>
         </svg>
         <span class="qm-lang__code">RU</span>
-      </button>
-    </form>
+      </a>
+    </nav>
 
     <button class="qm-burger" id="qm-burger" type="button" aria-label="{% trans 'Меню' %}" data-label-close="{% trans 'Закрити меню' %}" aria-expanded="false" aria-controls="qm-menu">
       <span class="qm-burger__lines" aria-hidden="true">

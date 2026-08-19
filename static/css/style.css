@@ -533,17 +533,28 @@ a.qm-header__brand:hover {
   gap: 0;
   padding: 0;
   overflow: visible;
+  flex: 0 0 auto;
+  isolation: isolate;
+  position: relative;
+  z-index: 3;
 }
 
 .qm-lang,
 .qm-lang:visited,
+a.qm-lang,
+a.qm-lang:visited,
 button.qm-lang {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--qm-lang-w);
-  height: var(--qm-lang-h);
+  width: 56px;
+  width: var(--qm-lang-w, 56px);
+  height: 38px;
+  height: var(--qm-lang-h, 38px);
+  min-width: 56px;
+  min-width: var(--qm-lang-w, 56px);
+  flex: 0 0 auto;
   flex-shrink: 0;
   margin: 0;
   padding: 0;
@@ -562,6 +573,8 @@ button.qm-lang {
   line-height: 1;
   text-transform: uppercase;
   overflow: visible;
+  z-index: 2;
+  pointer-events: auto;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   -webkit-transform: translateZ(0);
@@ -569,7 +582,8 @@ button.qm-lang {
 }
 
 .qm-lang + .qm-lang {
-  margin-left: calc(var(--qm-lang-w) * -0.285);
+  margin-left: calc(56px * -0.285);
+  margin-left: calc(var(--qm-lang-w, 56px) * -0.285);
 }
 
 .qm-lang__piece {
@@ -610,6 +624,11 @@ button.qm-lang {
 
 .qm-lang--active {
   z-index: 1;
+}
+
+.qm-lang:hover,
+.qm-lang:focus-visible {
+  z-index: 3;
 }
 
 .qm-lang--active .qm-lang__piece,
