@@ -50,7 +50,7 @@
     setActive(index + dir, true, false);
     window.setTimeout(function () {
       locked = false;
-    }, reduced ? 80 : 720);
+    }, reduced ? 80 : 1100);
   }
 
   cards.forEach(function (card, n) {
