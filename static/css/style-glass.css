@@ -174,6 +174,10 @@
   min-height: 0;
 }
 
+.qm-preview {
+  background: transparent;
+}
+
 .qm-counter {
   border-top: 0;
   border-bottom: 1px solid var(--qm-cyan-soft);

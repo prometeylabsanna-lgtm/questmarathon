@@ -394,12 +394,13 @@
   }
 
   .qm-brand-name {
-    max-width: min(320px, 36vw);
+    max-width: min(220px, 36vw);
     gap: 4px;
   }
 
-  .qm-brand-name__img {
-    height: calc(var(--qm-header-h) - 12px);
+  .qm-brand-name__text {
+    font-size: 13px;
+    letter-spacing: 0.06em;
   }
 
   .qm-brand-bars {

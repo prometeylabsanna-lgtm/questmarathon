@@ -1,11 +1,11 @@
 {% load i18n static %}
 <header class="qm-header">
   <div class="qm-header__brand">
-    <a href="{% url 'pages:home' %}" class="qm-logo" aria-label="{% trans 'Квест-марафон' %}">
+    <a href="{% url 'pages:home' %}" class="qm-logo" aria-label="kvest-marafon">
       <img src="{% static 'images/logo-quest-marathon.png' %}" alt="" class="qm-logo__img" width="64" height="64" decoding="async" fetchpriority="high">
     </a>
-    <a href="{% url 'pages:home' %}" class="qm-brand-name" aria-label="{% trans 'Квест-марафон' %}">
-      <img src="{% static 'images/logo-quest-wordmark.png' %}" alt="{% trans 'Квест-марафон' %}" class="qm-brand-name__img" width="220" height="26" decoding="async">
+    <a href="{% url 'pages:home' %}" class="qm-brand-name" aria-label="kvest-marafon">
+      <span class="qm-brand-name__text">kvest-marafon</span>
       <span class="qm-brand-bars" aria-hidden="true">
         <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>
         <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Квест-марафон — головна" %}{% endblock %}
 {% block body_class %}qm-body--home{% endblock %}
@@ -33,6 +33,16 @@
   </div>
 
   <section class="qm-preview">
+    <img
+      class="qm-preview__media"
+      src="{% static 'images/home-preview.png' %}"
+      alt=""
+      width="1024"
+      height="768"
+      decoding="async"
+      aria-hidden="true"
+    >
+    <div class="qm-preview__scrim" aria-hidden="true"></div>
     <div class="qm-preview__content">
       <div class="qm-preview__copy">
         <h3 class="qm-preview__heading">{% trans "Перегляд завдання" %}</h3>
