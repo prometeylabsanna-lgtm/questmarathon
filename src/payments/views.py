@@ -7,29 +7,33 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from src.accounts.models import UserProfile
 from src.payments.models import Payment
-from src.payments.services.liqpay import get_liqpay_service, liqpay_configured
+from src.payments.services.liqpay import (
+    LIQPAY_PENDING_STATUSES,
+    LIQPAY_SUCCESS_STATUSES,
+    amounts_match,
+    get_liqpay_service,
+    liqpay_configured,
+    quantize_amount,
+)
 
 logger = logging.getLogger(__name__)
 
 
-def _get_profile(user) -> UserProfile:
-    profile, _created = UserProfile.objects.get_or_create(
-        user=user,
-        defaults={"full_name": user.get_username(), "phone": ""},
-    )
-    return profile
+def _quest_amount() -> Decimal:
+    return quantize_amount(settings.QUEST_PRICE)
 
 
 @login_required
 @require_http_methods(["GET", "POST"])
 def payment_start(request):
-    profile = _get_profile(request.user)
+    profile = UserProfile.for_user(request.user)
     if profile.is_paid:
         return redirect("quest:room", n=1)
 
@@ -39,7 +43,7 @@ def payment_start(request):
                 Payment.objects.create(
                     user=request.user,
                     order_id=f"dev-{uuid.uuid4().hex[:12]}",
-                    amount=Decimal(str(settings.QUEST_PRICE)),
+                    amount=_quest_amount(),
                     currency=settings.QUEST_CURRENCY,
                     status=Payment.Status.SANDBOX,
                     raw_payload={"source": "dev_bypass"},
@@ -60,18 +64,33 @@ def payment_start(request):
             },
         )
 
-    order_id = f"qm-{request.user.pk}-{uuid.uuid4().hex[:10]}"
-    payment = Payment.objects.create(
-        user=request.user,
-        order_id=order_id,
-        amount=Decimal(str(settings.QUEST_PRICE)),
-        currency=settings.QUEST_CURRENCY,
-        status=Payment.Status.PENDING,
-    )
-    profile.payment_status = UserProfile.PaymentStatus.PENDING
-    profile.save(update_fields=["payment_status", "updated_at"])
+    with transaction.atomic():
+        profile = UserProfile.objects.select_for_update().get(pk=profile.pk)
+        if profile.is_paid:
+            return redirect("quest:room", n=1)
+        payment = (
+            Payment.objects.select_for_update()
+            .filter(user=request.user, status=Payment.Status.PENDING)
+            .order_by("-created_at")
+            .first()
+        )
+        if payment is None:
+            payment = Payment.objects.create(
+                user=request.user,
+                order_id=f"qm-{request.user.pk}-{uuid.uuid4().hex[:10]}",
+                amount=_quest_amount(),
+                currency=settings.QUEST_CURRENCY,
+                status=Payment.Status.PENDING,
+            )
+        if profile.payment_status != UserProfile.PaymentStatus.PENDING:
+            profile.payment_status = UserProfile.PaymentStatus.PENDING
+            profile.save(update_fields=["payment_status", "updated_at"])
 
     liqpay = get_liqpay_service()
+    if liqpay is None:
+        logger.error("LiqPay keys missing after configuration check")
+        return redirect("accounts:cabinet")
+
     result_url = settings.LIQPAY_RESULT_URL or request.build_absolute_uri(
         reverse("payments:return")
     )
@@ -80,7 +99,7 @@ def payment_start(request):
     )
     form_data = liqpay.create_checkout_data(
         order_id=payment.order_id,
-        amount=float(payment.amount),
+        amount=payment.amount,
         description="Квест-марафон — участь",
         result_url=result_url,
         server_url=server_url,
@@ -102,7 +121,7 @@ def payment_start(request):
 
 @login_required
 def payment_return(request):
-    profile = _get_profile(request.user)
+    profile = UserProfile.for_user(request.user)
     return render(
         request,
         "payments/return.html",
@@ -130,6 +149,9 @@ def payment_webhook_liqpay(request):
         return HttpResponse("Invalid signature", status=403)
 
     payload = liqpay.decode_data(data_b64)
+    if not payload:
+        return HttpResponse("Bad payload", status=400)
+
     order_id = payload.get("order_id", "")
     status = payload.get("status", "")
     payment_id = str(payload.get("payment_id", "") or "")
@@ -137,7 +159,6 @@ def payment_webhook_liqpay(request):
     if not order_id:
         return HttpResponse("Missing order_id", status=400)
 
-    success_statuses = {"success", "sandbox", "wait_accept"}
     idem_key = f"liqpay_{payment_id}_{status}" if payment_id else None
 
     try:
@@ -148,16 +169,27 @@ def payment_webhook_liqpay(request):
             if payment.status == Payment.Status.SUCCESS:
                 return HttpResponse("OK")
 
+            if not amounts_match(payment.amount, payload.get("amount")):
+                logger.error("LiqPay amount mismatch order_id=%s", order_id)
+                return HttpResponse("Amount mismatch", status=400)
+            payload_currency = payload.get("currency")
+            if payload_currency and payload_currency != payment.currency:
+                logger.error("LiqPay currency mismatch order_id=%s", order_id)
+                return HttpResponse("Currency mismatch", status=400)
+
             payment.raw_payload = payload
             payment.external_id = payment_id
             if idem_key:
                 payment.idempotency_key = idem_key
 
-            if status in success_statuses:
+            if status in LIQPAY_SUCCESS_STATUSES:
                 payment.status = Payment.Status.SUCCESS
                 payment.save()
                 profile = UserProfile.objects.select_for_update().get(user=payment.user)
                 profile.mark_paid()
+            elif status in LIQPAY_PENDING_STATUSES:
+                payment.status = Payment.Status.PENDING
+                payment.save()
             else:
                 payment.status = Payment.Status.FAILURE
                 payment.save()

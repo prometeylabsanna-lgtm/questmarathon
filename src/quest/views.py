@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.translation import get_language, gettext as _
@@ -7,14 +8,6 @@ from django.views.decorators.http import require_http_methods
 from src.accounts.models import UserProfile
 from src.core.i18n import activate_ui_language
 from src.quest.models import QuestRoom, normalize_keyword
-
-
-def _get_profile(user) -> UserProfile:
-    profile, _created = UserProfile.objects.get_or_create(
-        user=user,
-        defaults={"full_name": user.get_username(), "phone": ""},
-    )
-    return profile
 
 
 def _can_access_room(profile: UserProfile, room_order: int) -> bool:
@@ -27,7 +20,7 @@ def _can_access_room(profile: UserProfile, room_order: int) -> bool:
 def room(request, n: int):
     if n < 1 or n > 5:
         return redirect("accounts:cabinet")
-    profile = _get_profile(request.user)
+    profile = UserProfile.for_user(request.user)
     if not profile.is_paid:
         return redirect("accounts:cabinet")
     if not _can_access_room(profile, n):
@@ -54,9 +47,29 @@ def room(request, n: int):
 
 
 @login_required
+def room_media(request, n: int):
+    if n < 1 or n > 5:
+        raise Http404()
+    profile = UserProfile.for_user(request.user)
+    if not request.user.is_staff and (
+        not profile.is_paid or not _can_access_room(profile, n)
+    ):
+        raise Http404()
+    quest_room = get_object_or_404(QuestRoom, order=n, is_active=True)
+    if not quest_room.media_file:
+        raise Http404()
+    try:
+        handle = quest_room.media_file.open("rb")
+    except FileNotFoundError as exc:
+        raise Http404() from exc
+    filename = quest_room.media_file.name.rsplit("/", 1)[-1]
+    return FileResponse(handle, as_attachment=False, filename=filename)
+
+
+@login_required
 @require_http_methods(["POST"])
 def check_keyword(request, n: int):
-    profile = _get_profile(request.user)
+    profile = UserProfile.for_user(request.user)
     activate_ui_language(request, profile)
     if not profile.is_paid or not _can_access_room(profile, n):
         return render(
@@ -88,12 +101,15 @@ def check_keyword(request, n: int):
         response["HX-Redirect"] = redirect_url
         return response
 
-    return render(
+    redirect_url = reverse("accounts:cabinet")
+    response = render(
         request,
         "quest/partials/keyword_result.html",
         {
             "ok": True,
             "message": _("Квест пройдено. Усі кімнати доступні."),
-            "redirect_url": reverse("accounts:cabinet"),
+            "redirect_url": redirect_url,
         },
     )
+    response["HX-Redirect"] = redirect_url
+    return response

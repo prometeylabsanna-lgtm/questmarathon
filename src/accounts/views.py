@@ -13,7 +13,12 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import get_language, gettext as _
 from django.views.decorators.http import require_http_methods
 
-from src.accounts.forms import EmailAuthenticationForm, RegisterForm
+from src.accounts.forms import (
+    EmailAuthenticationForm,
+    QuestPasswordResetForm,
+    QuestSetPasswordForm,
+    RegisterForm,
+)
 from src.accounts.models import UserProfile
 from src.core.i18n import activate_ui_language
 
@@ -29,6 +34,11 @@ class QuestLoginView(LoginView):
 
     def get_success_url(self):
         return reverse_lazy("accounts:cabinet")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = _("Вхід")
+        return context
 
 
 class QuestLogoutView(LogoutView):
@@ -95,13 +105,7 @@ def _cabinet_game_cta(profile: UserProfile) -> tuple[str, str]:
 @login_required
 def cabinet(request):
     activate_ui_language(request)
-    profile, _created = UserProfile.objects.get_or_create(
-        user=request.user,
-        defaults={
-            "full_name": request.user.get_username(),
-            "phone": "",
-        },
-    )
+    profile = UserProfile.for_user(request.user)
     context = {
         "profile": profile,
         "page_title": _("Кабінет"),
@@ -121,17 +125,39 @@ class QuestPasswordResetView(PasswordResetView):
     template_name = "accounts/password_reset.html"
     email_template_name = "accounts/email/password_reset_email.txt"
     subject_template_name = "accounts/email/password_reset_subject.txt"
+    form_class = QuestPasswordResetForm
     success_url = reverse_lazy("accounts:password_reset_done")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = _("Відновлення пароля")
+        return context
 
 
 class QuestPasswordResetDoneView(PasswordResetDoneView):
     template_name = "accounts/password_reset_done.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = _("Лист надіслано")
+        return context
+
 
 class QuestPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = "accounts/password_reset_confirm.html"
+    form_class = QuestSetPasswordForm
     success_url = reverse_lazy("accounts:password_reset_complete")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = _("Новий пароль")
+        return context
 
 
 class QuestPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = "accounts/password_reset_complete.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = _("Пароль змінено")
+        return context

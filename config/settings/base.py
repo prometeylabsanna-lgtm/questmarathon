@@ -125,7 +125,7 @@ EMAIL_BACKEND = config(
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="noreply@example.com")
 RESEND_API_KEY = config("RESEND_API_KEY", default="")
 
-QUEST_PRICE = config("QUEST_PRICE", default="100", cast=float)
+QUEST_PRICE = config("QUEST_PRICE", default="100")
 QUEST_CURRENCY = config("QUEST_CURRENCY", default="UAH")
 
 LIQPAY_PUBLIC_KEY = config("LIQPAY_PUBLIC_KEY", default="")

@@ -4,7 +4,7 @@ from .base import *  # noqa: F403
 
 DEBUG = True
 
-SECRET_KEY = config("SECRET_KEY", default="dev-only-insecure-key-do-not-use-in-prod")
+SECRET_KEY = config("SECRET_KEY")
 
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS",

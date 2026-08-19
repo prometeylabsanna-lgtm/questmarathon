@@ -1,0 +1,11 @@
+{% load i18n %}
+<div class="qm-field{% if field.field.widget.input_type == 'checkbox' %} qm-field--check{% endif %}">
+  {% if field.field.widget.input_type == "checkbox" %}
+    {{ field }}
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+  {% else %}
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field }}
+  {% endif %}
+  {% if field.errors %}<p class="qm-field__error">{{ field.errors|striptags }}</p>{% endif %}
+</div>

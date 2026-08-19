@@ -1,13 +1,23 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block extra_head %}
+  {% if not profile.is_paid %}
+    <meta http-equiv="refresh" content="5">
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 <section class="qm-frame">
   <h1 class="qm-title">{% trans "Статус оплати" %}</h1>
 
   <p class="qm-status">
     {% if profile.is_paid %}
-      {% blocktrans with level=profile.current_level %}Оплачено · Рівень {{ level }} / 5{% endblocktrans %}
+      {% if profile.current_level > 0 %}
+        {% blocktrans with level=profile.current_level %}Оплачено · Рівень {{ level }} / 5{% endblocktrans %}
+      {% else %}
+        {% trans "Оплачено" %}
+      {% endif %}
     {% elif profile.payment_status == "pending" %}
       {% trans "Оплату обробляємо" %}
     {% else %}

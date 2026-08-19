@@ -1,6 +1,11 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    PasswordResetForm,
+    SetPasswordForm,
+    UserCreationForm,
+)
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -11,14 +16,22 @@ User = get_user_model()
 
 class EmailAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(
-        label=_("Email"),
-        widget=forms.EmailInput(attrs={"autocomplete": "email", "class": "qm-input"}),
+        label=_("Ел. пошта"),
+        widget=forms.EmailInput(
+            attrs={
+                "autocomplete": "username",
+                "class": "qm-input",
+                "inputmode": "email",
+            }
+        ),
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["password"].label = _("Пароль")
-        self.fields["password"].widget.attrs.update({"class": "qm-input"})
+        self.fields["password"].widget.attrs.update(
+            {"class": "qm-input", "autocomplete": "current-password"}
+        )
 
 
 class RegisterForm(UserCreationForm):
@@ -34,7 +47,14 @@ class RegisterForm(UserCreationForm):
     phone = forms.CharField(
         label=_("Телефон"),
         max_length=32,
-        widget=forms.TextInput(attrs={"class": "qm-input", "autocomplete": "tel"}),
+        widget=forms.TextInput(
+            attrs={
+                "class": "qm-input",
+                "autocomplete": "tel",
+                "inputmode": "tel",
+                "type": "tel",
+            }
+        ),
     )
     consent_terms = forms.BooleanField(
         label=_("Згода з користувацькою угодою"),
@@ -52,9 +72,24 @@ class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["password1"].label = _("Пароль")
-        self.fields["password1"].widget.attrs.update({"class": "qm-input"})
-        self.fields["password2"].widget.attrs.update({"class": "qm-input"})
+        self.fields["password1"].widget.attrs.update(
+            {"class": "qm-input", "autocomplete": "new-password"}
+        )
         self.fields["password2"].label = _("Підтвердження пароля")
+        self.fields["password2"].widget.attrs.update(
+            {"class": "qm-input", "autocomplete": "new-password"}
+        )
+        self.order_fields(
+            [
+                "email",
+                "password1",
+                "password2",
+                "full_name",
+                "phone",
+                "consent_terms",
+                "consent_age18",
+            ]
+        )
 
     def clean_email(self):
         email = self.cleaned_data["email"].strip().lower()
@@ -78,3 +113,25 @@ class RegisterForm(UserCreationForm):
                 consent_age18_at=now,
             )
         return user
+
+
+class QuestPasswordResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["email"].label = _("Ел. пошта")
+        self.fields["email"].widget.attrs.update(
+            {"class": "qm-input", "autocomplete": "email", "inputmode": "email"}
+        )
+
+
+class QuestSetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["new_password1"].label = _("Новий пароль")
+        self.fields["new_password2"].label = _("Підтвердження пароля")
+        self.fields["new_password1"].widget.attrs.update(
+            {"class": "qm-input", "autocomplete": "new-password"}
+        )
+        self.fields["new_password2"].widget.attrs.update(
+            {"class": "qm-input", "autocomplete": "new-password"}
+        )

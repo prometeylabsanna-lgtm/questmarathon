@@ -1,9 +1,13 @@
+import logging
+
 from django.contrib import admin, messages
 from django.core.mail import send_mail
 from django.utils import timezone
 from unfold.admin import ModelAdmin
 
 from src.mailings.models import Mailing
+
+logger = logging.getLogger(__name__)
 
 
 @admin.register(Mailing)
@@ -35,10 +39,14 @@ class MailingAdmin(ModelAdmin):
                     )
                     sent += 1
                 except Exception:
+                    logger.exception("Mailing send failed to %s", email)
                     continue
             mailing.recipients_count = sent
-            mailing.sent_at = timezone.now()
-            mailing.save(update_fields=["recipients_count", "sent_at"])
+            if sent:
+                mailing.sent_at = timezone.now()
+                mailing.save(update_fields=["recipients_count", "sent_at"])
+            else:
+                mailing.save(update_fields=["recipients_count"])
         self.message_user(
             request,
             f"Розсилку запущено для {len(emails)} адрес.",

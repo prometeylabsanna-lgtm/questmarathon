@@ -55,6 +55,17 @@ class QuestGateTests(TestCase):
         self.assertEqual(self.profile.current_level, 2)
         self.assertIn("HX-Redirect", response.headers)
 
+    def test_last_room_sets_hx_redirect_to_cabinet(self):
+        self.profile.current_level = 4
+        self.profile.save(update_fields=["current_level", "updated_at"])
+        self.client.login(username="player@example.com", password="Secret123!")
+        response = self.client.post(
+            reverse("quest:check", kwargs={"n": 5}),
+            {"keyword": "key5"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["HX-Redirect"], reverse("accounts:cabinet"))
+
     def test_wrong_keyword_uses_russian_when_prefixed(self):
         self.client.login(username="player@example.com", password="Secret123!")
         response = self.client.post(
@@ -111,31 +122,88 @@ class LiqPayWebhookTests(TestCase):
             user=self.user,
             order_id="qm-test-1",
             amount="100.00",
+            currency="UAH",
             status=Payment.Status.PENDING,
         )
 
+    def _post_webhook(self, payload, signature=None):
+        import base64
+        import json
+
+        service = LiqPayService("pub", "priv")
+        data_b64 = base64.b64encode(
+            json.dumps(payload, ensure_ascii=False).encode()
+        ).decode()
+        if signature is None:
+            signature = service._sign(data_b64)
+        url = reverse("payments_api:webhook_liqpay")
+        return self.client.post(url, {"data": data_b64, "signature": signature})
+
     @override_settings(LIQPAY_PUBLIC_KEY="pub", LIQPAY_PRIVATE_KEY="priv")
     def test_webhook_marks_paid_idempotent(self):
-        service = LiqPayService("pub", "priv")
         payload = {
             "order_id": "qm-test-1",
             "status": "success",
             "payment_id": "999",
+            "amount": "100.00",
+            "currency": "UAH",
         }
-        import base64
-        import json
-
-        data_b64 = base64.b64encode(
-            json.dumps(payload, ensure_ascii=False).encode()
-        ).decode()
-        signature = service._sign(data_b64)
-
-        url = reverse("payments_api:webhook_liqpay")
-        r1 = self.client.post(url, {"data": data_b64, "signature": signature})
+        r1 = self._post_webhook(payload)
         self.assertEqual(r1.status_code, 200)
         self.profile.refresh_from_db()
         self.assertTrue(self.profile.is_paid)
+        self.assertEqual(self.profile.current_level, 0)
 
-        r2 = self.client.post(url, {"data": data_b64, "signature": signature})
+        r2 = self._post_webhook(payload)
         self.assertEqual(r2.status_code, 200)
         self.assertEqual(SiteStats.sync_from_profiles(), 1)
+
+    @override_settings(LIQPAY_PUBLIC_KEY="pub", LIQPAY_PRIVATE_KEY="priv")
+    def test_wait_accept_does_not_mark_paid(self):
+        payload = {
+            "order_id": "qm-test-1",
+            "status": "wait_accept",
+            "payment_id": "999",
+            "amount": "100.00",
+            "currency": "UAH",
+        }
+        response = self._post_webhook(payload)
+        self.assertEqual(response.status_code, 200)
+        self.profile.refresh_from_db()
+        self.payment.refresh_from_db()
+        self.assertFalse(self.profile.is_paid)
+        self.assertEqual(self.payment.status, Payment.Status.PENDING)
+
+    @override_settings(LIQPAY_PUBLIC_KEY="pub", LIQPAY_PRIVATE_KEY="priv")
+    def test_amount_mismatch_rejected(self):
+        payload = {
+            "order_id": "qm-test-1",
+            "status": "success",
+            "payment_id": "999",
+            "amount": "1.00",
+            "currency": "UAH",
+        }
+        response = self._post_webhook(payload)
+        self.assertEqual(response.status_code, 400)
+        self.profile.refresh_from_db()
+        self.assertFalse(self.profile.is_paid)
+
+    @override_settings(LIQPAY_PUBLIC_KEY="pub", LIQPAY_PRIVATE_KEY="priv")
+    def test_invalid_signature_rejected(self):
+        payload = {
+            "order_id": "qm-test-1",
+            "status": "success",
+            "payment_id": "999",
+            "amount": "100.00",
+            "currency": "UAH",
+        }
+        response = self._post_webhook(payload, signature="not-a-valid-signature")
+        self.assertEqual(response.status_code, 403)
+
+    @override_settings(LIQPAY_PUBLIC_KEY="pub", LIQPAY_PRIVATE_KEY="priv")
+    def test_start_reuses_pending_payment(self):
+        self.client.login(username="pay@x.com", password="Secret123!")
+        url = reverse("payments:start")
+        self.client.get(url)
+        self.client.get(url)
+        self.assertEqual(Payment.objects.filter(user=self.user).count(), 1)

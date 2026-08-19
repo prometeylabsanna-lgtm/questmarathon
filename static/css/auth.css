@@ -1,0 +1,180 @@
+/* Auth forms — FAQ / contacts panel language. */
+
+.qm-frame.qm-auth {
+  align-items: center;
+  text-align: center;
+  gap: 22px;
+  padding-bottom: max(28px, calc(16px + env(safe-area-inset-bottom)));
+  scroll-padding-bottom: 24px;
+}
+
+.qm-auth .qm-form {
+  width: 100%;
+  max-width: none;
+  gap: 12px;
+}
+
+.qm-auth .qm-faq__panel {
+  padding: 16px 14px 18px;
+}
+
+.qm-auth .qm-title {
+  text-align: center;
+}
+
+.qm-auth .qm-field label {
+  text-align: left;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.qm-auth .qm-input {
+  background: rgba(2, 6, 14, 0.55);
+  border-color: var(--qm-line);
+  border-radius: var(--qm-radius);
+  min-height: 48px;
+  font-size: 16px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.qm-auth .qm-input:hover {
+  border-color: var(--qm-cyan-soft);
+}
+
+.qm-auth .qm-input:focus,
+.qm-auth .qm-input:focus-visible {
+  outline: none;
+  border-color: var(--qm-cyan);
+  box-shadow: 0 0 0 1px var(--qm-cyan-soft);
+}
+
+.qm-auth .qm-field--check {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.qm-auth .qm-field--check label {
+  flex: 1;
+  min-width: 0;
+  color: var(--qm-text);
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+.qm-auth .qm-field--check .qm-field__error {
+  flex-basis: 100%;
+  padding-left: 30px;
+}
+
+.qm-auth .qm-checkbox {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+  flex-shrink: 0;
+  border: 1px solid var(--qm-text);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.qm-auth .qm-checkbox:checked {
+  border-color: var(--qm-accent);
+  background:
+    linear-gradient(var(--qm-accent), var(--qm-accent)) center / 8px 8px no-repeat;
+}
+
+.qm-auth .qm-checkbox:focus-visible {
+  outline: 1px solid var(--qm-accent-soft);
+  outline-offset: 2px;
+}
+
+.qm-auth__legal {
+  color: var(--qm-cyan);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.qm-auth__legal:hover,
+.qm-auth__legal:focus-visible {
+  color: var(--qm-accent);
+}
+
+.qm-auth .qm-btn--block {
+  width: 100%;
+  min-height: 48px;
+  height: 48px;
+  margin-top: 6px;
+  box-sizing: border-box;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.qm-auth .qm-auth-alt {
+  margin: 0;
+  width: 100%;
+  max-width: 34rem;
+  text-align: center;
+}
+
+.qm-auth .qm-auth-alt + .qm-auth-alt {
+  margin-top: -12px;
+}
+
+.qm-auth .qm-tagline {
+  margin: 0;
+  color: var(--qm-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .qm-auth .qm-faq__panel {
+    width: min(100%, 36rem);
+    padding: 22px 20px 24px;
+  }
+
+  .qm-auth .qm-form {
+    gap: 14px;
+  }
+
+  .qm-auth .qm-input {
+    min-height: 52px;
+  }
+
+  .qm-auth .qm-btn--block {
+    min-height: 52px;
+    height: 52px;
+  }
+
+  .qm-auth .qm-auth-alt {
+    max-width: 36rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .qm-auth .qm-faq__panel {
+    padding: 12px 10px 14px;
+  }
+
+  .qm-auth .qm-field--check label {
+    font-size: 13px;
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .qm-auth .qm-input {
+    font-size: 16px;
+  }
+
+  .qm-auth .qm-checkbox {
+    width: 22px;
+    height: 22px;
+  }
+}

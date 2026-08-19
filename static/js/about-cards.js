@@ -48,7 +48,8 @@
       }
     });
     if (!withTurn) return;
-    window.setTimeout(function () {
+    window.clearTimeout(activateTimer);
+    activateTimer = window.setTimeout(function () {
       turn(cards[index]);
     }, isCompact() ? 220 : 140);
   }
@@ -139,9 +140,10 @@
   var switchLock = false;
   var userScrolling = false;
   var settleTimer;
+  var activateTimer;
+  var stepTimer;
   var lastTop = 0;
   var lockMs = reduced ? 80 : 1100;
-  var host = frame || track;
 
   function markScrolling() {
     var top = scrollHost().scrollTop;
@@ -158,7 +160,8 @@
     var next = target > index ? index + 1 : index - 1;
     switchLock = true;
     setActive(next, true);
-    window.setTimeout(function () {
+    window.clearTimeout(stepTimer);
+    stepTimer = window.setTimeout(function () {
       switchLock = false;
       var again = focusCard();
       if (again === index) return;
@@ -171,36 +174,59 @@
     }, lockMs);
   }
 
-  host.addEventListener(
-    "scroll",
-    function () {
-      if (!isCompact()) return;
-      markScrolling();
-      if (ticking || switchLock) return;
-      ticking = true;
-      window.requestAnimationFrame(function () {
-        ticking = false;
-        if (switchLock || !userScrolling) return;
-        var target = focusCard();
-        if (target === index) return;
-        stepMobileToward(target);
-      });
-    },
-    { passive: true }
-  );
-
-  host.addEventListener(
-    "scrollend",
-    function () {
-      if (!isCompact() || switchLock) return;
+  function onScroll() {
+    if (!isCompact()) return;
+    markScrolling();
+    if (ticking || switchLock) return;
+    ticking = true;
+    window.requestAnimationFrame(function () {
+      ticking = false;
+      if (switchLock || !userScrolling) return;
       var target = focusCard();
-      var lastIndex = cards.length - 1;
-      if (target !== lastIndex && target !== 0) return;
       if (target === index) return;
       stepMobileToward(target);
-    },
-    { passive: true }
-  );
+    });
+  }
+
+  function onScrollEnd() {
+    if (!isCompact() || switchLock) return;
+    var target = focusCard();
+    var lastIndex = cards.length - 1;
+    if (target !== lastIndex && target !== 0) return;
+    if (target === index) return;
+    stepMobileToward(target);
+  }
+
+  function bindScroll(el) {
+    if (!el) return;
+    el.addEventListener("scroll", onScroll, { passive: true });
+    el.addEventListener("scrollend", onScrollEnd, { passive: true });
+  }
+
+  bindScroll(frame);
+  bindScroll(track);
+
+  var compactMq = window.matchMedia("(max-width: 767px)");
+  function onCompactChange() {
+    setActive(index, false);
+  }
+  if (compactMq.addEventListener) {
+    compactMq.addEventListener("change", onCompactChange);
+  } else if (compactMq.addListener) {
+    compactMq.addListener(onCompactChange);
+  }
+
+  function clearTimers() {
+    window.clearTimeout(settleTimer);
+    window.clearTimeout(activateTimer);
+    window.clearTimeout(stepTimer);
+    cards.forEach(function (card) {
+      window.clearTimeout(card._turnTimer);
+      window.clearTimeout(card._hoverTimer);
+    });
+  }
+
+  window.addEventListener("pagehide", clearTimers);
 
   setActive(0, false);
 })();

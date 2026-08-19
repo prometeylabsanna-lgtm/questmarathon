@@ -35,6 +35,14 @@ class UserProfile(models.Model):
     def __str__(self) -> str:
         return f"{self.full_name} <{self.user.email}>"
 
+    @classmethod
+    def for_user(cls, user) -> "UserProfile":
+        profile, _created = cls.objects.get_or_create(
+            user=user,
+            defaults={"full_name": user.get_username(), "phone": ""},
+        )
+        return profile
+
     @property
     def is_paid(self) -> bool:
         return self.payment_status == self.PaymentStatus.PAID
@@ -43,9 +51,7 @@ class UserProfile(models.Model):
         if self.payment_status == self.PaymentStatus.PAID:
             return
         self.payment_status = self.PaymentStatus.PAID
-        if self.current_level < 1:
-            self.current_level = 0
-        self.save(update_fields=["payment_status", "current_level", "updated_at"])
+        self.save(update_fields=["payment_status", "updated_at"])
         from src.core.models import SiteStats
 
         SiteStats.sync_from_profiles()

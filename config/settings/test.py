@@ -1,3 +1,7 @@
+import os
+
+os.environ.setdefault("SECRET_KEY", "django-test-secret-key")
+
 from .develop import *  # noqa: F403
 
 PASSWORD_HASHERS = [

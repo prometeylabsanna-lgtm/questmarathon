@@ -1,33 +1,50 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
-{% block counter %}{% endblock %}
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
 
 {% block content %}
-<section class="qm-frame qm-auth">
-  <h1 class="qm-title">{% trans "Реєстрація" %}</h1>
-  <form method="post" class="qm-form" novalidate>
-    {% csrf_token %}
-    {% if form.non_field_errors %}
-      <div class="qm-alert qm-alert--error">{{ form.non_field_errors }}</div>
-    {% endif %}
-    {% for field in form %}
-      <div class="qm-field{% if field.field.widget.input_type == 'checkbox' %} qm-field--check{% endif %}">
-        {% if field.field.widget.input_type == 'checkbox' %}
-          {{ field }}
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {% else %}
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
+<article class="qm-frame qm-faq qm-auth">
+  <header class="qm-faq__head">
+    <h1 class="qm-title">{% trans "Реєстрація" %}</h1>
+  </header>
+
+  <div class="qm-faq__panel">
+    <form method="post" class="qm-form" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="qm-alert qm-alert--error">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      {% include "accounts/partials/field.html" with field=form.email %}
+      {% include "accounts/partials/field.html" with field=form.password1 %}
+      {% include "accounts/partials/field.html" with field=form.password2 %}
+      {% include "accounts/partials/field.html" with field=form.full_name %}
+      {% include "accounts/partials/field.html" with field=form.phone %}
+
+      <div class="qm-field qm-field--check">
+        {{ form.consent_terms }}
+        <label for="{{ form.consent_terms.id_for_label }}">
+          {% trans "Згода з" %}
+          <a class="qm-auth__legal" href="{% url 'pages:terms' %}">{% trans "користувацькою угодою" %}</a>
+        </label>
+        {% if form.consent_terms.errors %}
+          <p class="qm-field__error">{{ form.consent_terms.errors|striptags }}</p>
         {% endif %}
-        {% if field.errors %}<p class="qm-field__error">{{ field.errors|striptags }}</p>{% endif %}
       </div>
-    {% endfor %}
-    <button type="submit" class="qm-btn qm-btn--primary qm-btn--block">{% trans "Перейти до оплати" %}</button>
-  </form>
+
+      {% include "accounts/partials/field.html" with field=form.consent_age18 %}
+
+      <button type="submit" class="qm-btn qm-btn--primary qm-btn--block">{% trans "Перейти до оплати" %}</button>
+    </form>
+  </div>
+
   <p class="qm-auth-alt">
     {% trans "Вже є акаунт?" %}
     <a href="{% url 'accounts:login' %}">{% trans "Увійти" %}</a>
   </p>
-</section>
+</article>
 {% endblock %}
