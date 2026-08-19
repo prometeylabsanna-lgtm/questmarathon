@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="qm-contact-row qm-contact-row--static">
+  <span class="qm-contact-row__icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3.5" y="6" width="17" height="12" rx="2"/>
+      <path d="M3.5 10h17"/>
+      <circle cx="16.2" cy="14.2" r="1.1"/>
+    </svg>
+  </span>
+  <span class="qm-contact-row__text">
+    <span class="qm-contact-row__label">{% trans "Статус" %}</span>
+    <span class="qm-contact-row__value">
+      {% if profile.is_paid %}
+        {% if profile.current_level > 0 %}
+          {% blocktrans with level=profile.current_level %}Оплачено · Рівень {{ level }} / 5{% endblocktrans %}
+        {% else %}
+          {% trans "Оплачено" %}
+        {% endif %}
+      {% elif profile.payment_status == "pending" %}
+        {% trans "Оплату обробляємо" %}
+      {% else %}
+        {% trans "Не оплачено" %}
+      {% endif %}
+    </span>
+  </span>
+</div>

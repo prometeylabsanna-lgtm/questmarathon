@@ -1,0 +1,84 @@
+/* Legal accordion — FAQ panel, longer copy, iOS Safari. */
+
+.qm-frame.qm-faq--legal {
+  gap: 18px;
+}
+
+.qm-faq--legal .qm-faq__head {
+  width: min(100%, 40rem);
+}
+
+.qm-faq--legal .qm-faq__panel {
+  width: min(100%, 40rem);
+  max-width: 100%;
+}
+
+.qm-faq--legal .qm-faq__q {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.qm-faq--legal .qm-faq__a {
+  padding: 0 16px 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.qm-faq--legal .qm-faq__a p {
+  margin: 0 0 12px;
+  color: var(--qm-muted);
+  font-size: 14px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  word-wrap: break-word;
+}
+
+.qm-faq--legal .qm-faq__a p:last-child {
+  margin-bottom: 0;
+}
+
+.qm-faq--legal .qm-faq__a--pad {
+  padding: 16px;
+}
+
+@media (min-width: 768px) {
+  .qm-frame.qm-faq--legal {
+    gap: 22px;
+  }
+
+  .qm-faq--legal .qm-faq__head,
+  .qm-faq--legal .qm-faq__panel {
+    width: min(100%, 42rem);
+  }
+
+  .qm-faq--legal .qm-faq__a {
+    padding: 0 18px 18px;
+  }
+
+  .qm-faq--legal .qm-faq__a p {
+    font-size: 15px;
+    margin-bottom: 14px;
+  }
+
+  .qm-faq--legal .qm-faq__a--pad {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 767px) {
+  .qm-faq--legal .qm-faq__a {
+    padding: 0 12px 14px;
+  }
+
+  .qm-faq--legal .qm-faq__a p {
+    font-size: 14px;
+  }
+}
+
+@supports (padding: max(0px)) {
+  .qm-frame.qm-faq--legal {
+    padding-left: max(18px, env(safe-area-inset-left));
+    padding-right: max(18px, env(safe-area-inset-right));
+    padding-bottom: max(28px, env(safe-area-inset-bottom));
+  }
+}

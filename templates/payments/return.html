@@ -1,41 +1,33 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+  <link rel="stylesheet" href="{% static 'css/payments.css' %}">
   {% if not profile.is_paid %}
     <meta http-equiv="refresh" content="5">
   {% endif %}
 {% endblock %}
 
 {% block content %}
-<section class="qm-frame">
-  <h1 class="qm-title">{% trans "Статус оплати" %}</h1>
-
-  <p class="qm-status">
+<article class="qm-frame qm-faq qm-pay">
+  <header class="qm-faq__head">
+    <h1 class="qm-title">{% trans "Статус оплати" %}</h1>
     {% if profile.is_paid %}
-      {% if profile.current_level > 0 %}
-        {% blocktrans with level=profile.current_level %}Оплачено · Рівень {{ level }} / 5{% endblocktrans %}
-      {% else %}
-        {% trans "Оплачено" %}
-      {% endif %}
-    {% elif profile.payment_status == "pending" %}
-      {% trans "Оплату обробляємо" %}
+      <p class="qm-faq__lead">{% trans "Оплату підтверджено." %}</p>
     {% else %}
-      {% trans "Не оплачено" %}
+      <p class="qm-faq__lead">{% trans "Оплату обробляємо. Якщо гроші списались — доступ відкриється автоматично після webhook LiqPay." %}</p>
     {% endif %}
-  </p>
+  </header>
 
-  {% if profile.is_paid %}
-    <p class="qm-tagline">{% trans "Оплату підтверджено." %}</p>
-    <div class="qm-cta">
-      <a class="qm-btn qm-btn--primary" href="{% url 'quest:room' n=1 %}">{% trans "До першої кімнати" %}</a>
-    </div>
-  {% else %}
-    <p class="qm-tagline">{% trans "Оплату обробляємо. Якщо гроші списались — доступ відкриється автоматично після webhook LiqPay." %}</p>
-  {% endif %}
+  <div class="qm-faq__panel">
+    {% include "payments/partials/status_row.html" %}
 
-  <div class="qm-cta">
-    <a class="qm-btn qm-btn--ghost" href="{% url 'accounts:cabinet' %}">{% trans "До кабінету" %}</a>
+    {% if profile.is_paid %}
+      <a class="qm-btn qm-btn--primary qm-btn--block" href="{% url 'quest:room' n=1 %}">{% trans "До першої кімнати" %}</a>
+    {% endif %}
+
+    <a class="qm-btn qm-btn--ghost qm-btn--block" href="{% url 'accounts:cabinet' %}">{% trans "До кабінету" %}</a>
   </div>
-</section>
+</article>
 {% endblock %}

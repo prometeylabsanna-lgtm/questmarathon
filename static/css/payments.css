@@ -1,0 +1,78 @@
+/* Payment screens — FAQ / contacts panel language, iOS Safari. */
+
+.qm-frame.qm-pay {
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+}
+
+.qm-pay .qm-faq__panel {
+  width: min(100%, 34rem);
+}
+
+.qm-pay__note {
+  margin: 0;
+  padding: 4px 6px 8px;
+  color: var(--qm-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-wrap: break-word;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.qm-pay__form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+}
+
+.qm-pay .qm-btn--block {
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.qm-pay .qm-btn--ghost {
+  min-height: 48px;
+}
+
+@media (min-width: 768px) {
+  .qm-frame.qm-pay {
+    gap: 22px;
+  }
+
+  .qm-pay .qm-faq__panel {
+    width: min(100%, 36rem);
+  }
+
+  .qm-pay__note {
+    font-size: 15px;
+    padding: 6px 8px 10px;
+  }
+}
+
+@media (max-width: 767px) {
+  .qm-pay .qm-faq__panel {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .qm-pay__note {
+    font-size: 13px;
+    padding: 2px 4px 6px;
+  }
+}
+
+@supports (padding: max(0px)) {
+  .qm-frame.qm-pay {
+    padding-left: max(18px, env(safe-area-inset-left));
+    padding-right: max(18px, env(safe-area-inset-right));
+    padding-bottom: max(28px, env(safe-area-inset-bottom));
+  }
+}

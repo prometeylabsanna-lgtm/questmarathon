@@ -3,6 +3,7 @@ from django.utils.translation import get_language, gettext as _
 
 from src.pages.contacts import contact_details
 from src.pages.faq import parse_faq_items
+from src.pages.legal import parse_legal_document
 from src.pages.models import InfoPage
 
 INFO_SLUGS = ("about", "faq", "contacts", "terms", "privacy")
@@ -37,6 +38,11 @@ def info_page(request, slug: str):
     elif slug == "contacts":
         context["contact"] = contact_details(locale)
         template = "pages/contacts.html"
+    elif slug in ("terms", "privacy"):
+        parsed = parse_legal_document(page.body)
+        context["faq_items"] = parsed["items"]
+        context["page_lead"] = parsed["updated"]
+        template = "pages/legal.html"
     else:
         template = "pages/info.html"
     return render(request, template, context)

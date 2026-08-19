@@ -8,18 +8,17 @@
 
 {% block content %}
 <article class="qm-frame qm-faq qm-auth">
-  <header class="qm-faq__head">
-    <h1 class="qm-title">{% trans "Вхід" %}</h1>
-  </header>
-
   <div class="qm-faq__panel">
+    <h1 class="qm-title">{% trans "Вхід" %}</h1>
     <form method="post" class="qm-form" novalidate>
       {% csrf_token %}
       {% if form.non_field_errors %}
         <div class="qm-alert qm-alert--error">{{ form.non_field_errors }}</div>
       {% endif %}
-      {% include "accounts/partials/field.html" with field=form.username %}
-      {% include "accounts/partials/field.html" with field=form.password %}
+      <div class="qm-auth__grid qm-auth__grid--login">
+        {% include "accounts/partials/field.html" with field=form.username %}
+        {% include "accounts/partials/field.html" with field=form.password %}
+      </div>
       <button type="submit" class="qm-btn qm-btn--primary qm-btn--block">{% trans "Увійти" %}</button>
     </form>
   </div>

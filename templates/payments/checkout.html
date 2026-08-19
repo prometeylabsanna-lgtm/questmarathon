@@ -1,30 +1,31 @@
 {% extends "base.html" %}
 {% load i18n static %}
 
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+  <link rel="stylesheet" href="{% static 'css/payments.css' %}">
+{% endblock %}
+
 {% block content %}
-<section class="qm-frame">
-  <h1 class="qm-title">{% trans "Оплата" %}</h1>
+<article class="qm-frame qm-faq qm-pay">
+  <header class="qm-faq__head">
+    <h1 class="qm-title">{% trans "Оплата" %}</h1>
+    <p class="qm-faq__lead">{% trans "Зараз відкриється захищена сторінка оплати." %}</p>
+  </header>
 
-  <p class="qm-status">
-    {% if profile.payment_status == "pending" %}
-      {% trans "Оплату обробляємо" %}
-    {% else %}
-      {% trans "Не оплачено" %}
-    {% endif %}
-  </p>
+  <div class="qm-faq__panel">
+    {% include "payments/partials/status_row.html" %}
+    <p class="qm-pay__note">{% trans "Карткові дані обробляє LiqPay, а не Організатор." %}</p>
 
-  <p class="qm-tagline">{% trans "Зараз відкриється захищена сторінка оплати." %}</p>
+    <form id="liqpay-checkout" method="post" action="{{ liqpay_checkout_url }}" accept-charset="utf-8" class="qm-pay__form">
+      <input type="hidden" name="data" value="{{ liqpay_data }}">
+      <input type="hidden" name="signature" value="{{ liqpay_signature }}">
+      <button type="submit" class="qm-btn qm-btn--primary qm-btn--block">{% trans "Оплатити" %}</button>
+    </form>
 
-  <form id="liqpay-checkout" method="post" action="{{ liqpay_checkout_url }}" accept-charset="utf-8" class="qm-cta">
-    <input type="hidden" name="data" value="{{ liqpay_data }}">
-    <input type="hidden" name="signature" value="{{ liqpay_signature }}">
-    <button type="submit" class="qm-btn qm-btn--primary">{% trans "Оплатити" %}</button>
-  </form>
-
-  <div class="qm-cta">
-    <a class="qm-btn qm-btn--ghost" href="{% url 'accounts:cabinet' %}">{% trans "До кабінету" %}</a>
+    <a class="qm-btn qm-btn--ghost qm-btn--block" href="{% url 'accounts:cabinet' %}">{% trans "До кабінету" %}</a>
   </div>
-</section>
+</article>
 {% endblock %}
 
 {% block extra_js %}

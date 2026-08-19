@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+  <link rel="stylesheet" href="{% static 'css/legal.css' %}">
+{% endblock %}
+
+{% block content %}
+<article class="qm-frame qm-faq qm-faq--legal">
+  <header class="qm-faq__head">
+    <h1 class="qm-title">{{ page.title }}</h1>
+    {% if page_lead %}
+      <p class="qm-faq__lead">{{ page_lead }}</p>
+    {% endif %}
+  </header>
+
+  <div class="qm-faq__panel">
+    {% for item in faq_items %}
+      <details class="qm-faq__item" name="qm-legal"{% if forloop.first %} open{% endif %}>
+        <summary class="qm-faq__q">
+          <span class="qm-faq__q-text">{{ item.question }}</span>
+          <span class="qm-faq__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="qm-faq__a">{{ item.answer|linebreaks }}</div>
+      </details>
+    {% empty %}
+      <div class="qm-faq__item qm-faq__item--static">
+        <div class="qm-faq__a qm-faq__a--pad">{{ page.body|linebreaks }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</article>
+{% endblock %}
