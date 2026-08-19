@@ -125,8 +125,21 @@
 
   var ticking = false;
   var switchLock = false;
-  var lockMs = reduced ? 80 : 1900;
+  var userScrolling = false;
+  var settleTimer;
+  var lastTop = 0;
+  var lockMs = reduced ? 80 : 1100;
   var host = frame || track;
+
+  function markScrolling() {
+    var top = scrollHost().scrollTop;
+    if (Math.abs(top - lastTop) > 2) userScrolling = true;
+    lastTop = top;
+    window.clearTimeout(settleTimer);
+    settleTimer = window.setTimeout(function () {
+      userScrolling = false;
+    }, 160);
+  }
 
   function stepMobileToward(target) {
     if (target === index) return;
@@ -135,6 +148,7 @@
     setActive(next, true);
     window.setTimeout(function () {
       switchLock = false;
+      if (!userScrolling) return;
       var again = focusCard();
       if (again !== index) stepMobileToward(again);
     }, lockMs);
@@ -144,11 +158,12 @@
     "scroll",
     function () {
       if (!isCompact()) return;
+      markScrolling();
       if (ticking || switchLock) return;
       ticking = true;
       window.requestAnimationFrame(function () {
         ticking = false;
-        if (switchLock) return;
+        if (switchLock || !userScrolling) return;
         var target = focusCard();
         if (target === index) return;
         stepMobileToward(target);
