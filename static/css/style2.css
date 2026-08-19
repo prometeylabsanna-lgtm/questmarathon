@@ -356,6 +356,7 @@
     --qm-pad-y: 14px;
     --qm-gap: 10px;
     --qm-header-h: 78px;
+    --qm-logo-w: 112px;
     --qm-pad-top: max(var(--qm-pad-y), env(safe-area-inset-top));
     padding: var(--qm-pad-top) max(20px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
     gap: var(--qm-gap);
@@ -390,7 +391,7 @@
   }
 
   .qm-logo {
-    width: 112px;
+    width: var(--qm-logo-w);
     height: 52px;
   }
 
@@ -399,7 +400,7 @@
   }
 
   .qm-brand-name {
-    max-width: min(220px, 36vw);
+    max-width: 100%;
     gap: 4px;
   }
 

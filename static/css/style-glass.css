@@ -388,7 +388,7 @@
   }
 
   .qm-brand-name {
-    max-width: min(150px, 38vw);
+    max-width: 100%;
   }
 
   .qm-langs {

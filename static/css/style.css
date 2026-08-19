@@ -23,6 +23,7 @@
   --qm-pad-y: 10px;
   --qm-gap: 8px;
   --qm-header-h: 38px;
+  --qm-logo-w: 88px;
 }
 
 * { box-sizing: border-box; }
@@ -85,11 +86,12 @@ a.qm-header__brand:visited,
 a.qm-header__brand:hover {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   gap: 2px;
   min-width: 0;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
+  width: var(--qm-logo-w);
   height: var(--qm-header-h);
   color: var(--qm-text);
   text-decoration: none;
@@ -99,13 +101,14 @@ a.qm-header__brand:hover {
 .qm-brand-name {
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
   gap: 3px;
   line-height: 1;
   text-decoration: none;
-  flex-shrink: 1;
-  min-width: 0;
-  max-width: min(160px, 42vw);
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
   height: auto;
 }
 
@@ -120,7 +123,9 @@ a.qm-header__brand:hover {
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.15;
+  width: 100%;
   max-width: 100%;
+  text-align: center;
 }
 
 .qm-brand-bars {
@@ -425,7 +430,7 @@ a.qm-header__brand:hover {
   line-height: 0;
   text-decoration: none;
   flex-shrink: 0;
-  width: 88px;
+  width: var(--qm-logo-w);
   height: 42px;
   overflow: visible;
   position: relative;
