@@ -1,9 +1,10 @@
 /* About — vertical cards, smooth scale + phone-ring shake. */
 
 .qm-frame.qm-about {
-  overflow-x: hidden;
+  overflow-x: clip;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  max-width: 100%;
 }
 
 .qm-about .qm-faq__head {
@@ -29,6 +30,14 @@
   scroll-behavior: smooth;
   scroll-padding-inline: 14px;
   outline: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.qm-about-track::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .qm-about-card {
@@ -52,16 +61,16 @@
   -webkit-tap-highlight-color: transparent;
   transform: scale(0.97);
   -webkit-transform: scale(0.97);
-  transform-origin: 50% 18%;
-  -webkit-transform-origin: 50% 18%;
+  transform-origin: 50% 50%;
+  -webkit-transform-origin: 50% 50%;
   transition:
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.55s ease,
-    background 0.55s ease;
+    transform 1.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 1.1s ease,
+    background 1.1s ease;
   -webkit-transition:
-    -webkit-transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.55s ease,
-    background 0.55s ease;
+    -webkit-transform 1.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 1.1s ease,
+    background 1.1s ease;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
@@ -79,8 +88,8 @@
 }
 
 .qm-about-card.is-ringing {
-  animation: qm-about-ring 1.25s cubic-bezier(0.45, 0.05, 0.55, 0.95) both;
-  -webkit-animation: qm-about-ring 1.25s cubic-bezier(0.45, 0.05, 0.55, 0.95) both;
+  animation: qm-about-ring 2.4s ease-in-out both;
+  -webkit-animation: qm-about-ring 2.4s ease-in-out both;
 }
 
 .qm-about-card__title {
@@ -103,32 +112,33 @@
 }
 
 @keyframes qm-about-ring {
-  0% { transform: scale(1.05) rotate(0deg) translate3d(0, 0, 0); }
-  12% { transform: scale(1.052) rotate(-1.4deg) translate3d(-1.2px, 0, 0); }
-  24% { transform: scale(1.052) rotate(1.4deg) translate3d(1.2px, 0, 0); }
-  36% { transform: scale(1.051) rotate(-1deg) translate3d(-0.8px, 0, 0); }
-  48% { transform: scale(1.051) rotate(1deg) translate3d(0.8px, 0, 0); }
-  62% { transform: scale(1.05) rotate(-0.6deg) translate3d(-0.4px, 0, 0); }
-  76% { transform: scale(1.05) rotate(0.4deg) translate3d(0.3px, 0, 0); }
-  100% { transform: scale(1.05) rotate(0deg) translate3d(0, 0, 0); }
+  0% { transform: scale(1.05) rotate(0deg); }
+  14% { transform: scale(1.05) rotate(2.2deg); }
+  28% { transform: scale(1.05) rotate(-2.2deg); }
+  42% { transform: scale(1.05) rotate(1.6deg); }
+  56% { transform: scale(1.05) rotate(-1.6deg); }
+  70% { transform: scale(1.05) rotate(0.9deg); }
+  84% { transform: scale(1.05) rotate(-0.6deg); }
+  100% { transform: scale(1.05) rotate(0deg); }
 }
 
 @-webkit-keyframes qm-about-ring {
-  0% { -webkit-transform: scale(1.05) rotate(0deg) translate3d(0, 0, 0); }
-  12% { -webkit-transform: scale(1.052) rotate(-1.4deg) translate3d(-1.2px, 0, 0); }
-  24% { -webkit-transform: scale(1.052) rotate(1.4deg) translate3d(1.2px, 0, 0); }
-  36% { -webkit-transform: scale(1.051) rotate(-1deg) translate3d(-0.8px, 0, 0); }
-  48% { -webkit-transform: scale(1.051) rotate(1deg) translate3d(0.8px, 0, 0); }
-  62% { -webkit-transform: scale(1.05) rotate(-0.6deg) translate3d(-0.4px, 0, 0); }
-  76% { -webkit-transform: scale(1.05) rotate(0.4deg) translate3d(0.3px, 0, 0); }
-  100% { -webkit-transform: scale(1.05) rotate(0deg) translate3d(0, 0, 0); }
+  0% { -webkit-transform: scale(1.05) rotate(0deg); }
+  14% { -webkit-transform: scale(1.05) rotate(2.2deg); }
+  28% { -webkit-transform: scale(1.05) rotate(-2.2deg); }
+  42% { -webkit-transform: scale(1.05) rotate(1.6deg); }
+  56% { -webkit-transform: scale(1.05) rotate(-1.6deg); }
+  70% { -webkit-transform: scale(1.05) rotate(0.9deg); }
+  84% { -webkit-transform: scale(1.05) rotate(-0.6deg); }
+  100% { -webkit-transform: scale(1.05) rotate(0deg); }
 }
 
 @media (min-width: 768px) {
   .qm-about-track {
     gap: 14px;
-    padding: 24px 12px 32px;
-    overflow: visible;
+    padding: 28px 22px 36px;
+    overflow-x: clip;
+    overflow-y: visible;
     align-items: stretch;
   }
 

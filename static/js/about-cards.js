@@ -10,11 +10,47 @@
 
   var index = 0;
   var locked = false;
+  var scrolling = false;
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var pointer = { x: 0, y: 0, moved: false };
+  var scrollMs = 1600;
+  var stepMs = reduced ? 80 : 2400;
 
   function isCompact() {
     return window.matchMedia("(max-width: 767px)").matches;
+  }
+
+  function easeInOut(t) {
+    return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  }
+
+  function scrollToCard(card) {
+    if (!card) return;
+    if (reduced) {
+      card.scrollIntoView({ inline: "center", block: "nearest", behavior: "auto" });
+      return;
+    }
+    var start = track.scrollLeft;
+    var box = card.getBoundingClientRect();
+    var trackBox = track.getBoundingClientRect();
+    var target = start + (box.left + box.width / 2) - (trackBox.left + trackBox.width / 2);
+    var max = track.scrollWidth - track.clientWidth;
+    if (target < 0) target = 0;
+    if (target > max) target = max;
+    var delta = target - start;
+    if (Math.abs(delta) < 1) return;
+    scrolling = true;
+    var t0 = window.performance.now();
+    function frame(now) {
+      var p = Math.min(1, (now - t0) / scrollMs);
+      track.scrollLeft = start + delta * easeInOut(p);
+      if (p < 1) {
+        window.requestAnimationFrame(frame);
+        return;
+      }
+      scrolling = false;
+    }
+    window.requestAnimationFrame(frame);
   }
 
   function ring(card) {
@@ -24,7 +60,7 @@
     card.classList.add("is-ringing");
   }
 
-  function setActive(next, scrollIntoView, forceRing) {
+  function setActive(next, shouldScroll, forceRing) {
     var wrapped = (next + cards.length) % cards.length;
     var changed = wrapped !== index;
     index = wrapped;
@@ -35,12 +71,8 @@
     if (changed || forceRing) {
       ring(cards[index]);
     }
-    if (scrollIntoView && isCompact()) {
-      cards[index].scrollIntoView({
-        inline: "center",
-        block: "nearest",
-        behavior: reduced ? "auto" : "smooth",
-      });
+    if (shouldScroll && isCompact()) {
+      scrollToCard(cards[index]);
     }
   }
 
@@ -50,7 +82,7 @@
     setActive(index + dir, true, false);
     window.setTimeout(function () {
       locked = false;
-    }, reduced ? 80 : 1100);
+    }, stepMs);
   }
 
   cards.forEach(function (card, n) {
@@ -117,7 +149,7 @@
   track.addEventListener(
     "scroll",
     function () {
-      if (!isCompact()) return;
+      if (!isCompact() || scrolling || locked) return;
       window.clearTimeout(scrollTimer);
       scrollTimer = window.setTimeout(function () {
         var mid = track.getBoundingClientRect().left + track.clientWidth / 2;
