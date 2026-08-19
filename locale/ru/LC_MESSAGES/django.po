@@ -33,7 +33,7 @@ msgstr "Эл. почта"
 msgid "Ім'я"
 msgstr "Имя"
 
-#: src/accounts/forms.py:35
+#: src/accounts/forms.py:35 templates/pages/contacts.html
 msgid "Телефон"
 msgstr "Телефон"
 
@@ -398,6 +398,18 @@ msgstr "Краткие ответы об участии, комнатах и п�
 msgid "Хто ми і як влаштований квест."
 msgstr "Кто мы и как устроен квест."
 
-#: src/pages/views.py
-msgid "Напишіть нам щодо участі, оплати чи доступу."
-msgstr "Напишите нам по вопросам участия, оплаты или доступа."
+#: templates/pages/about.html
+msgid "Картки про квест"
+msgstr "Карточки о квесте"
+
+#: templates/pages/contacts.html
+msgid "З нами можна зв’язатись за допомогою цих даних."
+msgstr "С нами можно связаться по этим данным."
+
+#: templates/pages/contacts.html
+msgid "Адреса"
+msgstr "Адрес"
+
+#: templates/pages/contacts.html
+msgid "Соцмережі"
+msgstr "Соцсети"

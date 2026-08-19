@@ -37,31 +37,46 @@ class FaqPageTests(TestCase):
         self.assertContains(response, "Зареєструйтесь, оплатіть участь.")
 
 
-class AboutContactsAccordionTests(TestCase):
+class AboutContactsTests(TestCase):
     def setUp(self):
         InfoPage.objects.create(
             slug="about",
             locale="uk",
             title="Про нас",
-            body="Що таке квест?\nЛінійний онлайн-квест.",
+            body=(
+                "Що таке квест?\n"
+                "Лінійний онлайн-квест.\n\n"
+                "Як проходити?\n"
+                "По черзі.\n\n"
+                "Відповідь?\n"
+                "Ключове слово.\n\n"
+                "Прогрес?\n"
+                "Зберігається."
+            ),
             is_published=True,
         )
         InfoPage.objects.create(
             slug="contacts",
             locale="uk",
             title="Контакти",
-            body="Як зв’язатися?\nНапишіть нам.\n\nEmail\ninfo@example.com",
+            body="",
             is_published=True,
         )
 
-    def test_about_renders_accordion(self):
+    def test_about_has_no_accordion(self):
         response = self.client.get(reverse("pages:about"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "qm-faq__item")
+        self.assertNotContains(response, "<details")
+        self.assertContains(response, "qm-about-card")
         self.assertContains(response, "Що таке квест?")
+        self.assertContains(response, 'class="qm-about-card')
 
-    def test_contacts_email_is_mailto(self):
+    def test_contacts_shows_test_details_and_socials(self):
         response = self.client.get(reverse("pages:contacts"))
         self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "<details")
         self.assertContains(response, "mailto:info@example.com")
-        self.assertContains(response, "Як зв’язатися?")
+        self.assertContains(response, "tel:+380930001122")
+        self.assertContains(response, "t.me/kvestmarafon")
+        self.assertContains(response, "instagram.com/kvestmarafon")
+        self.assertContains(response, "facebook.com/kvestmarafon")

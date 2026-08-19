@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.utils.translation import get_language, gettext as _
 
+from src.pages.contacts import contact_details
 from src.pages.faq import parse_faq_items
 from src.pages.models import InfoPage
 
@@ -30,13 +31,12 @@ def info_page(request, slug: str):
         context["page_lead"] = _("Короткі відповіді про участь, кімнати та прогрес.")
         template = "pages/accordion.html"
     elif slug == "about":
-        context["faq_items"] = parse_faq_items(page.body)
+        context["about_cards"] = parse_faq_items(page.body)
         context["page_lead"] = _("Хто ми і як влаштований квест.")
-        template = "pages/accordion.html"
+        template = "pages/about.html"
     elif slug == "contacts":
-        context["faq_items"] = parse_faq_items(page.body)
-        context["page_lead"] = _("Напишіть нам щодо участі, оплати чи доступу.")
-        template = "pages/accordion.html"
+        context["contact"] = contact_details(locale)
+        template = "pages/contacts.html"
     else:
         template = "pages/info.html"
     return render(request, template, context)

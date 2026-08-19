@@ -147,7 +147,111 @@
   color: var(--qm-accent);
 }
 
-.qm-faq__mail:focus-visible {
+.qm-faq__a--pad {
+  padding: 16px;
+}
+
+.qm-faq__item--static {
+  border-color: var(--qm-cyan-soft);
+  background: linear-gradient(
+    180deg,
+    rgba(58, 82, 122, 0.42) 0%,
+    rgba(6, 11, 24, 0.94) 100%
+  );
+}
+
+.qm-contact-row,
+a.qm-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--qm-line);
+  border-radius: var(--qm-radius);
+  background: linear-gradient(
+    180deg,
+    rgba(58, 82, 122, 0.42) 0%,
+    rgba(6, 11, 24, 0.94) 100%
+  );
+  color: inherit;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+a.qm-contact-row:hover,
+a.qm-contact-row:focus-visible {
+  border-color: var(--qm-cyan-soft);
+}
+
+a.qm-contact-row:focus-visible {
+  outline: 1px solid var(--qm-accent-soft);
+  outline-offset: 2px;
+}
+
+.qm-contact-row__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  color: var(--qm-cyan);
+  border: 1px solid var(--qm-cyan-soft);
+  border-radius: var(--qm-radius-sm);
+  background: rgba(8, 16, 36, 0.7);
+}
+
+.qm-contact-row__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.qm-contact-row__label {
+  font-size: 12px;
+  color: var(--qm-muted);
+}
+
+.qm-contact-row__value {
+  color: var(--qm-text);
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.qm-socials {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0 2px;
+}
+
+.qm-socials__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--qm-text);
+  border: 1px solid var(--qm-line);
+  border-radius: var(--qm-radius);
+  background: rgba(2, 6, 14, 0.55);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.qm-socials__link:hover,
+.qm-socials__link:focus-visible {
+  color: var(--qm-cyan);
+  border-color: var(--qm-cyan-soft);
+}
+
+.qm-socials__link:focus-visible {
   outline: 1px solid var(--qm-accent-soft);
   outline-offset: 2px;
 }
@@ -176,6 +280,16 @@
   .qm-faq__a {
     padding: 0 18px 18px;
     font-size: 15px;
+  }
+
+  .qm-faq__a--pad {
+    padding: 18px;
+  }
+
+  .qm-contact-row,
+  a.qm-contact-row {
+    min-height: 52px;
+    padding: 14px 16px;
   }
 }
 
