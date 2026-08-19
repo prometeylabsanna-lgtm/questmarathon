@@ -40,3 +40,19 @@
     if (event.key === "Escape" && !overlay.hidden) closeMenu();
   });
 })();
+
+(function () {
+  "use strict";
+
+  var items = document.querySelectorAll(".qm-faq__item");
+  if (!items.length) return;
+
+  items.forEach(function (item) {
+    item.addEventListener("toggle", function () {
+      if (!item.open) return;
+      items.forEach(function (other) {
+        if (other !== item) other.open = false;
+      });
+    });
+  });
+})();

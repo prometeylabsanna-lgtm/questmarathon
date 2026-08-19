@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.utils.translation import get_language, gettext as _
 
+from src.pages.faq import parse_faq_items
 from src.pages.models import InfoPage
 
 INFO_SLUGS = ("about", "faq", "contacts", "terms", "privacy")
@@ -23,8 +24,10 @@ def info_page(request, slug: str):
     else:
         locale = "uk"
     page = get_object_or_404(InfoPage, slug=slug, locale=locale, is_published=True)
-    return render(
-        request,
-        "pages/info.html",
-        {"page": page, "page_title": page.title},
-    )
+    context = {"page": page, "page_title": page.title}
+    if slug == "faq":
+        context["faq_items"] = parse_faq_items(page.body)
+        template = "pages/faq.html"
+    else:
+        template = "pages/info.html"
+    return render(request, template, context)

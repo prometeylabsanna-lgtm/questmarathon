@@ -389,3 +389,7 @@ msgstr "Проверить"
 #: templates/partials/footer.html:16 templates/partials/footer.html:18
 msgid "Розроблено командою PrometeyLabs"
 msgstr "Разработано командой PrometeyLabs"
+
+#: templates/pages/faq.html:12
+msgid "Короткі відповіді про участь, кімнати та прогрес."
+msgstr "Краткие ответы об участии, комнатах и прогрессе."
