@@ -77,6 +77,7 @@ html {
   height: var(--qm-header-h);
   position: relative;
   z-index: 2;
+  padding-left: max(16px, env(safe-area-inset-left));
 }
 
 a.qm-header__brand,
@@ -424,8 +425,8 @@ a.qm-header__brand:hover {
   line-height: 0;
   text-decoration: none;
   flex-shrink: 0;
-  width: 56px;
-  height: 28px;
+  width: 88px;
+  height: 42px;
   overflow: visible;
   position: relative;
 }
@@ -434,7 +435,7 @@ a.qm-header__brand:hover {
   position: absolute;
   left: 50%;
   top: 50%;
-  height: 52px;
+  height: 78px;
   width: auto;
   max-width: none;
   object-fit: contain;

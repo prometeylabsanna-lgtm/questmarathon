@@ -26,9 +26,9 @@
         <li{% if room.state == "locked" %} data-state="locked"{% elif room.state == "current" %} data-state="current"{% endif %}>
           <span>{{ room.number }}</span>
           {% if room.url %}
-            <a href="{{ room.url }}">{% trans "Кімната" %} {{ room.n }}</a>
+            <a href="{{ room.url }}">{% trans "Підказка" %} {{ room.n }}</a>
           {% else %}
-            <span>{% trans "Кімната" %} {{ room.n }}</span>
+            <span>{% trans "Підказка" %} {{ room.n }}</span>
           {% endif %}
           <span>{{ room.status_label }}</span>
         </li>

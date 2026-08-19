@@ -355,7 +355,7 @@
   .qm-body {
     --qm-pad-y: 14px;
     --qm-gap: 10px;
-    --qm-header-h: 46px;
+    --qm-header-h: 78px;
     --qm-pad-top: max(var(--qm-pad-y), env(safe-area-inset-top));
     padding: var(--qm-pad-top) max(20px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
     gap: var(--qm-gap);
@@ -390,12 +390,12 @@
   }
 
   .qm-logo {
-    width: 72px;
-    height: 34px;
+    width: 112px;
+    height: 52px;
   }
 
   .qm-logo__img {
-    height: 64px;
+    height: 96px;
   }
 
   .qm-brand-name {

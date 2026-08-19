@@ -5,16 +5,8 @@
 
 {% block content %}
 <section class="qm-quest">
-  <h1 class="qm-quest__title">{{ title }}</h1>
-
   <div class="qm-quest__frame">
     <div class="qm-quest__media">
-      <div class="qm-file-tags qm-file-tags--quest" role="list" aria-label="{% trans 'Тип завдання' %}">
-        <span class="qm-file-tag{% if room.media_type == 'pdf' or not room.media_type %} qm-file-tag--active{% endif %}" role="listitem">PDF</span>
-        <span class="qm-file-tag{% if room.media_type == 'png' %} qm-file-tag--active{% endif %}" role="listitem">PNG</span>
-        <span class="qm-file-tag{% if room.media_type == 'mp3' %} qm-file-tag--active{% endif %}" role="listitem">MP3</span>
-        <span class="qm-file-tag{% if room.media_type == 'mp4' %} qm-file-tag--active{% endif %}" role="listitem">MP4</span>
-      </div>
       {% if room.media_file %}
         {% if room.media_type == "png" %}
           <img class="qm-media-img" src="{{ room.media_file.url }}" alt="{{ title }}">

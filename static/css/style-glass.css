@@ -97,7 +97,7 @@
 .qm-header {
   position: relative;
   z-index: 2;
-  padding: 0 4px;
+  padding: 0 4px 0 max(18px, env(safe-area-inset-left));
   border: 0;
   background: transparent;
   flex-shrink: 0;
@@ -343,7 +343,7 @@
 
 @media (min-width: 768px) {
   .qm-header {
-    padding: 0 6px;
+    padding: 0 6px 0 32px;
   }
 
   .qm-footer {
@@ -365,7 +365,7 @@
 
 @media (max-width: 767px) {
   .qm-body {
-    --qm-header-h: 56px;
+    --qm-header-h: 72px;
     padding: 8px;
     padding-top: max(8px, env(safe-area-inset-top));
     padding-bottom: max(8px, env(safe-area-inset-bottom));
@@ -384,7 +384,7 @@
 
   .qm-header {
     gap: 6px;
-    padding: 0 2px;
+    padding: 0 2px 0 max(16px, env(safe-area-inset-left));
   }
 
   .qm-brand-name {
