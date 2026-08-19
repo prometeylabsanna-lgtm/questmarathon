@@ -378,16 +378,13 @@
   }
 
   .qm-langs {
-    gap: 4px;
-  }
-
-  .qm-langs__sep {
-    font-size: 15px;
+    gap: 8px;
   }
 
   .qm-lang {
-    font-size: 15px;
-    padding: 5px 7px;
+    width: 48px;
+    height: 32px;
+    font-size: 12px;
   }
 
   .qm-logo {

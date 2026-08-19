@@ -392,16 +392,13 @@
   }
 
   .qm-langs {
-    gap: 3px;
-  }
-
-  .qm-langs__sep {
-    font-size: 13px;
+    gap: 5px;
   }
 
   .qm-lang {
-    font-size: 12px;
-    padding: 4px 5px;
+    width: 40px;
+    height: 28px;
+    font-size: 11px;
   }
 
   .qm-burger {
