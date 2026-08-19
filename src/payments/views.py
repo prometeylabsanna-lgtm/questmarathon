@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def _get_profile(user) -> UserProfile:
-    profile, _ = UserProfile.objects.get_or_create(
+    profile, _created = UserProfile.objects.get_or_create(
         user=user,
         defaults={"full_name": user.get_username(), "phone": ""},
     )
@@ -53,7 +53,7 @@ def payment_start(request):
             request,
             "payments/start.html",
             {
-                "page_title": "Оплата",
+                "page_title": _("Оплата"),
                 "profile": profile,
                 "not_configured": True,
                 "dev_bypass": settings.DEBUG and settings.PAYMENTS_DEV_BYPASS,
@@ -90,7 +90,7 @@ def payment_start(request):
         request,
         "payments/checkout.html",
         {
-            "page_title": "Оплата",
+            "page_title": _("Оплата"),
             "profile": profile,
             "payment": payment,
             "liqpay_data": form_data["data"],
@@ -107,7 +107,7 @@ def payment_return(request):
         request,
         "payments/return.html",
         {
-            "page_title": "Статус оплати",
+            "page_title": _("Статус оплати"),
             "profile": profile,
         },
     )

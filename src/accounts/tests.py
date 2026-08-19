@@ -24,3 +24,16 @@ class RegisterTests(TestCase):
         user = User.objects.get(email="reg@example.com")
         self.assertTrue(hasattr(user, "profile"))
         self.assertEqual(user.username, "reg@example.com")
+
+
+class CabinetTests(TestCase):
+    def test_cabinet_renders_for_logged_in_user(self):
+        user = User.objects.create_user(
+            username="cab@example.com",
+            email="cab@example.com",
+            password="ComplexPass123!",
+        )
+        self.client.force_login(user)
+        response = self.client.get(reverse("accounts:cabinet"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Кабінет")

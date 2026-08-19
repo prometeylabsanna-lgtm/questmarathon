@@ -387,6 +387,14 @@
     padding: 0 2px 0 max(16px, env(safe-area-inset-left));
   }
 
+  .qm-footer {
+    padding: 10px 14px max(10px, env(safe-area-inset-bottom));
+  }
+
+  .qm-footer__credit {
+    font-size: 10px;
+  }
+
   .qm-brand-name {
     max-width: 100%;
   }

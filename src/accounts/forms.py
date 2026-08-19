@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from src.accounts.models import UserProfile
 
@@ -10,36 +11,37 @@ User = get_user_model()
 
 class EmailAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(
-        label="Email",
+        label=_("Email"),
         widget=forms.EmailInput(attrs={"autocomplete": "email", "class": "qm-input"}),
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["password"].label = _("Пароль")
         self.fields["password"].widget.attrs.update({"class": "qm-input"})
 
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(
-        label="Ел. пошта",
+        label=_("Ел. пошта"),
         widget=forms.EmailInput(attrs={"class": "qm-input", "autocomplete": "email"}),
     )
     full_name = forms.CharField(
-        label="Ім'я",
+        label=_("Ім'я"),
         max_length=150,
         widget=forms.TextInput(attrs={"class": "qm-input", "autocomplete": "name"}),
     )
     phone = forms.CharField(
-        label="Телефон",
+        label=_("Телефон"),
         max_length=32,
         widget=forms.TextInput(attrs={"class": "qm-input", "autocomplete": "tel"}),
     )
     consent_terms = forms.BooleanField(
-        label="Згода з користувацькою угодою",
+        label=_("Згода з користувацькою угодою"),
         widget=forms.CheckboxInput(attrs={"class": "qm-checkbox"}),
     )
     consent_age18 = forms.BooleanField(
-        label="Мені виповнилось 18 років",
+        label=_("Мені виповнилось 18 років"),
         widget=forms.CheckboxInput(attrs={"class": "qm-checkbox"}),
     )
 
@@ -49,14 +51,15 @@ class RegisterForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["password1"].label = _("Пароль")
         self.fields["password1"].widget.attrs.update({"class": "qm-input"})
         self.fields["password2"].widget.attrs.update({"class": "qm-input"})
-        self.fields["password2"].label = "Підтвердження пароля"
+        self.fields["password2"].label = _("Підтвердження пароля")
 
     def clean_email(self):
         email = self.cleaned_data["email"].strip().lower()
         if User.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError("Користувач з таким email уже існує.")
+            raise forms.ValidationError(_("Користувач з таким email уже існує."))
         return email
 
     def save(self, commit=True):

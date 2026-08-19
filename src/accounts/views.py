@@ -45,7 +45,7 @@ def register(request):
     return render(
         request,
         "accounts/register.html",
-        {"form": form, "page_title": "Реєстрація"},
+        {"form": form, "page_title": _("Реєстрація")},
     )
 
 
@@ -88,7 +88,7 @@ def _cabinet_game_cta(profile: UserProfile) -> tuple[str, str]:
 
 @login_required
 def cabinet(request):
-    profile, _ = UserProfile.objects.get_or_create(
+    profile, _created = UserProfile.objects.get_or_create(
         user=request.user,
         defaults={
             "full_name": request.user.get_username(),
@@ -97,7 +97,7 @@ def cabinet(request):
     )
     context = {
         "profile": profile,
-        "page_title": "Кабінет",
+        "page_title": _("Кабінет"),
         "rooms": [],
         "game_cta_label": "",
         "game_cta_url": "",

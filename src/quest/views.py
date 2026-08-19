@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.utils.translation import get_language
+from django.utils.translation import get_language, gettext as _
 from django.views.decorators.http import require_http_methods
 
 from src.accounts.models import UserProfile
@@ -9,7 +9,7 @@ from src.quest.models import QuestRoom, normalize_keyword
 
 
 def _get_profile(user) -> UserProfile:
-    profile, _ = UserProfile.objects.get_or_create(
+    profile, _created = UserProfile.objects.get_or_create(
         user=user,
         defaults={"full_name": user.get_username(), "phone": ""},
     )
@@ -33,7 +33,7 @@ def room(request, n: int):
         return render(
             request,
             "quest/denied.html",
-            {"page_title": "Немає доступу", "room_number": n},
+            {"page_title": _("Немає доступу"), "room_number": n},
             status=403,
         )
     quest_room = get_object_or_404(QuestRoom, order=n, is_active=True)
@@ -60,7 +60,7 @@ def check_keyword(request, n: int):
         return render(
             request,
             "quest/partials/keyword_result.html",
-            {"ok": False, "error": "Немає доступу"},
+            {"ok": False, "error": _("Немає доступу")},
             status=403,
         )
     quest_room = get_object_or_404(QuestRoom, order=n, is_active=True)
@@ -69,7 +69,7 @@ def check_keyword(request, n: int):
         return render(
             request,
             "quest/partials/keyword_result.html",
-            {"ok": False, "error": "Невірне ключове слово"},
+            {"ok": False, "error": _("Невірне ключове слово")},
         )
 
     if profile.current_level < n:
@@ -81,7 +81,7 @@ def check_keyword(request, n: int):
         response = render(
             request,
             "quest/partials/keyword_result.html",
-            {"ok": True, "redirect_url": redirect_url, "message": "Вірно!"},
+            {"ok": True, "redirect_url": redirect_url, "message": _("Вірно!")},
         )
         response["HX-Redirect"] = redirect_url
         return response
@@ -91,7 +91,7 @@ def check_keyword(request, n: int):
         "quest/partials/keyword_result.html",
         {
             "ok": True,
-            "message": "Квест пройдено. Усі кімнати доступні.",
+            "message": _("Квест пройдено. Усі кімнати доступні."),
             "redirect_url": reverse("accounts:cabinet"),
         },
     )

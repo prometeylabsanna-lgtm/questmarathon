@@ -1,0 +1,387 @@
+# Квест-марафон — Russian UI
+# Copyright (C) 2026
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Quest Marathon\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-19 13:54+0300\n"
+"PO-Revision-Date: 2026-08-19 13:54+0300\n"
+"Last-Translator: \n"
+"Language-Team: ru\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: src/accounts/forms.py:14
+msgid "Email"
+msgstr "Email"
+
+#: src/accounts/forms.py:20 src/accounts/forms.py:54
+msgid "Пароль"
+msgstr "Пароль"
+
+#: src/accounts/forms.py:26
+msgid "Ел. пошта"
+msgstr "Эл. почта"
+
+#: src/accounts/forms.py:30
+msgid "Ім'я"
+msgstr "Имя"
+
+#: src/accounts/forms.py:35
+msgid "Телефон"
+msgstr "Телефон"
+
+#: src/accounts/forms.py:40
+msgid "Згода з користувацькою угодою"
+msgstr "Согласие с пользовательским соглашением"
+
+#: src/accounts/forms.py:44
+msgid "Мені виповнилось 18 років"
+msgstr "Мне исполнилось 18 лет"
+
+#: src/accounts/forms.py:57
+msgid "Підтвердження пароля"
+msgstr "Подтверждение пароля"
+
+#: src/accounts/forms.py:62
+msgid "Користувач з таким email уже існує."
+msgstr "Пользователь с таким email уже существует."
+
+#: src/accounts/views.py:48 templates/accounts/login.html:28
+#: templates/accounts/register.html:8 templates/pages/home.html:51
+#: templates/partials/header.html:43 templates/partials/header.html:95
+msgid "Реєстрація"
+msgstr "Регистрация"
+
+#: src/accounts/views.py:58
+msgid "Пройдено"
+msgstr "Пройдено"
+
+#: src/accounts/views.py:62
+msgid "Поточна"
+msgstr "Текущая"
+
+#: src/accounts/views.py:66
+msgid "Заблоковано"
+msgstr "Заблокировано"
+
+#: src/accounts/views.py:83
+msgid "Почати гру"
+msgstr "Начать игру"
+
+#: src/accounts/views.py:85
+msgid "Переглянути кімнати"
+msgstr "Смотреть комнаты"
+
+#: src/accounts/views.py:86
+msgid "Продовжити гру"
+msgstr "Продолжить игру"
+
+#: src/accounts/views.py:100 templates/accounts/cabinet.html:6
+#: templates/partials/header.html:29 templates/partials/header.html:88
+msgid "Кабінет"
+msgstr "Кабинет"
+
+#: src/pages/views.py:13 templates/base.html:7 templates/partials/footer.html:7
+msgid "Квест-марафон"
+msgstr "Квест-марафон"
+
+#: src/payments/views.py:56 src/payments/views.py:93
+#: templates/payments/checkout.html:6 templates/payments/start.html:6
+msgid "Оплата"
+msgstr "Оплата"
+
+#: src/payments/views.py:110 templates/payments/return.html:6
+msgid "Статус оплати"
+msgstr "Статус оплаты"
+
+#: src/quest/views.py:36 src/quest/views.py:63 templates/quest/denied.html:5
+msgid "Немає доступу"
+msgstr "Нет доступа"
+
+#: src/quest/views.py:72
+msgid "Невірне ключове слово"
+msgstr "Неверное ключевое слово"
+
+#: src/quest/views.py:84
+msgid "Вірно!"
+msgstr "Верно!"
+
+#: src/quest/views.py:94
+msgid "Квест пройдено. Усі кімнати доступні."
+msgstr "Квест пройден. Все комнаты доступны."
+
+#: templates/accounts/cabinet.html:11 templates/payments/checkout.html:12
+#: templates/payments/return.html:14 templates/payments/start.html:12
+msgid "Не оплачено"
+msgstr "Не оплачено"
+
+#: templates/accounts/cabinet.html:13 templates/payments/checkout.html:10
+#: templates/payments/return.html:12 templates/payments/start.html:10
+msgid "Оплату обробляємо"
+msgstr "Оплату обрабатываем"
+
+#: templates/accounts/cabinet.html:15 templates/payments/return.html:10
+#, python-format
+msgid "Оплачено · Рівень %(level)s / 5"
+msgstr "Оплачено · Уровень %(level)s / 5"
+
+#: templates/accounts/cabinet.html:20 templates/payments/start.html:26
+msgid "Участь ще не оплачена. Оплатіть, щоб відкрити першу кімнату."
+msgstr "Участие ещё не оплачено. Оплатите, чтобы открыть первую комнату."
+
+#: templates/accounts/cabinet.html:22
+msgid "Оплату обробляємо. Це займає кілька хвилин — оновіть сторінку пізніше."
+msgstr "Оплату обрабатываем. Это займёт несколько минут — обновите страницу позже."
+
+#: templates/accounts/cabinet.html:29 templates/accounts/cabinet.html:31
+msgid "Підказка"
+msgstr "Подсказка"
+
+#: templates/accounts/cabinet.html:41
+msgid "Оплатити участь"
+msgstr "Оплатить участие"
+
+#: templates/accounts/cabinet.html:43
+msgid "Оплата в обробці…"
+msgstr "Оплата в обработке…"
+
+#: templates/accounts/cabinet.html:49 templates/partials/header.html:91
+msgid "Вийти"
+msgstr "Выйти"
+
+#: templates/accounts/email/password_reset_email.txt:2
+msgid ""
+"Ви отримали цей лист, бо запитали скидання пароля на сайті Квест-марафон."
+msgstr ""
+"Вы получили это письмо, потому что запросили сброс пароля на сайте «Квест-марафон»."
+
+#: templates/accounts/email/password_reset_email.txt:4
+msgid "Перейдіть за посиланням:"
+msgstr "Перейдите по ссылке:"
+
+#: templates/accounts/email/password_reset_email.txt:7
+msgid "Якщо ви не надсилали запит — проігноруйте цей лист."
+msgstr "Если вы не отправляли запрос — проигнорируйте это письмо."
+
+#: templates/accounts/email/password_reset_subject.txt:1
+msgid "Скидання пароля — Квест-марафон"
+msgstr "Сброс пароля — Квест-марафон"
+
+#: templates/accounts/login.html:8
+msgid "Вхід"
+msgstr "Вход"
+
+#: templates/accounts/login.html:21
+#: templates/accounts/password_reset_complete.html:7
+#: templates/accounts/register.html:30 templates/pages/home.html:52
+#: templates/partials/header.html:36 templates/partials/header.html:94
+msgid "Увійти"
+msgstr "Войти"
+
+#: templates/accounts/login.html:24
+msgid "Забули пароль?"
+msgstr "Забыли пароль?"
+
+#: templates/accounts/login.html:27
+msgid "Немає акаунта?"
+msgstr "Нет аккаунта?"
+
+#: templates/accounts/password_reset.html:6
+msgid "Відновлення пароля"
+msgstr "Восстановление пароля"
+
+#: templates/accounts/password_reset.html:7
+msgid "Надіслати"
+msgstr "Отправить"
+
+#: templates/accounts/password_reset_complete.html:6
+msgid "Пароль змінено"
+msgstr "Пароль изменён"
+
+#: templates/accounts/password_reset_confirm.html:6
+msgid "Новий пароль"
+msgstr "Новый пароль"
+
+#: templates/accounts/password_reset_confirm.html:7
+msgid "Зберегти"
+msgstr "Сохранить"
+
+#: templates/accounts/password_reset_done.html:6
+msgid "Лист надіслано"
+msgstr "Письмо отправлено"
+
+#: templates/accounts/password_reset_done.html:7
+msgid "Якщо email існує в системі, ви отримаєте посилання для скидання пароля."
+msgstr "Если email есть в системе, вы получите ссылку для сброса пароля."
+
+#: templates/accounts/register.html:26
+msgid "Перейти до оплати"
+msgstr "Перейти к оплате"
+
+#: templates/accounts/register.html:29
+msgid "Вже є акаунт?"
+msgstr "Уже есть аккаунт?"
+
+#: templates/errors/404.html:6
+msgid "Сторінку не знайдено."
+msgstr "Страница не найдена."
+
+#: templates/errors/404.html:7 templates/errors/500.html:7
+msgid "На головну"
+msgstr "На главную"
+
+#: templates/errors/500.html:6
+msgid "Сталася помилка сервера."
+msgstr "Произошла ошибка сервера."
+
+#: templates/pages/home.html:4
+msgid "Квест-марафон — головна"
+msgstr "Квест-марафон — главная"
+
+#: templates/pages/home.html:11
+msgid ""
+"П’ять кімнат, п’ять загадок. Один маршрут — без розвилок і підказок ззовні."
+msgstr ""
+"Пять комнат, пять загадок. Один маршрут — без развилок и подсказок со стороны."
+
+#: templates/pages/home.html:12
+msgid "Як проходить квест"
+msgstr "Как проходит квест"
+
+#: templates/pages/home.html:14
+msgid "Зареєструйтесь і оплатіть участь, щоб увійти в гру."
+msgstr "Зарегистрируйтесь и оплатите участие, чтобы войти в игру."
+
+#: templates/pages/home.html:15
+msgid "Йдіть по черзі: наступна кімната відкриється лише після попередньої."
+msgstr "Идите по порядку: следующая комната откроется только после предыдущей."
+
+#: templates/pages/home.html:16
+msgid "У кімнаті — загадка. Відповідь — ключове слово."
+msgstr "В комнате — загадка. Ответ — ключевое слово."
+
+#: templates/pages/home.html:17
+msgid "Прогрес зберігається: можна вийти і продовжити пізніше."
+msgstr "Прогресс сохраняется: можно выйти и продолжить позже."
+
+#: templates/pages/home.html:22
+msgid "Лічильник учасників"
+msgstr "Счётчик участников"
+
+#: templates/pages/home.html:32
+msgid "ЛІЧИЛЬНИК"
+msgstr "СЧЁТЧИК"
+
+#: templates/pages/home.html:49 templates/payments/checkout.html:25
+#: templates/payments/return.html:28 templates/payments/start.html:30
+#: templates/quest/denied.html:7 templates/quest/room.html:64
+msgid "До кабінету"
+msgstr "В кабинет"
+
+#: templates/partials/footer.html:3
+msgid "Юридичні посилання"
+msgstr "Юридические ссылки"
+
+#: templates/partials/footer.html:4 templates/partials/header.html:97
+msgid "Користувацька угода"
+msgstr "Пользовательское соглашение"
+
+#: templates/partials/footer.html:5 templates/partials/header.html:98
+msgid "Політика конфіденційності"
+msgstr "Политика конфиденциальности"
+
+#: templates/partials/header.html:19
+msgid "Основні сторінки"
+msgstr "Основные страницы"
+
+#: templates/partials/header.html:20 templates/partials/header.html:83
+msgid "Головна"
+msgstr "Главная"
+
+#: templates/partials/header.html:21 templates/partials/header.html:84
+msgid "Про нас"
+msgstr "О нас"
+
+#: templates/partials/header.html:22 templates/partials/header.html:85
+msgid "Контакти"
+msgstr "Контакты"
+
+#: templates/partials/header.html:23 templates/partials/header.html:86
+msgid "FAQ"
+msgstr "FAQ"
+
+#: templates/partials/header.html:27
+msgid "Акаунт"
+msgstr "Аккаунт"
+
+#: templates/partials/header.html:53
+msgid "Мова"
+msgstr "Язык"
+
+#: templates/partials/header.html:68
+msgid "Меню"
+msgstr "Меню"
+
+#: templates/partials/header.html:68
+msgid "Закрити меню"
+msgstr "Закрыть меню"
+
+#: templates/partials/header.html:82
+msgid "Головне меню"
+msgstr "Главное меню"
+
+#: templates/payments/checkout.html:16
+msgid "Зараз відкриється захищена сторінка оплати."
+msgstr "Сейчас откроется защищённая страница оплаты."
+
+#: templates/payments/checkout.html:21
+msgid "Оплатити"
+msgstr "Оплатить"
+
+#: templates/payments/return.html:19
+msgid "Оплату підтверджено."
+msgstr "Оплата подтверждена."
+
+#: templates/payments/return.html:21
+msgid "До першої кімнати"
+msgstr "В первую комнату"
+
+#: templates/payments/return.html:24
+msgid ""
+"Оплату обробляємо. Якщо гроші списались — доступ відкриється автоматично "
+"після webhook LiqPay."
+msgstr ""
+"Оплату обрабатываем. Если деньги списались, доступ откроется автоматически "
+"после подтверждения от LiqPay."
+
+#: templates/payments/start.html:17
+msgid "LiqPay ще не підключено (немає ключів у .env)."
+msgstr "LiqPay ещё не подключён (нет ключей в .env)."
+
+#: templates/payments/start.html:22
+msgid "Симулювати оплату (dev)"
+msgstr "Симулировать оплату (dev)"
+
+#: templates/quest/denied.html:6
+#, python-format
+msgid "Кімната %(room_number)s ще закрита. Пройдіть попередні завдання."
+msgstr "Комната %(room_number)s ещё закрыта. Пройдите предыдущие задания."
+
+#: templates/quest/room.html:51
+msgid "Кодове слово"
+msgstr "Кодовое слово"
+
+#: templates/quest/room.html:57
+msgid "кодове слово"
+msgstr "кодовое слово"
+
+#: templates/quest/room.html:63
+msgid "Перевірити"
+msgstr "Проверить"

@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render
-from django.utils.translation import get_language
+from django.utils.translation import get_language, gettext as _
 
 from src.pages.models import InfoPage
 
@@ -10,7 +10,7 @@ def home(request):
     return render(
         request,
         "pages/home.html",
-        {"page_title": "Квест-марафон"},
+        {"page_title": _("Квест-марафон")},
     )
 
 

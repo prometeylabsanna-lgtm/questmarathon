@@ -4,5 +4,19 @@
     <a class="qm-footer__link" href="{% url 'pages:terms' %}">{% trans "Користувацька угода" %}</a>
     <a class="qm-footer__link" href="{% url 'pages:privacy' %}">{% trans "Політика конфіденційності" %}</a>
   </nav>
-  <div class="qm-footer__copy">© {% now "Y" %} {% trans "Квест-марафон" %}</div>
+  <div class="qm-footer__meta">
+    <div class="qm-footer__copy">© {% now "Y" %} {% trans "Квест-марафон" %}</div>
+    <div class="qm-footer__attribution">
+      {% if request.resolver_match and request.resolver_match.namespace == "pages" and request.resolver_match.url_name == "home" %}
+        <a
+          class="qm-footer__link qm-footer__credit"
+          href="https://www.prometeylabs.com/"
+          rel="nofollow noopener noreferrer"
+          target="_blank"
+        >{% trans "Розроблено командою PrometeyLabs" %}</a>
+      {% else %}
+        <span class="qm-footer__credit">{% trans "Розроблено командою PrometeyLabs" %}</span>
+      {% endif %}
+    </div>
+  </div>
 </footer>
