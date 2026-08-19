@@ -136,18 +136,22 @@ class LegalPageTests(TestCase):
             is_published=True,
         )
 
-    def test_terms_renders_accordion(self):
+    def test_terms_renders_document_not_accordion(self):
         response = self.client.get(reverse("pages:terms"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "qm-faq--legal")
-        self.assertContains(response, "qm-faq__item")
+        self.assertContains(response, "qm-legal")
+        self.assertNotContains(response, "<details")
         self.assertContains(response, "1. Загальні положення")
         self.assertContains(response, "Ця угода регулює доступ.")
         self.assertContains(response, "Останнє оновлення: 19 серпня 2026 р.")
+        self.assertContains(response, reverse("pages:contacts"))
+        self.assertContains(response, reverse("pages:privacy"))
 
-    def test_privacy_renders_accordion(self):
+    def test_privacy_renders_document_not_accordion(self):
         response = self.client.get(reverse("pages:privacy"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "qm-faq--legal")
+        self.assertContains(response, "qm-legal")
+        self.assertNotContains(response, "<details")
         self.assertContains(response, "1. Хто обробляє дані")
         self.assertContains(response, "Володільцем є Організатор.")
+        self.assertContains(response, reverse("pages:terms"))

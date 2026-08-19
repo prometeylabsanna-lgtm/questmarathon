@@ -39,6 +39,14 @@ class QuestGateTests(TestCase):
                 keyword_normalized=f"key{n}",
             )
 
+    def test_room_required_hint_follows_ui_locale(self):
+        self.client.login(username="player@example.com", password="Secret123!")
+        uk = self.client.get(reverse("quest:room", kwargs={"n": 1}))
+        self.assertContains(uk, 'data-required-msg="Заповніть це поле."')
+        ru = self.client.get("/ru/quest/room/1/")
+        self.assertContains(ru, 'data-required-msg="Заполните это поле."')
+        self.assertNotContains(ru, 'data-required-msg="Заповніть це поле."')
+
     def test_skip_room_denied(self):
         self.client.login(username="player@example.com", password="Secret123!")
         response = self.client.get(reverse("quest:room", kwargs={"n": 3}))

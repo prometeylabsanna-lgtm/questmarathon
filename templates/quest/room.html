@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block body_class %}qm-body--quest{% endblock %}
 
@@ -54,9 +54,11 @@
             type="text"
             name="keyword"
             id="id_keyword"
+            lang="{{ LANGUAGE_CODE }}"
             placeholder="{% trans 'кодове слово' %}"
             autocomplete="off"
             required
+            data-required-msg="{% trans 'Заповніть це поле.' %}"
           >
         </div>
         <div class="qm-cta qm-quest__actions">
@@ -68,4 +70,8 @@
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/quest-keyword.js' %}" defer></script>
 {% endblock %}

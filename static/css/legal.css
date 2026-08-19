@@ -1,31 +1,51 @@
-/* Legal accordion — FAQ panel, longer copy, iOS Safari. */
+/* Legal document — contacts panel, volumetric buttons, iOS Safari. */
 
-.qm-frame.qm-faq--legal {
+.qm-frame.qm-legal {
+  align-items: center;
+  text-align: center;
   gap: 18px;
 }
 
-.qm-faq--legal .qm-faq__head {
-  width: min(100%, 40rem);
+.qm-legal .qm-faq__head,
+.qm-legal .qm-faq__panel {
+  width: min(100%, 34rem);
 }
 
-.qm-faq--legal .qm-faq__panel {
-  width: min(100%, 40rem);
-  max-width: 100%;
-}
-
-.qm-faq--legal .qm-faq__q {
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.qm-faq--legal .qm-faq__a {
-  padding: 0 16px 16px;
+.qm-legal__doc {
+  padding: 14px 16px 16px;
+  text-align: left;
+  border: 1px solid var(--qm-line);
+  border-radius: var(--qm-radius);
+  background: linear-gradient(
+    180deg,
+    rgba(58, 82, 122, 0.42) 0%,
+    rgba(6, 11, 24, 0.94) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 4px 0 rgba(2, 6, 14, 0.55),
+    0 10px 18px rgba(0, 0, 0, 0.28);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
-.qm-faq--legal .qm-faq__a p {
-  margin: 0 0 12px;
+.qm-legal__block + .qm-legal__block {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--qm-line);
+}
+
+.qm-legal__heading {
+  margin: 0 0 8px;
+  color: var(--qm-text);
+  font-family: var(--qm-font-head);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.qm-legal__text p {
+  margin: 0 0 10px;
   color: var(--qm-muted);
   font-size: 14px;
   line-height: 1.55;
@@ -33,52 +53,118 @@
   word-wrap: break-word;
 }
 
-.qm-faq--legal .qm-faq__a p:last-child {
+.qm-legal__text p:last-child {
   margin-bottom: 0;
 }
 
-.qm-faq--legal .qm-faq__a--pad {
-  padding: 16px;
+.qm-legal .qm-btn--block {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 48px;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.qm-legal .qm-btn--primary {
+  color: #1a1408;
+  background: linear-gradient(180deg, #ffe27a 0%, var(--qm-accent) 46%, #d4a41c 100%);
+  border-color: #c48f10;
+  border-top-color: #fff1a8;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    inset 0 -2px 3px rgba(110, 72, 0, 0.28),
+    0 4px 0 #b07d0c,
+    0 8px 16px rgba(0, 0, 0, 0.38),
+    0 0 18px rgba(248, 198, 46, 0.24);
+}
+
+.qm-legal .qm-btn--primary:hover,
+.qm-legal .qm-btn--primary:focus-visible {
+  background: linear-gradient(180deg, #ffea96 0%, #ffd040 46%, #e0b020 100%);
+  border-color: #d4a41c;
+  border-top-color: #fff8d0;
+}
+
+.qm-legal .qm-btn--primary:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 2px 5px rgba(80, 50, 0, 0.38),
+    0 1px 0 #b07d0c,
+    0 4px 10px rgba(0, 0, 0, 0.32);
+}
+
+.qm-legal .qm-btn--ghost {
+  background: linear-gradient(
+    180deg,
+    rgba(58, 82, 122, 0.42) 0%,
+    rgba(6, 11, 24, 0.94) 100%
+  );
+  border-color: var(--qm-line);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 4px 0 rgba(2, 6, 14, 0.7),
+    0 8px 14px rgba(0, 0, 0, 0.28);
+}
+
+.qm-legal .qm-btn--ghost:hover,
+.qm-legal .qm-btn--ghost:focus-visible {
+  border-color: var(--qm-cyan-soft);
+}
+
+.qm-legal .qm-btn--ghost:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.35),
+    0 1px 0 rgba(2, 6, 14, 0.7);
 }
 
 @media (min-width: 768px) {
-  .qm-frame.qm-faq--legal {
+  .qm-frame.qm-legal {
     gap: 22px;
   }
 
-  .qm-faq--legal .qm-faq__head,
-  .qm-faq--legal .qm-faq__panel {
-    width: min(100%, 42rem);
+  .qm-legal .qm-faq__head,
+  .qm-legal .qm-faq__panel {
+    width: min(100%, 36rem);
   }
 
-  .qm-faq--legal .qm-faq__a {
-    padding: 0 18px 18px;
+  .qm-legal__doc {
+    padding: 18px 20px 20px;
   }
 
-  .qm-faq--legal .qm-faq__a p {
+  .qm-legal__heading {
+    font-size: 16px;
+  }
+
+  .qm-legal__text p {
     font-size: 15px;
-    margin-bottom: 14px;
-  }
-
-  .qm-faq--legal .qm-faq__a--pad {
-    padding: 18px;
   }
 }
 
 @media (max-width: 767px) {
-  .qm-faq--legal .qm-faq__a {
-    padding: 0 12px 14px;
+  .qm-legal .qm-faq__panel {
+    padding: 8px;
+    gap: 8px;
   }
 
-  .qm-faq--legal .qm-faq__a p {
-    font-size: 14px;
+  .qm-legal__doc {
+    padding: 12px 12px 14px;
   }
 }
 
 @supports (padding: max(0px)) {
-  .qm-frame.qm-faq--legal {
+  .qm-frame.qm-legal {
     padding-left: max(18px, env(safe-area-inset-left));
     padding-right: max(18px, env(safe-area-inset-right));
     padding-bottom: max(28px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qm-legal .qm-btn--primary:active,
+  .qm-legal .qm-btn--ghost:active {
+    transform: none;
   }
 }

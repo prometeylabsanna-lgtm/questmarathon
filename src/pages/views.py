@@ -40,8 +40,14 @@ def info_page(request, slug: str):
         template = "pages/contacts.html"
     elif slug in ("terms", "privacy"):
         parsed = parse_legal_document(page.body)
-        context["faq_items"] = parsed["items"]
+        context["legal_sections"] = parsed["items"]
         context["page_lead"] = parsed["updated"]
+        if slug == "terms":
+            context["legal_alt_url"] = "pages:privacy"
+            context["legal_alt_label"] = _("Політика конфіденційності")
+        else:
+            context["legal_alt_url"] = "pages:terms"
+            context["legal_alt_label"] = _("Користувацька угода")
         template = "pages/legal.html"
     else:
         template = "pages/info.html"

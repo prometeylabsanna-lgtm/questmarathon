@@ -382,6 +382,10 @@ msgstr "Кодовое слово"
 msgid "кодове слово"
 msgstr "кодовое слово"
 
+#: templates/quest/room.html
+msgid "Заповніть це поле."
+msgstr "Заполните это поле."
+
 #: templates/quest/room.html:63
 msgid "Перевірити"
 msgstr "Проверить"
