@@ -1,4 +1,4 @@
-/* About cards: smooth cycle + phone-ring on scroll, swipe and tap. */
+/* About cards: 3D turn on tap/click only. Mobile = vertical snap. */
 (function () {
   "use strict";
 
@@ -9,89 +9,98 @@
   if (!cards.length) return;
 
   var index = 0;
-  var locked = false;
-  var scrolling = false;
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var pointer = { x: 0, y: 0, moved: false };
-  var scrollMs = 1600;
-  var stepMs = reduced ? 80 : 2400;
+
+  function canHover() {
+    return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  }
 
   function isCompact() {
     return window.matchMedia("(max-width: 767px)").matches;
   }
 
-  function easeInOut(t) {
-    return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  function turn(card) {
+    if (reduced || !card) return;
+    if (card.classList.contains("is-turning")) return;
+    card.classList.add("is-turning");
+    window.clearTimeout(card._turnTimer);
+    card._turnTimer = window.setTimeout(function () {
+      card.classList.remove("is-turning");
+    }, isCompact() ? 1800 : 1100);
   }
 
-  function scrollToCard(card) {
-    if (!card) return;
-    if (reduced) {
-      card.scrollIntoView({ inline: "center", block: "nearest", behavior: "auto" });
+  function setActive(next, withTurn) {
+    var last = cards.length - 1;
+    var wrapped = Math.max(0, Math.min(last, next));
+    if (wrapped === index) {
+      if (withTurn) turn(cards[index]);
       return;
     }
-    var start = track.scrollLeft;
-    var box = card.getBoundingClientRect();
-    var trackBox = track.getBoundingClientRect();
-    var target = start + (box.left + box.width / 2) - (trackBox.left + trackBox.width / 2);
-    var max = track.scrollWidth - track.clientWidth;
-    if (target < 0) target = 0;
-    if (target > max) target = max;
-    var delta = target - start;
-    if (Math.abs(delta) < 1) return;
-    scrolling = true;
-    var t0 = window.performance.now();
-    function frame(now) {
-      var p = Math.min(1, (now - t0) / scrollMs);
-      track.scrollLeft = start + delta * easeInOut(p);
-      if (p < 1) {
-        window.requestAnimationFrame(frame);
-        return;
-      }
-      scrolling = false;
-    }
-    window.requestAnimationFrame(frame);
-  }
-
-  function ring(card) {
-    if (reduced || !card) return;
-    card.classList.remove("is-ringing");
-    void card.offsetWidth;
-    card.classList.add("is-ringing");
-  }
-
-  function setActive(next, shouldScroll, forceRing) {
-    var wrapped = (next + cards.length) % cards.length;
-    var changed = wrapped !== index;
     index = wrapped;
     cards.forEach(function (card, n) {
       card.classList.toggle("is-active", n === index);
-      if (n !== index) card.classList.remove("is-ringing");
+      card.classList.toggle("is-left", !isCompact() && n < index);
+      card.classList.toggle("is-right", !isCompact() && n > index);
+      if (n !== index) {
+        window.clearTimeout(card._turnTimer);
+        card.classList.remove("is-turning");
+      }
     });
-    if (changed || forceRing) {
-      ring(cards[index]);
-    }
-    if (shouldScroll && isCompact()) {
-      scrollToCard(cards[index]);
-    }
+    if (!withTurn) return;
+    window.setTimeout(function () {
+      turn(cards[index]);
+    }, isCompact() ? 220 : 140);
   }
 
-  function step(dir) {
-    if (locked) return;
-    locked = true;
-    setActive(index + dir, true, false);
-    window.setTimeout(function () {
-      locked = false;
-    }, stepMs);
+  function mostVisibleCard() {
+    var lastIndex = cards.length - 1;
+    var max = track.scrollHeight - track.clientHeight;
+    if (track.scrollTop <= 12) return 0;
+    if (max > 0 && track.scrollTop >= max - 28) return lastIndex;
+
+    var root = track.getBoundingClientRect();
+    var lastRect = cards[lastIndex].getBoundingClientRect();
+    var lastSeen = Math.min(lastRect.bottom, root.bottom) - Math.max(lastRect.top, root.top);
+    if (lastSeen > lastRect.height * 0.5) return lastIndex;
+
+    var best = 0;
+    var bestDist = Infinity;
+    cards.forEach(function (card, n) {
+      var dist = Math.abs(card.getBoundingClientRect().top - (root.top + 10));
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = n;
+      }
+    });
+    return best;
+  }
+
+  function pickMobileCard() {
+    var lastIndex = cards.length - 1;
+    var raw = mostVisibleCard();
+    if (raw > index + 1) return index + 1;
+    if (raw < index - 1) return index - 1;
+    if (raw === lastIndex) return raw;
+    if (raw > index) {
+      var root = track.getBoundingClientRect();
+      var chosen = cards[raw].getBoundingClientRect();
+      if (chosen.top > root.top + root.height * 0.3) return index;
+    }
+    return raw;
   }
 
   cards.forEach(function (card, n) {
-    card.addEventListener("animationend", function (event) {
-      if (event.animationName !== "qm-about-ring") return;
-      card.classList.remove("is-ringing");
+    card.addEventListener("mouseenter", function () {
+      if (!canHover()) return;
+      window.clearTimeout(card._hoverTimer);
+      card._hoverTimer = window.setTimeout(function () {
+        setActive(n, true);
+      }, 90);
     });
-    card.addEventListener("webkitAnimationEnd", function () {
-      card.classList.remove("is-ringing");
+
+    card.addEventListener("mouseleave", function () {
+      window.clearTimeout(card._hoverTimer);
     });
 
     card.addEventListener("pointerdown", function (event) {
@@ -108,13 +117,13 @@
 
     card.addEventListener("pointerup", function () {
       if (pointer.moved) return;
-      setActive(n, true, true);
+      setActive(n, true);
     });
 
     card.addEventListener("keydown", function (event) {
       if (event.key !== "Enter" && event.key !== " ") return;
       event.preventDefault();
-      setActive(n, true, true);
+      setActive(n, true);
     });
 
     if (!card.hasAttribute("tabindex")) {
@@ -122,50 +131,37 @@
     }
   });
 
-  track.addEventListener(
-    "wheel",
-    function (event) {
-      var dy = event.deltaY;
-      var dx = event.deltaX;
-      if (Math.abs(dy) < 8 && Math.abs(dx) < 8) return;
-      event.preventDefault();
-      step(dy + dx > 0 ? 1 : -1);
-    },
-    { passive: false }
-  );
-
-  track.addEventListener("keydown", function (event) {
-    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-      event.preventDefault();
-      step(1);
-    }
-    if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-      event.preventDefault();
-      step(-1);
-    }
-  });
-
-  var scrollTimer;
+  var ticking = false;
+  var switchLock = false;
+  var settleTimer;
   track.addEventListener(
     "scroll",
     function () {
-      if (!isCompact() || scrolling || locked) return;
-      window.clearTimeout(scrollTimer);
-      scrollTimer = window.setTimeout(function () {
-        var mid = track.getBoundingClientRect().left + track.clientWidth / 2;
-        var best = index;
-        var bestDist = Infinity;
-        cards.forEach(function (card, n) {
-          var box = card.getBoundingClientRect();
-          var dist = Math.abs(box.left + box.width / 2 - mid);
-          if (dist < bestDist) {
-            bestDist = dist;
-            best = n;
-          }
-        });
-        setActive(best, false, false);
-      }, 90);
+      if (!isCompact()) return;
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(function () {
+        switchLock = false;
+        var settled = mostVisibleCard();
+        if (settled === index) return;
+        setActive(settled, settled > index);
+      }, 280);
+
+      if (ticking || switchLock) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        ticking = false;
+        if (switchLock) return;
+        var next = pickMobileCard();
+        if (next === index) return;
+        switchLock = true;
+        setActive(next, next > index);
+        window.setTimeout(function () {
+          switchLock = false;
+        }, reduced ? 80 : 680);
+      });
     },
     { passive: true }
   );
+
+  setActive(0, false);
 })();
