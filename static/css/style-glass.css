@@ -392,12 +392,12 @@
   }
 
   .qm-langs {
-    gap: 5px;
+    gap: 0;
   }
 
   .qm-lang {
-    width: 40px;
-    height: 28px;
+    --qm-lang-w: 42px;
+    --qm-lang-h: 30px;
     font-size: 11px;
   }
 

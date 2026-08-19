@@ -23,7 +23,8 @@
   --qm-pad-y: 10px;
   --qm-gap: 8px;
   --qm-lang-blue: #1e4fa3;
-  --qm-lang-piece: #ffffff;
+  --qm-lang-w: 40px;
+  --qm-lang-h: 28px;
 }
 
 * { box-sizing: border-box; }
@@ -525,8 +526,9 @@ a.qm-header__brand:hover {
 .qm-langs {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 0;
   padding: 0;
+  overflow: visible;
 }
 
 .qm-lang,
@@ -535,8 +537,8 @@ a.qm-header__brand:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 26px;
+  width: var(--qm-lang-w);
+  height: var(--qm-lang-h);
   flex-shrink: 0;
   font-family: var(--qm-font-head);
   font-size: 10px;
@@ -547,9 +549,14 @@ a.qm-header__brand:hover {
   -webkit-text-decoration: none;
   line-height: 1;
   text-transform: uppercase;
+  overflow: visible;
   -webkit-tap-highlight-color: transparent;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
+}
+
+.qm-lang + .qm-lang {
+  margin-left: calc(var(--qm-lang-w) * -0.24);
 }
 
 .qm-lang__piece {
@@ -558,14 +565,14 @@ a.qm-header__brand:hover {
   width: 100%;
   height: 100%;
   display: block;
-  fill: var(--qm-lang-piece);
+  overflow: visible;
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+  stroke-linecap: round;
   pointer-events: none;
-  transition: fill 0.18s ease;
-}
-
-.qm-lang--flip .qm-lang__piece {
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
+  transition: fill 0.18s ease, stroke 0.18s ease;
 }
 
 .qm-lang__code {
@@ -576,13 +583,18 @@ a.qm-header__brand:hover {
 
 .qm-lang:hover .qm-lang__piece,
 .qm-lang:focus-visible .qm-lang__piece {
-  fill: #f3e3a8;
+  stroke: #f3e3a8;
+}
+
+.qm-lang--active {
+  z-index: 1;
 }
 
 .qm-lang--active .qm-lang__piece,
 .qm-lang--active:hover .qm-lang__piece,
 .qm-lang--active:focus-visible .qm-lang__piece {
   fill: var(--qm-accent);
+  stroke: var(--qm-accent);
 }
 
 .qm-burger {
