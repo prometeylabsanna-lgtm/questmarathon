@@ -59,14 +59,26 @@
     return isCompact() && frame ? frame : track;
   }
 
+  function lastCardInView(root) {
+    var lastIndex = cards.length - 1;
+    var rect = cards[lastIndex].getBoundingClientRect();
+    var seen = Math.min(rect.bottom, root.bottom) - Math.max(rect.top, root.top);
+    if (seen < 40) return false;
+    return (
+      rect.top < root.top + root.height * 0.64 ||
+      seen >= rect.height * 0.42
+    );
+  }
+
   function focusCard() {
     var host = scrollHost();
     var lastIndex = cards.length - 1;
     var max = host.scrollHeight - host.clientHeight;
-    if (host.scrollTop <= 16) return 0;
-    if (max > 0 && host.scrollTop >= max - 20) return lastIndex;
-
     var root = host.getBoundingClientRect();
+    if (host.scrollTop <= 16) return 0;
+    if (max > 0 && host.scrollTop >= max - 72) return lastIndex;
+    if (index >= lastIndex - 1 && lastCardInView(root)) return lastIndex;
+
     var bandTop = root.top + Math.min(56, root.height * 0.1);
     var bandBottom = root.top + root.height * 0.48;
     var best = 0;
@@ -148,9 +160,14 @@
     setActive(next, true);
     window.setTimeout(function () {
       switchLock = false;
-      if (!userScrolling) return;
       var again = focusCard();
-      if (again !== index) stepMobileToward(again);
+      if (again === index) return;
+      var lastIndex = cards.length - 1;
+      var edgeSnap =
+        (again === lastIndex && index === lastIndex - 1) ||
+        (again === 0 && index === 1);
+      if (!userScrolling && !edgeSnap) return;
+      stepMobileToward(again);
     }, lockMs);
   }
 
@@ -168,6 +185,19 @@
         if (target === index) return;
         stepMobileToward(target);
       });
+    },
+    { passive: true }
+  );
+
+  host.addEventListener(
+    "scrollend",
+    function () {
+      if (!isCompact() || switchLock) return;
+      var target = focusCard();
+      var lastIndex = cards.length - 1;
+      if (target !== lastIndex && target !== 0) return;
+      if (target === index) return;
+      stepMobileToward(target);
     },
     { passive: true }
   );
