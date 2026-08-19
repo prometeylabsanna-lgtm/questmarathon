@@ -55,6 +55,29 @@ class QuestGateTests(TestCase):
         self.assertEqual(self.profile.current_level, 2)
         self.assertIn("HX-Redirect", response.headers)
 
+    def test_wrong_keyword_uses_russian_when_prefixed(self):
+        self.client.login(username="player@example.com", password="Secret123!")
+        response = self.client.post(
+            "/ru/quest/room/2/check/",
+            {"keyword": "wrong"},
+        )
+        self.assertEqual(response.status_code, 200)
+        body = response.content.decode()
+        self.assertIn("Неверное ключевое слово", body)
+        self.assertNotIn("Невірне ключове слово", body)
+
+    def test_wrong_keyword_uses_russian_from_htmx_current_url(self):
+        self.client.login(username="player@example.com", password="Secret123!")
+        response = self.client.post(
+            reverse("quest_api:check", kwargs={"n": 2}),
+            {"keyword": "wrong"},
+            headers={"HX-Current-URL": "http://testserver/ru/quest/room/2/"},
+        )
+        self.assertEqual(response.status_code, 200)
+        body = response.content.decode()
+        self.assertIn("Неверное ключевое слово", body)
+        self.assertNotIn("Невірне ключове слово", body)
+
 
 class CounterTests(TestCase):
     def test_paid_only(self):

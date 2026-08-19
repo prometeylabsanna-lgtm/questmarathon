@@ -385,3 +385,7 @@ msgstr "кодовое слово"
 #: templates/quest/room.html:63
 msgid "Перевірити"
 msgstr "Проверить"
+
+#: templates/partials/footer.html:16 templates/partials/footer.html:18
+msgid "Розроблено командою PrometeyLabs"
+msgstr "Разработано командой PrometeyLabs"

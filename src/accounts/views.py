@@ -15,12 +15,17 @@ from django.views.decorators.http import require_http_methods
 
 from src.accounts.forms import EmailAuthenticationForm, RegisterForm
 from src.accounts.models import UserProfile
+from src.core.i18n import activate_ui_language
 
 
 class QuestLoginView(LoginView):
     template_name = "accounts/login.html"
     authentication_form = EmailAuthenticationForm
     redirect_authenticated_user = True
+
+    def dispatch(self, request, *args, **kwargs):
+        activate_ui_language(request)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy("accounts:cabinet")
@@ -32,6 +37,7 @@ class QuestLogoutView(LogoutView):
 
 @require_http_methods(["GET", "POST"])
 def register(request):
+    activate_ui_language(request)
     if request.user.is_authenticated:
         return redirect("accounts:cabinet")
     form = RegisterForm(request.POST or None)
@@ -88,6 +94,7 @@ def _cabinet_game_cta(profile: UserProfile) -> tuple[str, str]:
 
 @login_required
 def cabinet(request):
+    activate_ui_language(request)
     profile, _created = UserProfile.objects.get_or_create(
         user=request.user,
         defaults={

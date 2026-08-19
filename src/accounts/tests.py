@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import translation
 
 User = get_user_model()
 
@@ -34,6 +35,32 @@ class CabinetTests(TestCase):
             password="ComplexPass123!",
         )
         self.client.force_login(user)
-        response = self.client.get(reverse("accounts:cabinet"))
+        with translation.override("uk"):
+            response = self.client.get(reverse("accounts:cabinet"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Кабінет")
+
+
+class RegisterLocaleTests(TestCase):
+    def test_register_validation_errors_in_russian(self):
+        response = self.client.post(
+            "/ru/auth/register/",
+            {
+                "email": "taken@example.com",
+                "full_name": "",
+                "phone": "",
+                "password1": "1",
+                "password2": "2",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        body = response.content.decode()
+        self.assertNotIn("обов", body.lower())
+        self.assertNotIn("існує", body.lower())
+        self.assertNotIn("паролі", body.lower())
+        self.assertTrue(
+            "обязательн" in body.lower()
+            or "не совпадают" in body.lower()
+            or "слишком" in body.lower()
+            or "коротк" in body.lower()
+        )

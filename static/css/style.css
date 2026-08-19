@@ -536,7 +536,8 @@ a.qm-header__brand:hover {
 }
 
 .qm-lang,
-.qm-lang:visited {
+.qm-lang:visited,
+button.qm-lang {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -544,6 +545,13 @@ a.qm-header__brand:hover {
   width: var(--qm-lang-w);
   height: var(--qm-lang-h);
   flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
   font-family: var(--qm-font-head);
   font-size: 12px;
   font-weight: 700;
@@ -555,6 +563,7 @@ a.qm-header__brand:hover {
   text-transform: uppercase;
   overflow: visible;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
 }

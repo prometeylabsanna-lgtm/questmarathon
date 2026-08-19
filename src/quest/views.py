@@ -5,6 +5,7 @@ from django.utils.translation import get_language, gettext as _
 from django.views.decorators.http import require_http_methods
 
 from src.accounts.models import UserProfile
+from src.core.i18n import activate_ui_language
 from src.quest.models import QuestRoom, normalize_keyword
 
 
@@ -56,6 +57,7 @@ def room(request, n: int):
 @require_http_methods(["POST"])
 def check_keyword(request, n: int):
     profile = _get_profile(request.user)
+    activate_ui_language(request, profile)
     if not profile.is_paid or not _can_access_room(profile, n):
         return render(
             request,

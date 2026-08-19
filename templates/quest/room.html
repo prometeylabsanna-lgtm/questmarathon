@@ -33,8 +33,8 @@
       <form
         class="qm-quest__form"
         method="post"
-        action="{% url 'quest_api:check' n=room_number %}"
-        hx-post="{% url 'quest_api:check' n=room_number %}"
+        action="{% url 'quest:check' n=room_number %}"
+        hx-post="{% url 'quest:check' n=room_number %}"
         hx-target="#qm-keyword-result"
         hx-swap="innerHTML"
       >
