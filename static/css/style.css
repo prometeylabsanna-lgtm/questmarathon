@@ -22,9 +22,12 @@
   --qm-radius-sm: 6px;
   --qm-pad-y: 10px;
   --qm-gap: 8px;
-  --qm-lang-blue: #1e4fa3;
-  --qm-lang-w: 40px;
-  --qm-lang-h: 28px;
+  --qm-header-h: 38px;
+  --qm-logo-w: 88px;
+  --qm-lang-blue: #153a8c;
+  --qm-lang-blue-on-dark: #7ec8ff;
+  --qm-lang-w: 56px;
+  --qm-lang-h: 38px;
 }
 
 * { box-sizing: border-box; }
@@ -489,6 +492,7 @@ a.qm-header__brand:hover {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+  overflow: visible;
 }
 
 .qm-auth-icons {
@@ -541,8 +545,8 @@ a.qm-header__brand:hover {
   height: var(--qm-lang-h);
   flex-shrink: 0;
   font-family: var(--qm-font-head);
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 800;
   letter-spacing: 0.04em;
   color: var(--qm-lang-blue);
   text-decoration: none;
@@ -556,7 +560,7 @@ a.qm-header__brand:hover {
 }
 
 .qm-lang + .qm-lang {
-  margin-left: calc(var(--qm-lang-w) * -0.24);
+  margin-left: calc(var(--qm-lang-w) * -0.42);
 }
 
 .qm-lang__piece {
@@ -578,7 +582,13 @@ a.qm-header__brand:hover {
 .qm-lang__code {
   position: relative;
   z-index: 1;
+  color: var(--qm-lang-blue-on-dark);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+}
+
+.qm-lang--active .qm-lang__code {
   color: var(--qm-lang-blue);
+  text-shadow: none;
 }
 
 .qm-lang:hover .qm-lang__piece,

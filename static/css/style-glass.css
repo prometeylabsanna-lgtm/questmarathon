@@ -396,9 +396,9 @@
   }
 
   .qm-lang {
-    --qm-lang-w: 42px;
-    --qm-lang-h: 30px;
-    font-size: 11px;
+    --qm-lang-w: 58px;
+    --qm-lang-h: 40px;
+    font-size: 14px;
   }
 
   .qm-burger {

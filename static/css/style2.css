@@ -382,9 +382,9 @@
   }
 
   .qm-lang {
-    --qm-lang-w: 50px;
-    --qm-lang-h: 34px;
-    font-size: 12px;
+    --qm-lang-w: 72px;
+    --qm-lang-h: 48px;
+    font-size: 16px;
   }
 
   .qm-logo {
