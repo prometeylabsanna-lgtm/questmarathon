@@ -23,7 +23,7 @@
     {% for item in about_cards %}
       <article class="qm-about-card{% if forloop.first %} is-active{% endif %}">
         <h2 class="qm-about-card__title">{{ item.question }}</h2>
-        <p class="qm-about-card__text">{{ item.answer }}</p>
+        <p class="qm-about-card__text">{{ item.answer|linebreaksbr }}</p>
       </article>
     {% endfor %}
   </div>

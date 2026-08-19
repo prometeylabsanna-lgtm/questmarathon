@@ -69,7 +69,7 @@ class AboutContactsTests(TestCase):
         self.assertNotContains(response, "<details")
         self.assertContains(response, "qm-about-card")
         self.assertContains(response, "Що таке квест?")
-        self.assertContains(response, 'class="qm-about-card')
+        self.assertContains(response, "Лінійний онлайн-квест.")
 
     def test_contacts_shows_test_details_and_socials(self):
         response = self.client.get(reverse("pages:contacts"))
