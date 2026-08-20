@@ -5,6 +5,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{% block title %}{% if page_title %}{{ page_title }} — {% endif %}{% trans "Квест-марафон" %}{% endblock %}</title>
+  <link rel="icon" href="{% static 'images/favicon.svg' %}?v=8" type="image/svg+xml">
+  <link rel="icon" href="{% static 'images/favicon.ico' %}?v=8" sizes="any">
+  <link rel="icon" type="image/png" href="{% static 'images/favicon-32.png' %}?v=8" sizes="32x32">
+  <link rel="icon" type="image/png" href="{% static 'images/favicon-48.png' %}?v=8" sizes="48x48">
+  <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}?v=8">
   <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="stylesheet" href="{% static 'css/style2.css' %}">

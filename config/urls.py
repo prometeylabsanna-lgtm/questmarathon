@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 
 from src.core.views import health
 from src.pages.sitemaps import InfoPageSitemap, StaticViewSitemap
@@ -20,6 +20,11 @@ urlpatterns = [
     path("api/v1/quest/", include("src.quest.api_urls")),
     path("api/v1/payment/", include("src.payments.api_urls")),
     path("i18n/", include("django.conf.urls.i18n")),
+    path(
+        "favicon.ico",
+        RedirectView.as_view(url="/static/images/favicon.ico", permanent=False),
+        name="favicon",
+    ),
     path(
         "robots.txt",
         TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),

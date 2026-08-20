@@ -720,8 +720,15 @@ button.qm-lang {
   min-height: 0;
   align-self: stretch;
   box-sizing: border-box;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* Hide classic horizontal scrollbar arrows (1px overflow artifact). */
+.qm-frame::-webkit-scrollbar:horizontal {
+  height: 0;
 }
 
 h1, h2,

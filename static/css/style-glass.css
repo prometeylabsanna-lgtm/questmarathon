@@ -8,18 +8,18 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(1.5px 1.5px at 12% 18%, rgba(255, 255, 255, 0.85) 50%, transparent 51%),
-    radial-gradient(1px 1px at 28% 42%, rgba(255, 255, 255, 0.7) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 44% 12%, rgba(255, 255, 255, 0.75) 50%, transparent 51%),
-    radial-gradient(1px 1px at 62% 28%, rgba(255, 255, 255, 0.55) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 78% 16%, rgba(255, 255, 255, 0.8) 50%, transparent 51%),
-    radial-gradient(1px 1px at 88% 38%, rgba(255, 255, 255, 0.6) 50%, transparent 51%),
-    radial-gradient(1px 1px at 18% 68%, rgba(255, 255, 255, 0.55) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 36% 82%, rgba(255, 255, 255, 0.7) 50%, transparent 51%),
-    radial-gradient(1px 1px at 54% 74%, rgba(255, 255, 255, 0.5) 50%, transparent 51%),
-    radial-gradient(1px 1px at 72% 88%, rgba(255, 255, 255, 0.65) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 92% 72%, rgba(255, 255, 255, 0.75) 50%, transparent 51%),
-    radial-gradient(1px 1px at 8% 48%, rgba(255, 255, 255, 0.45) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 12% 18%, rgba(255, 255, 255, 0.55) 50%, transparent 51%),
+    radial-gradient(1px 1px at 28% 42%, rgba(255, 255, 255, 0.4) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 44% 12%, rgba(255, 255, 255, 0.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 62% 28%, rgba(255, 255, 255, 0.35) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 78% 16%, rgba(255, 255, 255, 0.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 88% 38%, rgba(255, 255, 255, 0.35) 50%, transparent 51%),
+    radial-gradient(1px 1px at 18% 58%, rgba(255, 255, 255, 0.3) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 36% 62%, rgba(255, 255, 255, 0.35) 50%, transparent 51%),
+    radial-gradient(1px 1px at 54% 52%, rgba(255, 255, 255, 0.28) 50%, transparent 51%),
+    radial-gradient(1px 1px at 72% 48%, rgba(255, 255, 255, 0.32) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 92% 42%, rgba(255, 255, 255, 0.4) 50%, transparent 51%),
+    radial-gradient(1px 1px at 8% 48%, rgba(255, 255, 255, 0.28) 50%, transparent 51%),
     radial-gradient(ellipse 55% 40% at 20% 30%, rgba(40, 20, 80, 0.18), transparent 70%),
     radial-gradient(ellipse 50% 35% at 78% 22%, rgba(16, 60, 100, 0.14), transparent 70%),
     radial-gradient(ellipse 60% 45% at 55% 85%, rgba(10, 40, 80, 0.12), transparent 70%),
@@ -31,10 +31,10 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(1px 1px at 22% 55%, rgba(255, 255, 255, 0.55) 50%, transparent 51%),
-    radial-gradient(1px 1px at 66% 48%, rgba(255, 255, 255, 0.4) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 48% 32%, rgba(180, 230, 255, 0.7) 50%, transparent 51%);
-  opacity: 0.85;
+    radial-gradient(1px 1px at 22% 40%, rgba(255, 255, 255, 0.35) 50%, transparent 51%),
+    radial-gradient(1px 1px at 66% 34%, rgba(255, 255, 255, 0.28) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 48% 24%, rgba(180, 230, 255, 0.45) 50%, transparent 51%);
+  opacity: 0.7;
   animation: qm-star-twinkle 7s ease-in-out infinite alternate;
 }
 
@@ -54,7 +54,7 @@
   overflow-x: hidden;
   overflow-y: hidden;
   border-radius: var(--qm-radius);
-  background: rgba(4, 8, 18, 0.72);
+  background: rgba(4, 8, 18, 0.94);
   border: 1px solid var(--qm-cyan-soft);
   box-shadow:
     0 0 0 1px rgba(94, 200, 255, 0.05) inset,
@@ -86,7 +86,7 @@
 
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .qm-shell {
-    background: rgba(4, 10, 22, 0.55);
+    background: rgba(4, 10, 22, 0.88);
     -webkit-backdrop-filter: blur(12px) saturate(1.1);
     backdrop-filter: blur(12px) saturate(1.1);
   }
@@ -107,14 +107,16 @@
 .qm-footer {
   padding: 10px 16px;
   border-top: 1px solid var(--qm-cyan-soft);
-  background: rgba(2, 6, 14, 0.4);
+  background: #02060e;
   margin: 0;
 }
 
 .qm-main {
   flex: 1;
   min-height: 0;
+  min-width: 0;
   background: transparent;
+  overflow-x: hidden;
 }
 
 /* ---------- Shared glass panels ---------- */
@@ -122,8 +124,10 @@
 .qm-frame {
   border: 0;
   border-radius: 0;
-  background: rgba(4, 10, 22, 0.32);
+  background: rgba(4, 10, 22, 0.72);
   box-shadow: none;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
