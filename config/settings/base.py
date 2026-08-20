@@ -73,18 +73,22 @@ DATABASES = {
 
 _database_url = config("DATABASE_URL", default="")
 if _database_url.startswith("postgres"):
-    # postgres://user:pass@host:5432/db
+    # postgres://user:pass@host:5432/db?sslmode=require (Neon / Vercel)
     import urllib.parse as _urlparse
 
     _parsed = _urlparse.urlparse(_database_url)
+    _qs = _urlparse.parse_qs(_parsed.query)
+    _sslmode = (_qs.get("sslmode") or ["require"])[0]
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
             "NAME": _parsed.path.lstrip("/"),
-            "USER": _parsed.username,
-            "PASSWORD": _parsed.password,
+            "USER": _urlparse.unquote(_parsed.username or ""),
+            "PASSWORD": _urlparse.unquote(_parsed.password or ""),
             "HOST": _parsed.hostname,
             "PORT": _parsed.port or 5432,
+            "OPTIONS": {"sslmode": _sslmode},
+            "CONN_MAX_AGE": config("DB_CONN_MAX_AGE", default=0, cast=int),
         }
     }
 

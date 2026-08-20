@@ -6,6 +6,7 @@ __pycache__/
 .env
 .env.*
 !.env.example
+.vercel/
 *.pem
 *.key
 credentials.json
@@ -20,3 +21,4 @@ htmlcov/
 .mypy_cache/
 .idea/
 .vscode/
+.tmp-*
