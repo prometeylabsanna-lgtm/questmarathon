@@ -465,6 +465,7 @@ a.qm-header__brand:hover {
 }
 
 .qm-nav__link {
+  position: relative;
   color: var(--qm-muted);
   text-decoration: none;
   font-size: 14px;
@@ -472,9 +473,9 @@ a.qm-header__brand:hover {
   letter-spacing: 0.08em;
   white-space: nowrap;
   padding: 4px 0;
-  border-bottom: 1px solid transparent;
+  border: 0;
   text-transform: uppercase;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .qm-nav__link:hover {
@@ -483,7 +484,18 @@ a.qm-header__brand:hover {
 
 .qm-nav__link--active {
   color: var(--qm-accent);
-  border-bottom-color: var(--qm-accent);
+}
+
+/* Underline only when active — no transparent border (1px GPU artifact). */
+.qm-nav__link--active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--qm-accent);
+  pointer-events: none;
 }
 
 .qm-header__actions {
