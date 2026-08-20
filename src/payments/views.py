@@ -38,7 +38,7 @@ def payment_start(request):
         return redirect("quest:room", n=1)
 
     if request.method == "POST" and request.POST.get("action") == "dev_bypass":
-        if settings.DEBUG and settings.PAYMENTS_DEV_BYPASS:
+        if settings.PAYMENTS_DEV_BYPASS:
             with transaction.atomic():
                 Payment.objects.create(
                     user=request.user,
@@ -60,7 +60,7 @@ def payment_start(request):
                 "page_title": _("Оплата"),
                 "profile": profile,
                 "not_configured": True,
-                "dev_bypass": settings.DEBUG and settings.PAYMENTS_DEV_BYPASS,
+                "dev_bypass": settings.PAYMENTS_DEV_BYPASS,
             },
         )
 

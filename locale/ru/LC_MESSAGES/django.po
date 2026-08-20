@@ -361,13 +361,29 @@ msgstr ""
 "Оплату обрабатываем. Если деньги списались, доступ откроется автоматически "
 "после подтверждения от LiqPay."
 
+#: templates/payments/start.html:13
+msgid "Оплатіть участь, щоб відкрити першу кімнату."
+msgstr "Оплатите участие, чтобы открыть первую комнату."
+
+#: templates/payments/partials/status_row.html:11
+msgid "Статус"
+msgstr "Статус"
+
+#: templates/payments/partials/status_row.html:17
+msgid "Оплачено"
+msgstr "Оплачено"
+
+#: templates/payments/checkout.html:18
+msgid "Карткові дані обробляє LiqPay, а не Організатор."
+msgstr "Карточные данные обрабатывает LiqPay, а не Организатор."
+
 #: templates/payments/start.html:17
 msgid "LiqPay ще не підключено (немає ключів у .env)."
 msgstr "LiqPay ещё не подключён (нет ключей в .env)."
 
 #: templates/payments/start.html:22
-msgid "Симулювати оплату (dev)"
-msgstr "Симулировать оплату (dev)"
+msgid "Симулювати оплату (тест)"
+msgstr "Симулировать оплату (тест)"
 
 #: templates/quest/denied.html:6
 #, python-format

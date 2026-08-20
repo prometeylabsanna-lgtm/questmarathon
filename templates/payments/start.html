@@ -22,7 +22,7 @@
         <form method="post" class="qm-pay__form">
           {% csrf_token %}
           <input type="hidden" name="action" value="dev_bypass">
-          <button type="submit" class="qm-btn qm-btn--primary qm-btn--block">{% trans "Симулювати оплату (dev)" %}</button>
+          <button type="submit" class="qm-btn qm-btn--primary qm-btn--block">{% trans "Симулювати оплату (тест)" %}</button>
         </form>
       {% endif %}
     {% else %}
