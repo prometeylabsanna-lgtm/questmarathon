@@ -179,7 +179,22 @@
 
 .qm-media-placeholder__lock {
   display: inline-flex;
-  color: rgba(94, 200, 255, 0.55);
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  filter: drop-shadow(0 0 8px rgba(94, 200, 255, 0.3))
+    drop-shadow(0 0 14px rgba(200, 80, 255, 0.18));
+}
+
+.qm-media-placeholder__lock-img {
+  display: block;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
 }
 
 .qm-media-placeholder__label {
@@ -236,6 +251,12 @@
     -webkit-transform: none;
     transform: none;
     pointer-events: auto;
+  }
+
+  .qm-media-placeholder__lock,
+  .qm-media-placeholder__lock-img {
+    width: 56px;
+    height: 56px;
   }
 
   .qm-quest__input {

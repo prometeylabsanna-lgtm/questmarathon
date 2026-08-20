@@ -50,17 +50,37 @@
       {% endif %}
     </div>
 
-    <nav class="qm-langs" aria-label="{% trans 'Мова' %}">
-      <a href="{{ language_urls.uk }}" hreflang="uk" class="qm-lang{% if LANGUAGE_CODE == 'uk' %} qm-lang--active{% endif %}"{% if LANGUAGE_CODE == 'uk' %} aria-current="true"{% endif %}>
-        <svg class="qm-lang__piece" viewBox="0 0 56 32" overflow="visible" aria-hidden="true" focusable="false">
-          <path d="M12 5h32a4 4 0 0 1 4 4v3.8a3.2 3.2 0 0 1 0 6.4V23a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4v-3.8a3.2 3.2 0 1 0 0-6.4V9a4 4 0 0 1 4-4z"/>
-        </svg>
+    <nav
+      class="qm-langs{% if LANGUAGE_CODE == 'ru' %} qm-langs--ru{% else %} qm-langs--uk{% endif %}"
+      aria-label="{% trans 'Мова' %}"
+      data-active="{{ LANGUAGE_CODE }}"
+    >
+      <span class="qm-langs__glow" aria-hidden="true"></span>
+      <img
+        class="qm-langs__art"
+        src="{% static 'images/lang-switcher.png' %}"
+        srcset="{% static 'images/lang-switcher.png' %} 1x, {% static 'images/lang-switcher@2x.png' %} 2x"
+        width="78"
+        height="24"
+        alt=""
+        decoding="async"
+        aria-hidden="true"
+      >
+      <span class="qm-langs__dim" aria-hidden="true"></span>
+      <a
+        href="{{ language_urls.uk }}"
+        hreflang="uk"
+        class="qm-lang qm-lang--ua{% if LANGUAGE_CODE == 'uk' %} qm-lang--active{% endif %}"
+        {% if LANGUAGE_CODE == 'uk' %}aria-current="true"{% endif %}
+      >
         <span class="qm-lang__code">UA</span>
       </a>
-      <a href="{{ language_urls.ru }}" hreflang="ru" class="qm-lang{% if LANGUAGE_CODE == 'ru' %} qm-lang--active{% endif %}"{% if LANGUAGE_CODE == 'ru' %} aria-current="true"{% endif %}>
-        <svg class="qm-lang__piece" viewBox="0 0 56 32" overflow="visible" aria-hidden="true" focusable="false">
-          <path d="M12 5h32a4 4 0 0 1 4 4v3.8a3.2 3.2 0 0 1 0 6.4V23a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4v-3.8a3.2 3.2 0 1 0 0-6.4V9a4 4 0 0 1 4-4z"/>
-        </svg>
+      <a
+        href="{{ language_urls.ru }}"
+        hreflang="ru"
+        class="qm-lang qm-lang--ru{% if LANGUAGE_CODE == 'ru' %} qm-lang--active{% endif %}"
+        {% if LANGUAGE_CODE == 'ru' %}aria-current="true"{% endif %}
+      >
         <span class="qm-lang__code">RU</span>
       </a>
     </nav>

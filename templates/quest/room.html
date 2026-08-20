@@ -17,13 +17,18 @@
         {% elif room.media_type == "mp4" %}
           <video class="qm-media-video" controls src="{% url 'quest:room_media' n=room_number %}"></video>
         {% endif %}
-      {% else %}
-        <div class="qm-media-placeholder" role="img" aria-label="{{ room.get_media_type_display|default:'PDF' }}">
+      {% elif not room.media_type or room.media_type == "png" %}
+        <div class="qm-media-placeholder" role="img" aria-label="{% trans 'Зображення ще не додано' %}">
           <span class="qm-media-placeholder__lock" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="5" y="11" width="14" height="10" rx="2"/>
-              <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
-            </svg>
+            <img
+              class="qm-media-placeholder__lock-img"
+              src="{% static 'images/icon-lock-neon.png' %}"
+              srcset="{% static 'images/icon-lock-neon.png' %} 1x, {% static 'images/icon-lock-neon@2x.png' %} 2x"
+              width="48"
+              height="48"
+              alt=""
+              decoding="async"
+            >
           </span>
         </div>
       {% endif %}

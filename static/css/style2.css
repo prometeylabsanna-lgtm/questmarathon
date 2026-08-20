@@ -451,12 +451,8 @@ a.qm-footer__credit:focus-visible {
 
   .qm-langs {
     gap: 0;
-  }
-
-  .qm-lang {
-    --qm-lang-w: 72px;
-    --qm-lang-h: 48px;
-    font-size: 14px;
+    --qm-langs-w: 94px;
+    --qm-langs-h: 30px;
   }
 
   .qm-logo {
@@ -538,7 +534,11 @@ a.qm-footer__credit:focus-visible {
   }
 
   .qm-preview__media {
-    object-position: 30% 50%;
+    object-position: 42% 50%;
+    -webkit-transform: scale(1.18);
+    transform: scale(1.18);
+    -webkit-transform-origin: 42% 50%;
+    transform-origin: 42% 50%;
   }
 
   .qm-intro__content { padding: 28px 26px; }

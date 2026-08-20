@@ -26,8 +26,8 @@
   --qm-logo-w: 88px;
   --qm-lang-blue: #153a8c;
   --qm-lang-blue-on-dark: #7ec8ff;
-  --qm-lang-w: 56px;
-  --qm-lang-h: 38px;
+  --qm-lang-w: 64px;
+  --qm-lang-h: 40px;
 }
 
 * { box-sizing: border-box; }
@@ -81,7 +81,7 @@ html {
   overflow: visible;
   height: var(--qm-header-h);
   position: relative;
-  z-index: 2;
+  z-index: 8;
   padding-left: max(16px, env(safe-area-inset-left));
 }
 
@@ -528,15 +528,97 @@ a.qm-header__brand:hover {
 }
 
 .qm-langs {
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
+  --qm-langs-w: 78px;
+  --qm-langs-h: 24px;
+  position: relative;
+  display: inline-block;
+  width: var(--qm-langs-w);
+  height: var(--qm-langs-h);
   padding: 0;
   overflow: visible;
   flex: 0 0 auto;
-  isolation: isolate;
-  position: relative;
   z-index: 3;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Soft ambient backlight (autumn-card style): feathered, near the edge */
+.qm-langs__glow {
+  position: absolute;
+  top: 50%;
+  width: 48%;
+  height: 88%;
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  opacity: 0.85;
+  -webkit-filter: blur(9px);
+  filter: blur(9px);
+}
+
+.qm-langs--uk .qm-langs__glow {
+  left: 3%;
+  background: rgba(94, 200, 255, 0.8);
+  box-shadow:
+    0 0 14px 4px rgba(94, 200, 255, 0.45),
+    0 0 24px 8px rgba(94, 200, 255, 0.25);
+}
+
+.qm-langs--ru .qm-langs__glow {
+  left: auto;
+  right: 3%;
+  background: rgba(220, 100, 255, 0.8);
+  box-shadow:
+    0 0 14px 4px rgba(220, 100, 255, 0.45),
+    0 0 24px 8px rgba(220, 100, 255, 0.25);
+}
+
+.qm-langs__art {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-filter: brightness(1.1) contrast(1.04) saturate(1.1);
+  filter: brightness(1.1) contrast(1.04) saturate(1.1);
+  transition: filter 0.18s ease, -webkit-filter 0.18s ease;
+}
+
+/* Soft dim on inactive half — feathered toward the join, no hard square */
+.qm-langs__dim {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 54%;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(2, 6, 14, 0.55);
+}
+
+.qm-langs--uk .qm-langs__dim {
+  left: auto;
+  right: 0;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 18%, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 18%, #000 100%);
+}
+
+.qm-langs--ru .qm-langs__dim {
+  left: 0;
+  right: auto;
+  -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 18%, #000 100%);
+  mask-image: linear-gradient(to left, transparent 0%, #000 18%, #000 100%);
+}
+
+.qm-langs:has(.qm-lang:hover) .qm-langs__art,
+.qm-langs:has(.qm-lang:focus-visible) .qm-langs__art {
+  -webkit-filter: brightness(1.18) contrast(1.06) saturate(1.14);
+  filter: brightness(1.18) contrast(1.06) saturate(1.14);
 }
 
 .qm-lang,
@@ -544,18 +626,10 @@ a.qm-header__brand:hover {
 a.qm-lang,
 a.qm-lang:visited,
 button.qm-lang {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  width: var(--qm-lang-w, 56px);
-  height: 38px;
-  height: var(--qm-lang-h, 38px);
-  min-width: 56px;
-  min-width: var(--qm-lang-w, 56px);
-  flex: 0 0 auto;
-  flex-shrink: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 52%;
   margin: 0;
   padding: 0;
   border: 0;
@@ -563,79 +637,41 @@ button.qm-lang {
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  font-family: var(--qm-font-head);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--qm-lang-blue);
+  color: transparent;
   text-decoration: none;
   -webkit-text-decoration: none;
-  line-height: 1;
-  text-transform: uppercase;
-  overflow: visible;
   z-index: 2;
-  pointer-events: auto;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
+  border-radius: 10px;
 }
 
-.qm-lang + .qm-lang {
-  margin-left: calc(56px * -0.285);
-  margin-left: calc(var(--qm-lang-w, 56px) * -0.285);
+.qm-lang--ua {
+  left: 0;
+  right: auto;
 }
 
-.qm-lang__piece {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  overflow: visible;
-  fill: none;
-  stroke: #ffffff;
-  stroke-width: 1.25;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-  pointer-events: none;
-  transition: fill 0.18s ease, stroke 0.18s ease;
+.qm-lang--ru {
+  left: auto;
+  right: 0;
 }
 
 .qm-lang__code {
-  position: relative;
-  z-index: 1;
-  color: var(--qm-lang-blue-on-dark);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
-  padding: 0 2px;
-  pointer-events: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.qm-lang--active .qm-lang__code {
-  color: var(--qm-lang-blue);
-  text-shadow: none;
-}
-
-.qm-lang:hover .qm-lang__piece,
-.qm-lang:focus-visible .qm-lang__piece {
-  stroke: #f3e3a8;
-}
-
-.qm-lang--active {
-  z-index: 1;
-}
-
-.qm-lang:hover,
 .qm-lang:focus-visible {
-  z-index: 3;
-}
-
-.qm-lang--active .qm-lang__piece,
-.qm-lang--active:hover .qm-lang__piece,
-.qm-lang--active:focus-visible .qm-lang__piece {
-  fill: var(--qm-accent);
-  stroke: var(--qm-accent);
+  outline: 2px solid rgba(94, 200, 255, 0.65);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
 .qm-burger {
@@ -897,23 +933,16 @@ h3, h4, h5, h6 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 22% 48%;
+  object-position: 38% 52%;
+  -webkit-transform: scale(1.28);
+  transform: scale(1.28);
+  -webkit-transform-origin: 38% 52%;
+  transform-origin: 38% 52%;
+  -webkit-filter: brightness(1.12) contrast(1.06) saturate(1.08);
+  filter: brightness(1.12) contrast(1.06) saturate(1.08);
   pointer-events: none;
   -webkit-user-select: none;
   user-select: none;
-}
-
-.qm-preview__scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(13, 27, 51, 0.18) 0%,
-    rgba(13, 27, 51, 0.55) 45%,
-    rgba(13, 27, 51, 0.92) 100%
-  );
 }
 
 .qm-intro__content {
