@@ -1,0 +1,15 @@
+.venv
+venv
+__pycache__
+*.pyc
+.git
+.env
+.env.*
+!.env.example
+.vercel
+media
+staticfiles
+db.sqlite3
+.tmp-*
+docs
+Deliverable format details
