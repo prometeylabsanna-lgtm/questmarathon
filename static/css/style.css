@@ -451,13 +451,14 @@ a.qm-header__brand:hover {
   position: absolute;
   left: 50%;
   top: 50%;
-  height: 78px;
-  width: auto;
+  width: 100%;
+  height: auto;
+  max-height: 42px;
   max-width: none;
   object-fit: contain;
   display: block;
-  -webkit-transform: translate(-50%, -50%) rotate(90deg);
-  transform: translate(-50%, -50%) rotate(90deg);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
 .qm-nav--desktop {
