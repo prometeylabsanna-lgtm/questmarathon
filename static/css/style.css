@@ -54,16 +54,23 @@ html {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  height: 100vh;
-  height: 100dvh;
-  height: -webkit-fill-available;
-  min-height: 100vh;
-  min-height: 100dvh;
-  min-height: -webkit-fill-available;
+  /* Fill viewport via html% chain — avoids Windows 100vh overflow
+     (classic scrollbar, DPI scaling, browser chrome). No min-height:100vh:
+     it stacked with padding and forced document scroll. */
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
   overflow-x: hidden;
   overflow-y: hidden;
   position: relative;
   isolation: isolate;
+}
+
+@supports (height: 100dvh) {
+  .qm-body {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
 }
 
 .qm-body--home {

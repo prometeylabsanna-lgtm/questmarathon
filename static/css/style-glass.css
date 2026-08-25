@@ -342,6 +342,7 @@
     margin-top: auto;
     align-self: center;
     margin-inline: auto;
+    flex-shrink: 0;
   }
 }
 

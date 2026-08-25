@@ -3,10 +3,13 @@
 .qm-frame.qm-faq.qm-auth {
   align-items: center;
   justify-content: center;
+  justify-content: safe center;
   text-align: center;
   gap: 8px;
   padding: 10px 14px 8px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .qm-auth .qm-faq__panel {
@@ -167,6 +170,7 @@
   min-height: 42px;
   height: 42px;
   margin-top: 2px;
+  flex-shrink: 0;
   box-sizing: border-box;
   padding-top: 0;
   padding-bottom: 0;
@@ -262,6 +266,7 @@
   .qm-frame.qm-faq.qm-auth {
     padding-block: 8px;
     gap: 8px;
+    justify-content: flex-start;
   }
 
   .qm-auth .qm-title {
@@ -276,6 +281,7 @@
 
   .qm-auth .qm-btn--block {
     height: 42px;
+    flex-shrink: 0;
   }
 }
 
