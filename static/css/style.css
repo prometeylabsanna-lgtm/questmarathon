@@ -942,6 +942,15 @@ h3, h4, h5, h6 {
 }
 
 .qm-preview {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.qm-preview__stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -1040,8 +1049,9 @@ h3, h4, h5, h6 {
   gap: 20px;
   min-width: 0;
   max-width: 100%;
-  height: 100%;
+  flex: 0 0 auto;
   box-sizing: border-box;
+  background: transparent;
 }
 
 .qm-preview__copy {

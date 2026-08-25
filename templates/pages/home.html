@@ -33,15 +33,17 @@
   </div>
 
   <section class="qm-preview">
-    <img
-      class="qm-preview__media"
-      src="{% static 'images/home-preview.jpg' %}"
-      alt=""
-      width="1024"
-      height="768"
-      decoding="async"
-      aria-hidden="true"
-    >
+    <div class="qm-preview__stage">
+      <img
+        class="qm-preview__media"
+        src="{% static 'images/home-preview.jpg' %}"
+        alt=""
+        width="1024"
+        height="768"
+        decoding="async"
+        aria-hidden="true"
+      >
+    </div>
     <div class="qm-preview__content">
       <div class="qm-cta">
         {% if user.is_authenticated %}
