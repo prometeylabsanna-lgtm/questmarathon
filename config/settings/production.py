@@ -8,6 +8,7 @@ SECRET_KEY = config("SECRET_KEY")
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
+USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -25,3 +26,13 @@ EMAIL_BACKEND = config(
     "EMAIL_BACKEND",
     default="src.mailings.backends.ResendEmailBackend",
 )
+
+# Hosting Ukraine proxies all traffic to Gunicorn (no nginx for static).
+MIDDLEWARE = ["whitenoise.middleware.WhiteNoiseMiddleware"] + MIDDLEWARE  # noqa: F405
+
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}

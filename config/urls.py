@@ -1,10 +1,10 @@
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views.generic import RedirectView, TemplateView
+from django.views.static import serve
 
 from src.core.views import health
 from src.pages.sitemaps import InfoPageSitemap, StaticViewSitemap
@@ -50,5 +50,12 @@ urlpatterns += i18n_patterns(
 handler404 = "src.core.views.handler404"
 handler500 = "src.core.views.handler500"
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Media via Django (DEBUG=False too): Hosting Ukraine proxies all traffic to Gunicorn.
+# Do not use django.conf.urls.static.static() — it is a no-op when DEBUG is False.
+urlpatterns += [
+    re_path(
+        r"^media/(?P<path>.*)$",
+        serve,
+        {"document_root": settings.MEDIA_ROOT},
+    ),
+]
