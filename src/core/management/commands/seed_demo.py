@@ -1,5 +1,7 @@
+from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from decouple import config
 
 from src.core.block_defaults import (
     BLOCK_CONTENT_TYPES,
@@ -212,6 +214,38 @@ def migrate_infopage_if_needed() -> None:
                 )
 
 
+def seed_staff_user(stdout=None) -> str:
+    """
+    Create staff superuser from env if missing.
+    Requires ADMIN_PASSWORD. Does not overwrite an existing user's password
+    unless ADMIN_PASSWORD_FORCE=True.
+    """
+    password = config("ADMIN_PASSWORD", default="")
+    if not password:
+        return "skipped (set ADMIN_PASSWORD to bootstrap)"
+    username = config("ADMIN_USERNAME", default="admin")
+    email = config("ADMIN_EMAIL", default="admin@example.com")
+    force = config("ADMIN_PASSWORD_FORCE", default=False, cast=bool)
+    User = get_user_model()
+    user = User.objects.filter(username=username).first()
+    if user is None:
+        User.objects.create_superuser(username=username, email=email, password=password)
+        return f"created {username}"
+    changed = False
+    if not user.is_staff or not user.is_superuser or not user.is_active:
+        user.is_staff = True
+        user.is_superuser = True
+        user.is_active = True
+        changed = True
+    if force:
+        user.set_password(password)
+        changed = True
+    if changed:
+        user.save()
+        return f"updated {username}"
+    return f"exists {username}"
+
+
 class Command(BaseCommand):
     help = "Idempotent seed: rooms, SiteSettings, SiteBlocks, Legal/FAQ/About CMS"
 
@@ -220,6 +254,8 @@ class Command(BaseCommand):
         validate_registry()
         SiteStats.get_solo()
         SiteSettings.get_solo()
+
+        self.stdout.write(f"staff user: {seed_staff_user()}")
 
         for order, title_uk, title_ru, keyword in ROOMS:
             obj, created = QuestRoom.objects.get_or_create(
