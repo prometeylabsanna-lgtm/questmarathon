@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from django.urls import reverse_lazy
+from django.conf import settings
 
 
 @dataclass(frozen=True)
@@ -193,12 +193,18 @@ def iter_section_blocks(section: ContentSection) -> list[tuple[str, str]]:
     return list(section.blocks)
 
 
+def _admin_link(model_name: str) -> str:
+    # Plain str — Vercel JSON-encodes UNFOLD settings; reverse_lazy breaks deploy.
+    prefix = f"/{getattr(settings, 'ADMIN_URL', 'kvest-cms/').strip('/')}/"
+    return f"{prefix}core/{model_name}/"
+
+
 def build_content_sidebar_items() -> list[dict]:
     return [
         {
             "title": section.sidebar_title or section.title,
             "icon": section.sidebar_icon,
-            "link": reverse_lazy(f"admin:core_{section.admin_model_name}_changelist"),
+            "link": _admin_link(section.admin_model_name),
         }
         for section in CONTENT_SECTIONS
     ]

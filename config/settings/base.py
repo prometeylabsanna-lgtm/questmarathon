@@ -1,7 +1,6 @@
 from pathlib import Path
 
 from decouple import Csv, config
-from django.urls import reverse_lazy
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -11,8 +10,17 @@ DEBUG = False
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 
-# Custom admin path (no trailing leading slash in path(); trailing slash required).
+# Custom admin path (trailing slash required). Plain strings only — no reverse_lazy
+# in settings (Vercel settings introspection JSON-encodes UNFOLD and would resolve
+# reverse_lazy before apps are ready).
 ADMIN_URL = config("ADMIN_URL", default="kvest-cms/")
+_ADMIN_PREFIX = f"/{ADMIN_URL.strip('/')}/"
+
+
+def admin_path(model_path: str) -> str:
+    """Build absolute admin changelist path, e.g. admin_path('core/sitesettings/')."""
+    return f"{_ADMIN_PREFIX}{model_path.lstrip('/')}"
+
 
 INSTALLED_APPS = [
     "unfold",
@@ -158,7 +166,7 @@ CONTENT_SECURITY_POLICY = {
         "frame-ancestors": ("'none'",),
     },
     # Admin is staff-only; Unfold Alpine + TinyMCE need eval/inline.
-    "EXCLUDE_URL_PREFIXES": (f"/{ADMIN_URL.lstrip('/')}",),
+    "EXCLUDE_URL_PREFIXES": (_ADMIN_PREFIX,),
 }
 
 TINYMCE_DEFAULT_CONFIG = {
@@ -185,12 +193,12 @@ UNFOLD = {
                     {
                         "title": "Налаштування сайту",
                         "icon": "settings",
-                        "link": reverse_lazy("admin:core_sitesettings_changelist"),
+                        "link": admin_path("core/sitesettings/"),
                     },
                     {
                         "title": "Статистика",
                         "icon": "bar_chart",
-                        "link": reverse_lazy("admin:core_sitestats_changelist"),
+                        "link": admin_path("core/sitestats/"),
                     },
                 ],
             },
@@ -206,17 +214,17 @@ UNFOLD = {
                     {
                         "title": "Картки «Про нас»",
                         "icon": "view_carousel",
-                        "link": reverse_lazy("admin:pages_aboutcard_changelist"),
+                        "link": admin_path("pages/aboutcard/"),
                     },
                     {
                         "title": "FAQ пункти",
                         "icon": "quiz",
-                        "link": reverse_lazy("admin:pages_faqitem_changelist"),
+                        "link": admin_path("pages/faqitem/"),
                     },
                     {
                         "title": "Юридичні сторінки",
                         "icon": "gavel",
-                        "link": reverse_lazy("admin:pages_legalpage_changelist"),
+                        "link": admin_path("pages/legalpage/"),
                     },
                 ],
             },
@@ -227,7 +235,7 @@ UNFOLD = {
                     {
                         "title": "Кімнати (ключові слова)",
                         "icon": "meeting_room",
-                        "link": reverse_lazy("admin:quest_questroom_changelist"),
+                        "link": admin_path("quest/questroom/"),
                     },
                 ],
             },
