@@ -180,8 +180,23 @@ TINYMCE_DEFAULT_CONFIG = {
 
 UNFOLD = {
     "SITE_TITLE": "Квест-марафон",
-    "SITE_HEADER": "Квест-марафон Admin",
+    "SITE_HEADER": "Квест-марафон",
     "SITE_SYMBOL": "extension",
+    "COLORS": {
+        "primary": {
+            "50": "oklch(97% .014 254)",
+            "100": "oklch(93% .03 254)",
+            "200": "oklch(88% .06 254)",
+            "300": "oklch(80% .11 254)",
+            "400": "oklch(70% .16 254)",
+            "500": "oklch(60% .2 254)",
+            "600": "oklch(52% .22 254)",
+            "700": "oklch(45% .19 254)",
+            "800": "oklch(38% .15 254)",
+            "900": "oklch(32% .12 254)",
+            "950": "oklch(24% .09 254)",
+        },
+    },
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": False,
@@ -203,23 +218,50 @@ UNFOLD = {
                 ],
             },
             {
-                "title": "Контент сторінок",
-                "separator": True,
-                "items": [],  # filled below after imports
-            },
-            {
-                "title": "Списки контенту",
+                "title": "Головна",
                 "separator": True,
                 "items": [
                     {
-                        "title": "Картки «Про нас»",
-                        "icon": "view_carousel",
-                        "link": admin_path("pages/aboutcard/"),
+                        "title": "Контент головної",
+                        "icon": "home",
+                        "link": admin_path("core/homeintrosettings/"),
+                    },
+                ],
+            },
+            {
+                "title": "Шапка і підвал",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Шапка",
+                        "icon": "menu",
+                        "link": admin_path("core/siteheadersettings/"),
                     },
                     {
-                        "title": "FAQ пункти",
-                        "icon": "quiz",
-                        "link": admin_path("pages/faqitem/"),
+                        "title": "Підвал",
+                        "icon": "vertical_align_bottom",
+                        "link": admin_path("core/sitefootersettings/"),
+                    },
+                ],
+            },
+            {
+                "title": "Сторінки",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Про нас",
+                        "icon": "info",
+                        "link": admin_path("core/aboutpagesettings/"),
+                    },
+                    {
+                        "title": "FAQ",
+                        "icon": "help",
+                        "link": admin_path("core/faqpagesettings/"),
+                    },
+                    {
+                        "title": "Контакти",
+                        "icon": "call",
+                        "link": admin_path("core/contactspagesettings/"),
                     },
                     {
                         "title": "Юридичні сторінки",
@@ -233,7 +275,7 @@ UNFOLD = {
                 "separator": True,
                 "items": [
                     {
-                        "title": "Кімнати (ключові слова)",
+                        "title": "Кімнати",
                         "icon": "meeting_room",
                         "link": admin_path("quest/questroom/"),
                     },
@@ -242,18 +284,6 @@ UNFOLD = {
         ],
     },
 }
-
-# Lazy-fill CMS sidebar from registry (avoids circular import at module load).
-def _unfold_sidebar_with_cms():
-    from src.core.site_content_registry import build_content_sidebar_items
-
-    for group in UNFOLD["SIDEBAR"]["navigation"]:
-        if group.get("title") == "Контент сторінок":
-            group["items"] = build_content_sidebar_items()
-            break
-
-
-_unfold_sidebar_with_cms()
 
 LOGGING = {
     "version": 1,

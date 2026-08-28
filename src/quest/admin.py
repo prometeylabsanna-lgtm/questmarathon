@@ -22,32 +22,54 @@ class QuestRoomAdmin(ModelAdmin):
     fieldsets = (
         (
             "Порядок і статус",
-            {"fields": ("order", "is_active")},
+            {"classes": ["tab"], "fields": ("order", "is_active")},
         ),
         (
             "Ключове слово",
             {
+                "classes": ["tab"],
                 "fields": ("keyword_normalized",),
                 "description": (
-                    "Одне слово для uk і ru. При збереженні нормалізується "
-                    "(trim + casefold). Регістр і зайві пробіли на фронті не важливі."
+                    "Одне слово для української та російської версій. "
+                    "При збереженні нормалізується (пробіли + регістр)."
                 ),
             },
         ),
         (
             "Українська",
-            {"fields": ("title_uk", "body_uk")},
+            {"classes": ["tab"], "fields": ("title_uk", "body_uk")},
         ),
         (
             "Російська",
-            {"fields": ("title_ru", "body_ru")},
+            {"classes": ["tab"], "fields": ("title_ru", "body_ru")},
         ),
         (
             "Медіа",
-            {"fields": ("media_file", "media_type")},
+            {"classes": ["tab"], "fields": ("media_file", "media_type")},
         ),
     )
 
-    @display(description="Ключ", label=True)
+    @display(description="Ключове слово", label=True)
     def keyword_badge(self, obj):
         return obj.keyword_normalized or "—"
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        labels = {
+            "order": "Номер кімнати",
+            "is_active": "Активна",
+            "keyword_normalized": "Ключове слово",
+            "title_uk": "Назва",
+            "title_ru": "Назва",
+            "body_uk": "Текст завдання",
+            "body_ru": "Текст завдання",
+            "media_file": "Файл медіа",
+            "media_type": "Тип медіа",
+        }
+        if formfield is not None and db_field.name in labels:
+            formfield.label = labels[db_field.name]
+        return formfield
+
+    class Media:
+        css = {"all": ["css/admin/site_content.css"]}
+        js = ["js/admin/locale_switcher.js"]

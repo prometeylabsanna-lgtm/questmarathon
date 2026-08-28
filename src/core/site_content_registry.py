@@ -26,17 +26,18 @@ class ContentSection:
     visibility_key: str = ""
     field_groups: tuple[FieldGroup, ...] = ()
     admin_model_name: str = ""
+    collection: str = ""  # "about_cards" | "faq_items"
 
 
 CONTENT_SECTIONS: tuple[ContentSection, ...] = (
     ContentSection(
         slug="intro",
         page_slug="home",
-        title="Головна — Intro",
+        title="Головна",
         sidebar_title="Головна",
         sidebar_icon="home",
         preview_url="/",
-        description="Tagline, правила, прев’ю та CTA на головній.",
+        description="Слоган, правила, прев’ю та кнопки на головній.",
         visibility_key="intro_section_visible",
         admin_model_name="homeintrosettings",
         blocks=(
@@ -103,13 +104,12 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
         sidebar_title="Підвал",
         sidebar_icon="vertical_align_bottom",
         preview_url="/",
-        description="Юридичні посилання, copyright і кредит.",
+        description="Юридичні посилання та copyright.",
         admin_model_name="sitefootersettings",
         blocks=(
             ("site", "footer_link_terms"),
             ("site", "footer_link_privacy"),
             ("site", "footer_copyright"),
-            ("site", "footer_credit"),
         ),
         field_groups=(
             FieldGroup(
@@ -118,7 +118,6 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
                     "footer_link_terms",
                     "footer_link_privacy",
                     "footer_copyright",
-                    "footer_credit",
                 ),
             ),
         ),
@@ -126,35 +125,37 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
     ContentSection(
         slug="main",
         page_slug="about",
-        title="Про нас — заголовки",
-        sidebar_title="Про нас (тексти)",
+        title="Про нас",
+        sidebar_title="Про нас",
         sidebar_icon="info",
         preview_url="/about/",
-        description="Заголовок сторінки. Картки — окремий розділ «Картки Про нас».",
+        description="Заголовки сторінки та картки контенту.",
         admin_model_name="aboutpagesettings",
+        collection="about_cards",
         blocks=(("about", "page_title"), ("about", "page_lead")),
         field_groups=(FieldGroup("Заголовки", ("page_title", "page_lead")),),
     ),
     ContentSection(
         slug="main",
         page_slug="faq",
-        title="FAQ — заголовки",
-        sidebar_title="FAQ (тексти)",
+        title="FAQ",
+        sidebar_title="FAQ",
         sidebar_icon="help",
         preview_url="/faq/",
-        description="Заголовок сторінки. Питання — у розділі «FAQ пункти».",
+        description="Заголовки сторінки та пункти запитань.",
         admin_model_name="faqpagesettings",
+        collection="faq_items",
         blocks=(("faq", "page_title"), ("faq", "page_lead")),
         field_groups=(FieldGroup("Заголовки", ("page_title", "page_lead")),),
     ),
     ContentSection(
         slug="main",
         page_slug="contacts",
-        title="Контакти — тексти",
-        sidebar_title="Контакти (тексти)",
+        title="Контакти",
+        sidebar_title="Контакти",
         sidebar_icon="call",
         preview_url="/contacts/",
-        description="Заголовки сторінки. Телефон/email/соцмережі — у «Налаштування сайту».",
+        description="Тексти сторінки. Телефон, email і соцмережі — у «Налаштування сайту».",
         admin_model_name="contactspagesettings",
         blocks=(
             ("contacts", "page_title"),

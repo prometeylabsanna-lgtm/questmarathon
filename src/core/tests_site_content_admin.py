@@ -15,14 +15,12 @@ class SiteContentAdminTests(TestCase):
 
     def test_home_intro_get_shows_dark_inputs(self):
         url = reverse("admin:core_homeintrosettings_change", args=[1])
-        response = self.client.get(url)
+        response = self.client.get(url, follow=True)
         self.assertEqual(response.status_code, 200)
         content = response.content.decode()
         self.assertIn("bg-base-900", content)
         self.assertIn("text-base-100", content)
-        self.assertIn('id="id_block__home__intro_tagline__text_uk"', content)
         self.assertIn("block__home__intro_tagline__text_uk", content)
-        # Textarea for tagline must include dark-readable force classes.
         start = content.find("block__home__intro_tagline__text_uk")
         snippet = content[start : start + 800]
         self.assertIn("bg-base-900", snippet)

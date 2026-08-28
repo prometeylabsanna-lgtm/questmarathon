@@ -8,8 +8,13 @@ from django.core.cache import cache
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from unfold.widgets import UnfoldAdminFileFieldWidget, UnfoldBooleanWidget
+from unfold.widgets import UnfoldBooleanWidget
 
+from src.core.admin_image_widgets import CmsImageFieldWidget
+from src.core.admin_page_collections import (
+    build_about_card_formset,
+    build_faq_item_formset,
+)
 from src.core.admin_site_content_widgets import (
     CmsAdminTextareaWidget,
     CmsAdminTextInputWidget,
@@ -53,6 +58,16 @@ def load_section_blocks(page_slug: str, section_slug: str) -> dict[str, SiteBloc
     return result
 
 
+def _build_collection_formset(section, data=None, files=None):
+    if section is None or not section.collection:
+        return None
+    if section.collection == "about_cards":
+        return build_about_card_formset(data=data, files=files)
+    if section.collection == "faq_items":
+        return build_faq_item_formset(data=data, files=files)
+    return None
+
+
 class SitePageContentForm(forms.Form):
     def __init__(self, *args, page_slug: str, section_slug: str, **kwargs):
         self.page_slug = page_slug
@@ -85,11 +100,14 @@ class SitePageContentForm(forms.Form):
                 )
                 continue
             if ctype == SiteBlock.ContentType.IMAGE or ctype == "image":
-                self.fields[f"block__{page}__{key}__image"] = forms.ImageField(
+                field = forms.ImageField(
                     required=False,
                     label=label,
-                    widget=UnfoldAdminFileFieldWidget,
+                    widget=CmsImageFieldWidget,
                 )
+                if block.image:
+                    field.initial = block.image
+                self.fields[f"block__{page}__{key}__image"] = field
                 continue
             if key in INLINE_KEYS:
                 widget_uk = CmsAdminTextInputWidget()
@@ -103,13 +121,13 @@ class SitePageContentForm(forms.Form):
             self.fields[f"block__{page}__{key}__text_uk"] = forms.CharField(
                 required=False,
                 initial=block.text_uk,
-                label=f"{label} (UK)",
+                label=label,
                 widget=widget_uk,
             )
             self.fields[f"block__{page}__{key}__text_ru"] = forms.CharField(
                 required=False,
                 initial=block.text_ru,
-                label=f"{label} (RU)",
+                label=label,
                 widget=widget_ru,
             )
 
@@ -149,6 +167,14 @@ class SitePageContentForm(forms.Form):
         cache.delete(SITE_BLOCKS_CACHE_KEY)
 
 
+def _field_locale(name: str) -> str:
+    if name.endswith("__text_ru") or name.endswith("_ru"):
+        return "ru"
+    if name.endswith("__text_uk") or name.endswith("_uk"):
+        return "uk"
+    return "all"
+
+
 def _grouped_fields(form: SitePageContentForm) -> list[dict]:
     if form.section is None:
         return []
@@ -157,24 +183,30 @@ def _grouped_fields(form: SitePageContentForm) -> list[dict]:
         groups.append(
             {
                 "title": "Видимість",
-                "fields": [form["section_visible"]],
+                "rows": [{"field": form["section_visible"], "locale": "all"}],
             }
         )
     used: set[str] = set()
     for group in form.section.field_groups:
-        fields = []
+        rows = []
         for key in group.keys:
             page = form.section.page_slug
             for suffix in ("visible", "image", "text_uk", "text_ru"):
                 name = f"block__{page}__{key}__{suffix}"
                 if name in form.fields:
-                    fields.append(form[name])
+                    rows.append(
+                        {"field": form[name], "locale": _field_locale(name)}
+                    )
                     used.add(name)
-        if fields:
-            groups.append({"title": group.title, "fields": fields})
-    orphans = [form[name] for name in form.fields if name not in used and name != "section_visible"]
+        if rows:
+            groups.append({"title": group.title, "rows": rows})
+    orphans = [
+        {"field": form[name], "locale": _field_locale(name)}
+        for name in form.fields
+        if name not in used and name != "section_visible"
+    ]
     if orphans:
-        groups.append({"title": "Інше", "fields": orphans})
+        groups.append({"title": "Інше", "rows": orphans})
     return groups
 
 
@@ -185,16 +217,25 @@ def site_content_section_view(request, page_slug: str, section_slug: str, model_
         messages.error(request, "Секцію не знайдено в registry.")
         return HttpResponseRedirect(reverse("admin:index"))
 
+    collection = None
     if request.method == "POST":
         form = SitePageContentForm(
             request.POST, request.FILES, page_slug=page_slug, section_slug=section_slug
         )
-        if form.is_valid():
+        collection = _build_collection_formset(
+            section, data=request.POST, files=request.FILES
+        )
+        form_ok = form.is_valid()
+        collection_ok = collection.is_valid() if collection is not None else True
+        if form_ok and collection_ok:
             form.save()
+            if collection is not None:
+                collection.save()
             messages.success(request, "Збережено.")
             return HttpResponseRedirect(request.path)
     else:
         form = SitePageContentForm(page_slug=page_slug, section_slug=section_slug)
+        collection = _build_collection_formset(section)
 
     context = {
         **model_admin.admin_site.each_context(request),
@@ -202,6 +243,8 @@ def site_content_section_view(request, page_slug: str, section_slug: str, model_
         "section": section,
         "form": form,
         "field_groups": _grouped_fields(form),
+        "collection_formset": collection,
+        "field_locale": _field_locale,
         "opts": model_admin.model._meta,
         "has_view_permission": True,
         "has_change_permission": model_admin.has_change_permission(request),

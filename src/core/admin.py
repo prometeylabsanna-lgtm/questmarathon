@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 
+from src.core.admin_image_widgets import CmsImageFieldWidget
 from src.core.admin_site_content_proxies import register_site_content_section_admins
 from src.core.admin_site_content_widgets import apply_readable_widget
 from src.core.models import SiteSettings, SiteStats
@@ -11,9 +12,12 @@ from src.core.models import SiteSettings, SiteStats
 
 class ReadableUnfoldFieldsMixin:
     def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.get_internal_type() == "ImageField":
+            kwargs["widget"] = CmsImageFieldWidget
         formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
         if formfield is not None and hasattr(formfield, "widget"):
-            apply_readable_widget(formfield.widget)
+            if db_field.get_internal_type() != "ImageField":
+                apply_readable_widget(formfield.widget)
         return formfield
 
 
@@ -51,27 +55,31 @@ class SiteSettingsAdmin(ReadableUnfoldFieldsMixin, SingletonModelAdminMixin, Mod
     fieldsets = (
         (
             "Бренд",
-            {"fields": ("site_name", "logo", "favicon", "apple_touch_icon", "logo_preview")},
+            {
+                "classes": ["tab"],
+                "fields": ("site_name", "logo", "favicon", "apple_touch_icon"),
+            },
         ),
         (
             "Контакти",
-            {"fields": ("phone", "email", "address_uk", "address_ru")},
+            {
+                "classes": ["tab"],
+                "fields": ("phone", "email", "telegram_url", "instagram_url", "facebook_url"),
+            },
         ),
         (
-            "Соцмережі",
-            {"fields": ("telegram_url", "instagram_url", "facebook_url")},
+            "Українська",
+            {"classes": ["tab"], "fields": ("address_uk",)},
+        ),
+        (
+            "Російська",
+            {"classes": ["tab"], "fields": ("address_ru",)},
         ),
     )
-    readonly_fields = ("logo_preview",)
 
-    @admin.display(description="Прев’ю логотипу")
-    def logo_preview(self, obj):
-        if obj and obj.logo:
-            return format_html(
-                '<img src="{}" alt="" style="max-height:80px;width:auto;">',
-                obj.logo.url,
-            )
-        return "—"
+    class Media:
+        css = {"all": ["css/admin/site_content.css"]}
+        js = ["js/admin/locale_switcher.js"]
 
 
 register_site_content_section_admins()
