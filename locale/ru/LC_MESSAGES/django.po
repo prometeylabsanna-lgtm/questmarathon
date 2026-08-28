@@ -275,10 +275,6 @@ msgstr "Прогресс сохраняется: можно выйти и про
 msgid "Лічильник учасників"
 msgstr "Счётчик участников"
 
-#: templates/pages/home.html:32
-msgid "ЛІЧИЛЬНИК"
-msgstr "СЧЁТЧИК"
-
 #: templates/pages/home.html:49 templates/payments/checkout.html:25
 #: templates/payments/return.html:28 templates/payments/start.html:30
 #: templates/quest/denied.html:7 templates/quest/room.html:64
