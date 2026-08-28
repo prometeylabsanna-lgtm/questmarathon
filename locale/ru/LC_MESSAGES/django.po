@@ -229,17 +229,25 @@ msgstr "Перейти к оплате"
 msgid "Вже є акаунт?"
 msgstr "Уже есть аккаунт?"
 
-#: templates/errors/404.html:6
-msgid "Сторінку не знайдено."
-msgstr "Страница не найдена."
+#: templates/errors/404.html:11
+msgid "Сторінку не знайдено"
+msgstr "Страница не найдена"
 
-#: templates/errors/404.html:7 templates/errors/500.html:7
+#: templates/errors/404.html:12
+msgid "Перевірте адресу або поверніться на головну."
+msgstr "Проверьте адрес или вернитесь на главную."
+
+#: templates/errors/404.html:13 templates/errors/500.html:13
 msgid "На головну"
 msgstr "На главную"
 
-#: templates/errors/500.html:6
-msgid "Сталася помилка сервера."
-msgstr "Произошла ошибка сервера."
+#: templates/errors/500.html:11
+msgid "Сталася помилка сервера"
+msgstr "Произошла ошибка сервера"
+
+#: templates/errors/500.html:12
+msgid "Спробуйте пізніше або поверніться на головну."
+msgstr "Попробуйте позже или вернитесь на главную."
 
 #: templates/pages/home.html:4
 msgid "Квест-марафон — головна"

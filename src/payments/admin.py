@@ -1,6 +1,7 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 
+from src.core.admin_filters import PaymentStatusFilter, ProviderFilter
 from src.payments.models import Payment
 
 
@@ -15,7 +16,12 @@ class PaymentAdmin(ModelAdmin):
         "external_id",
         "created_at",
     )
-    list_filter = ("status", "provider")
+    list_filter = (
+        ("status", PaymentStatusFilter),
+        ProviderFilter,
+    )
+    list_filter_sheet = False
+    list_filter_submit = True
     search_fields = ("order_id", "external_id", "user__email")
     readonly_fields = ("raw_payload", "created_at", "updated_at", "idempotency_key")
 

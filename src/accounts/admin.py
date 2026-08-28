@@ -2,6 +2,7 @@ from django.contrib import admin
 from unfold.admin import ModelAdmin
 
 from src.accounts.models import UserProfile
+from src.core.admin_filters import LocaleFilter, PaymentStatusProfileFilter
 
 
 @admin.register(UserProfile)
@@ -15,7 +16,12 @@ class UserProfileAdmin(ModelAdmin):
         "locale",
         "created_at",
     )
-    list_filter = ("payment_status", "locale")
+    list_filter = (
+        ("payment_status", PaymentStatusProfileFilter),
+        LocaleFilter,
+    )
+    list_filter_sheet = False
+    list_filter_submit = True
     search_fields = ("full_name", "phone", "user__email", "user__username")
     readonly_fields = ("consent_terms_at", "consent_age18_at", "created_at", "updated_at")
 

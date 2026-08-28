@@ -1,0 +1,112 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list unfold_list unfold %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <script src="{% url 'admin:jsi18n' %}"></script>
+    {{ media.css }}
+    <link rel="stylesheet" href="{% static 'css/admin/changelist_filters.css' %}">
+    {% if not actions_on_top and not actions_on_bottom %}
+        <style>
+            #changelist table thead th:first-child {width: inherit}
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    {{ media.js }}
+    <script src="{% static 'js/admin/changelist_filters.js' %}" defer></script>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% block coltype %}{% endblock %}
+
+{% block nav-global-side %}
+    {% block object-tools %}
+        <div class="object-tools">
+            {% block object-tools-items %}
+                {% change_list_object_tools %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+{% endblock %}
+
+{% block content %}
+    <div id="content-main">
+        {% include "unfold/helpers/popup_header.html" %}
+
+        {% if cl.formset and cl.formset.errors %}
+            {% include "unfold/helpers/messages/errornote.html" with errors=cl.formset.errors %}
+            {{ cl.formset.non_form_errors }}
+        {% endif %}
+
+        <div class="flex -mx-4 module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+            <div class="changelist-form-container flex flex-col grow gap-4 min-w-0 px-4">
+                {% block date_hierarchy %}
+                    {% if cl.date_hierarchy %}
+                        {% date_hierarchy cl %}
+                    {% endif %}
+                {% endblock %}
+
+                {% if cl.model_admin.list_before_template and not is_popup %}
+                    {% include cl.model_admin.list_before_template %}
+                {% endif %}
+
+                <div class="qm-changelist-toolbar flex flex-col gap-3 mb-1 lg:border lg:border-base-200 lg:dark:border-base-800 lg:p-3 lg:rounded-default">
+                    {% block search %}
+                        {% search_form cl %}
+                    {% endblock %}
+
+                    {% if cl.has_filters %}
+                        <form
+                            id="filter-form"
+                            method="get"
+                            class="qm-admin-filters"
+                            data-auto-submit
+                        >
+                            {% preserve_filters %}
+                            <div class="qm-admin-filters__row">
+                                {% for spec in cl.filter_specs %}
+                                    <div class="qm-admin-filters__item">
+                                        {% admin_list_filter cl spec %}
+                                    </div>
+                                {% endfor %}
+                                {% if cl.has_active_filters %}
+                                    <a
+                                        href="{{ cl.clear_all_filters_qs }}"
+                                        class="qm-admin-filters__clear border border-base-200 dark:border-base-700"
+                                    >{% trans "Скинути" %}</a>
+                                {% endif %}
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+
+                <form id="changelist-form" class="group" method="post"{% if cl.formset and cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>
+                    {% csrf_token %}
+
+                    {% if cl.formset %}
+                        {{ cl.formset.management_form }}
+                    {% endif %}
+
+                    {% block result_list %}
+                        {% include "unfold/helpers/change_list_actions.html" %}
+                        {% unfold_result_list cl %}
+                    {% endblock %}
+                </form>
+
+                {% if cl.model_admin.list_after_template and not is_popup %}
+                    {% include cl.model_admin.list_after_template %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    {% block pagination %}
+        {% include "unfold/helpers/pagination.html" %}
+    {% endblock %}
+{% endblock %}

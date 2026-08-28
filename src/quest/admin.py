@@ -2,6 +2,7 @@ from django.contrib import admin
 from unfold.admin import ModelAdmin
 from unfold.decorators import display
 
+from src.core.admin_filters import ActivityFilter, MediaTypeFilter
 from src.quest.models import QuestRoom
 
 
@@ -18,7 +19,12 @@ class QuestRoomAdmin(ModelAdmin):
     list_editable = ("is_active",)
     ordering = ("order",)
     search_fields = ("title_uk", "title_ru", "keyword_normalized")
-    list_filter = ("media_type", "is_active")
+    list_filter = (
+        ("media_type", MediaTypeFilter),
+        ("is_active", ActivityFilter),
+    )
+    list_filter_sheet = False
+    list_filter_submit = True
     fieldsets = (
         (
             "Порядок і статус",

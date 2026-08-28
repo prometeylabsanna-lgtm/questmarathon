@@ -2,13 +2,16 @@ from django.contrib import admin
 from tinymce.widgets import TinyMCE
 from unfold.admin import ModelAdmin
 
+from src.core.admin_filters import PublishedFilter
 from src.pages.models import LegalPage
 
 
 @admin.register(LegalPage)
 class LegalPageAdmin(ModelAdmin):
     list_display = ("slug", "title_uk", "is_published", "updated_at")
-    list_filter = ("is_published",)
+    list_filter = (("is_published", PublishedFilter),)
+    list_filter_sheet = False
+    list_filter_submit = True
     search_fields = ("slug", "title_uk", "title_ru")
     prepopulated_fields = {"slug": ("title_uk",)}
     fieldsets = (
