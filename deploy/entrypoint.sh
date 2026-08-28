@@ -22,7 +22,8 @@ PY
 
 echo "==> Django migrate + collectstatic"
 python manage.py migrate --noinput
-python manage.py collectstatic --noinput
+python manage.py seed_site_blocks
 python manage.py seed_demo
+python manage.py collectstatic --noinput
 
 exec "$@"

@@ -1,11 +1,11 @@
-{% load i18n %}
+{% load i18n site_content %}
 <footer class="qm-footer">
   <nav class="qm-footer__links" aria-label="{% trans 'Юридичні посилання' %}">
-    <a class="qm-footer__link" href="{% url 'pages:terms' %}">{% trans "Користувацька угода" %}</a>
-    <a class="qm-footer__link" href="{% url 'pages:privacy' %}">{% trans "Політика конфіденційності" %}</a>
+    <a class="qm-footer__link" href="{% url 'pages:terms' %}">{% block_plain "site" "footer_link_terms" %}</a>
+    <a class="qm-footer__link" href="{% url 'pages:privacy' %}">{% block_plain "site" "footer_link_privacy" %}</a>
   </nav>
   <div class="qm-footer__meta">
-    <div class="qm-footer__copy">© {% now "Y" %} {% trans "Квест-марафон" %}</div>
+    <div class="qm-footer__copy">© {% now "Y" %} {% block_plain "site" "footer_copyright" %}</div>
     <div class="qm-footer__attribution">
       {% if request.resolver_match and request.resolver_match.namespace == "pages" and request.resolver_match.url_name == "home" %}
         <a
@@ -13,9 +13,9 @@
           href="https://www.prometeylabs.com/"
           rel="nofollow noopener noreferrer"
           target="_blank"
-        >{% trans "Розроблено командою PrometeyLabs" %}</a>
+        >{% block_plain "site" "footer_credit" %}</a>
       {% else %}
-        <span class="qm-footer__credit">{% trans "Розроблено командою PrometeyLabs" %}</span>
+        <span class="qm-footer__credit">{% block_plain "site" "footer_credit" %}</span>
       {% endif %}
     </div>
   </div>

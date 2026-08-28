@@ -1,11 +1,15 @@
-{% load i18n static %}
+{% load i18n static site_content %}
 <header class="qm-header">
-  <a href="{% url 'pages:home' %}" class="qm-header__brand" aria-label="kvest-marafon">
+  <a href="{% url 'pages:home' %}" class="qm-header__brand" aria-label="{% block_plain 'site' 'header_brand_name' %}">
     <span class="qm-logo">
-      <img src="{% static 'images/logo-quest-marathon.png' %}?v=13" alt="" class="qm-logo__img" width="640" height="325" decoding="async" fetchpriority="high">
+      {% if site_settings.logo %}
+        <img src="{{ site_settings.logo.url }}" alt="" class="qm-logo__img" width="640" height="325" decoding="async" fetchpriority="high">
+      {% else %}
+        <img src="{% static 'images/logo-quest-marathon.png' %}?v=13" alt="" class="qm-logo__img" width="640" height="325" decoding="async" fetchpriority="high">
+      {% endif %}
     </span>
     <span class="qm-brand-name">
-      <span class="qm-brand-name__text">kvest-marafon</span>
+      <span class="qm-brand-name__text">{% block_plain "site" "header_brand_name" %}</span>
       <span class="qm-brand-bars" aria-hidden="true">
         <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>
         <span class="qm-brand-bars__seg"><span class="qm-brand-bars__fill"></span></span>
@@ -17,10 +21,22 @@
   </a>
 
   <nav class="qm-nav qm-nav--desktop" aria-label="{% trans 'Основні сторінки' %}">
-    <a class="qm-nav__link{% if request.resolver_match.namespace == 'pages' and request.resolver_match.url_name == 'home' %} qm-nav__link--active{% endif %}" href="{% url 'pages:home' %}">{% trans "Головна" %}</a>
-    <a class="qm-nav__link{% if request.resolver_match.url_name == 'about' %} qm-nav__link--active{% endif %}" href="{% url 'pages:about' %}">{% trans "Про нас" %}</a>
-    <a class="qm-nav__link{% if request.resolver_match.url_name == 'contacts' %} qm-nav__link--active{% endif %}" href="{% url 'pages:contacts' %}">{% trans "Контакти" %}</a>
-    <a class="qm-nav__link{% if request.resolver_match.url_name == 'faq' %} qm-nav__link--active{% endif %}" href="{% url 'pages:faq' %}">{% trans "FAQ" %}</a>
+    {% section_visible "site" "header_nav_home_visible" as show_nav_home %}
+    {% section_visible "site" "header_nav_about_visible" as show_nav_about %}
+    {% section_visible "site" "header_nav_contacts_visible" as show_nav_contacts %}
+    {% section_visible "site" "header_nav_faq_visible" as show_nav_faq %}
+    {% if show_nav_home %}
+      <a class="qm-nav__link{% if request.resolver_match.namespace == 'pages' and request.resolver_match.url_name == 'home' %} qm-nav__link--active{% endif %}" href="{% url 'pages:home' %}">{% block_plain "site" "header_nav_home" %}</a>
+    {% endif %}
+    {% if show_nav_about %}
+      <a class="qm-nav__link{% if request.resolver_match.url_name == 'about' %} qm-nav__link--active{% endif %}" href="{% url 'pages:about' %}">{% block_plain "site" "header_nav_about" %}</a>
+    {% endif %}
+    {% if show_nav_contacts %}
+      <a class="qm-nav__link{% if request.resolver_match.url_name == 'contacts' %} qm-nav__link--active{% endif %}" href="{% url 'pages:contacts' %}">{% block_plain "site" "header_nav_contacts" %}</a>
+    {% endif %}
+    {% if show_nav_faq %}
+      <a class="qm-nav__link{% if request.resolver_match.url_name == 'faq' %} qm-nav__link--active{% endif %}" href="{% url 'pages:faq' %}">{% block_plain "site" "header_nav_faq" %}</a>
+    {% endif %}
   </nav>
 
   <div class="qm-header__actions">
@@ -100,10 +116,18 @@
 
 <div class="qm-menu-overlay" id="qm-menu-overlay" hidden>
   <nav class="qm-menu" id="qm-menu" aria-label="{% trans 'Головне меню' %}">
-    <a class="qm-menu__link{% if request.resolver_match.namespace == 'pages' and request.resolver_match.url_name == 'home' %} qm-menu__link--active{% endif %}" href="{% url 'pages:home' %}">{% trans "Головна" %}</a>
-    <a class="qm-menu__link{% if request.resolver_match.url_name == 'about' %} qm-menu__link--active{% endif %}" href="{% url 'pages:about' %}">{% trans "Про нас" %}</a>
-    <a class="qm-menu__link{% if request.resolver_match.url_name == 'contacts' %} qm-menu__link--active{% endif %}" href="{% url 'pages:contacts' %}">{% trans "Контакти" %}</a>
-    <a class="qm-menu__link{% if request.resolver_match.url_name == 'faq' %} qm-menu__link--active{% endif %}" href="{% url 'pages:faq' %}">{% trans "FAQ" %}</a>
+    {% if show_nav_home %}
+      <a class="qm-menu__link{% if request.resolver_match.namespace == 'pages' and request.resolver_match.url_name == 'home' %} qm-menu__link--active{% endif %}" href="{% url 'pages:home' %}">{% block_plain "site" "header_nav_home" %}</a>
+    {% endif %}
+    {% if show_nav_about %}
+      <a class="qm-menu__link{% if request.resolver_match.url_name == 'about' %} qm-menu__link--active{% endif %}" href="{% url 'pages:about' %}">{% block_plain "site" "header_nav_about" %}</a>
+    {% endif %}
+    {% if show_nav_contacts %}
+      <a class="qm-menu__link{% if request.resolver_match.url_name == 'contacts' %} qm-menu__link--active{% endif %}" href="{% url 'pages:contacts' %}">{% block_plain "site" "header_nav_contacts" %}</a>
+    {% endif %}
+    {% if show_nav_faq %}
+      <a class="qm-menu__link{% if request.resolver_match.url_name == 'faq' %} qm-menu__link--active{% endif %}" href="{% url 'pages:faq' %}">{% block_plain "site" "header_nav_faq" %}</a>
+    {% endif %}
     {% if user.is_authenticated %}
       <a class="qm-menu__link" href="{% url 'accounts:cabinet' %}">{% trans "Кабінет" %}</a>
       <form method="post" action="{% url 'accounts:logout' %}" class="qm-menu__form">
@@ -114,7 +138,7 @@
       <a class="qm-menu__link" href="{% url 'accounts:login' %}">{% trans "Увійти" %}</a>
       <a class="qm-menu__link" href="{% url 'accounts:register' %}">{% trans "Реєстрація" %}</a>
     {% endif %}
-    <a class="qm-menu__link" href="{% url 'pages:terms' %}">{% trans "Користувацька угода" %}</a>
-    <a class="qm-menu__link" href="{% url 'pages:privacy' %}">{% trans "Політика конфіденційності" %}</a>
+    <a class="qm-menu__link" href="{% url 'pages:terms' %}">{% block_plain "site" "footer_link_terms" %}</a>
+    <a class="qm-menu__link" href="{% url 'pages:privacy' %}">{% block_plain "site" "footer_link_privacy" %}</a>
   </nav>
 </div>

@@ -15,7 +15,8 @@ sitemaps = {
 }
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
+    path("tinymce/", include("tinymce.urls")),
     path("api/v1/health/", health, name="health"),
     path("api/v1/quest/", include("src.quest.api_urls")),
     path("api/v1/payment/", include("src.payments.api_urls")),

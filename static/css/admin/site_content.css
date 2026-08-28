@@ -1,0 +1,89 @@
+/* CMS section editor — layout only (no input colors) */
+
+.site-content-editor {
+  max-width: 52rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.site-content-editor__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-content-editor__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.site-content-editor__desc {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+}
+
+.site-content-editor__preview {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  text-decoration: none;
+}
+
+.site-content-editor__fieldset {
+  padding: 1rem 1.25rem 1.25rem;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.site-content-editor__legend {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  padding: 0 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.site-content-editor__fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.site-content-editor__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.site-content-editor__label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.site-content-editor__actions {
+  margin-top: 1.5rem;
+}
+
+.site-content-editor__errors {
+  color: #f87171;
+  font-size: 0.8125rem;
+}
+
+.site-content-editor__help {
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .site-content-editor__fieldset {
+    padding: 0.875rem 1rem 1rem;
+  }
+
+  .site-content-editor__head {
+    flex-direction: column;
+  }
+}

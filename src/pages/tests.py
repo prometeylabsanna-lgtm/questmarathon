@@ -1,9 +1,12 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from src.core.models import SiteSettings
+from src.core.site_content_registry import all_registry_block_keys, validate_registry
 from src.pages.faq import parse_faq_items
 from src.pages.legal import parse_legal_document
-from src.pages.models import InfoPage
+from src.pages.legal_html import plain_legal_to_html
+from src.pages.models import AboutCard, FAQItem, LegalPage
 
 
 class ParseFaqItemsTests(TestCase):
@@ -22,12 +25,11 @@ class ParseFaqItemsTests(TestCase):
 
 class FaqPageTests(TestCase):
     def setUp(self):
-        InfoPage.objects.create(
-            slug="faq",
-            locale="uk",
-            title="FAQ",
-            body="Як почати?\nЗареєструйтесь, оплатіть участь.",
-            is_published=True,
+        FAQItem.objects.create(
+            question_uk="Як почати?",
+            answer_uk="Зареєструйтесь, оплатіть участь.",
+            sort_order=0,
+            is_active=True,
         )
 
     def test_faq_renders_accordion(self):
@@ -40,29 +42,13 @@ class FaqPageTests(TestCase):
 
 class AboutContactsTests(TestCase):
     def setUp(self):
-        InfoPage.objects.create(
-            slug="about",
-            locale="uk",
-            title="Про нас",
-            body=(
-                "Що таке квест?\n"
-                "Лінійний онлайн-квест.\n\n"
-                "Як проходити?\n"
-                "По черзі.\n\n"
-                "Відповідь?\n"
-                "Ключове слово.\n\n"
-                "Прогрес?\n"
-                "Зберігається."
-            ),
-            is_published=True,
+        AboutCard.objects.create(
+            title_uk="Що таке квест?",
+            text_uk="Лінійний онлайн-квест.",
+            sort_order=0,
+            is_active=True,
         )
-        InfoPage.objects.create(
-            slug="contacts",
-            locale="uk",
-            title="Контакти",
-            body="",
-            is_published=True,
-        )
+        SiteSettings.get_solo()
 
     def test_about_has_no_accordion(self):
         response = self.client.get(reverse("pages:about"))
@@ -109,30 +95,32 @@ class ParseLegalDocumentTests(TestCase):
 
 class LegalPageTests(TestCase):
     def setUp(self):
-        InfoPage.objects.create(
+        updated, html = plain_legal_to_html(
+            "Останнє оновлення: 19 серпня 2026 р.\n"
+            "\n"
+            "1. Загальні положення\n"
+            "\n"
+            "1.1. Ця угода регулює доступ."
+        )
+        LegalPage.objects.create(
             slug="terms",
-            locale="uk",
-            title="Користувацька угода",
-            body=(
-                "Останнє оновлення: 19 серпня 2026 р.\n"
-                "\n"
-                "1. Загальні положення\n"
-                "\n"
-                "1.1. Ця угода регулює доступ."
-            ),
+            title_uk="Користувацька угода",
+            body_uk=html,
+            updated_label_uk=updated,
             is_published=True,
         )
-        InfoPage.objects.create(
+        updated_p, html_p = plain_legal_to_html(
+            "Останнє оновлення: 19 серпня 2026 р.\n"
+            "\n"
+            "1. Хто обробляє дані\n"
+            "\n"
+            "1.1. Володільцем є Організатор."
+        )
+        LegalPage.objects.create(
             slug="privacy",
-            locale="uk",
-            title="Політика конфіденційності",
-            body=(
-                "Останнє оновлення: 19 серпня 2026 р.\n"
-                "\n"
-                "1. Хто обробляє дані\n"
-                "\n"
-                "1.1. Володільцем є Організатор."
-            ),
+            title_uk="Політика конфіденційності",
+            body_uk=html_p,
+            updated_label_uk=updated_p,
             is_published=True,
         )
 
@@ -155,3 +143,10 @@ class LegalPageTests(TestCase):
         self.assertContains(response, "1. Хто обробляє дані")
         self.assertContains(response, "Володільцем є Організатор.")
         self.assertContains(response, reverse("pages:terms"))
+
+
+class RegistryTests(TestCase):
+    def test_registry_unique(self):
+        validate_registry()
+        keys = all_registry_block_keys()
+        self.assertEqual(len(keys), len(set(keys)))

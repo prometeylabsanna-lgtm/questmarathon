@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from decouple import Csv, config
+from django.urls import reverse_lazy
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -9,6 +10,9 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = False
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
+
+# Custom admin path (no trailing leading slash in path(); trailing slash required).
+ADMIN_URL = config("ADMIN_URL", default="kvest-cms/")
 
 INSTALLED_APPS = [
     "unfold",
@@ -22,6 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
     "django_htmx",
+    "tinymce",
     "src.core",
     "src.accounts",
     "src.pages",
@@ -151,13 +156,96 @@ CONTENT_SECURITY_POLICY = {
         "connect-src": ("'self'",),
         "form-action": ("'self'", "https://www.liqpay.ua"),
         "frame-ancestors": ("'none'",),
-    }
+    },
+    # Admin is staff-only; Unfold Alpine + TinyMCE need eval/inline.
+    "EXCLUDE_URL_PREFIXES": (f"/{ADMIN_URL.lstrip('/')}",),
+}
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": 420,
+    "menubar": False,
+    "plugins": "link lists image code",
+    "toolbar": "undo redo | bold italic underline | bullist numlist | link image | code",
+    "content_css": False,
+    "skin": "oxide",
 }
 
 UNFOLD = {
     "SITE_TITLE": "Квест-марафон",
     "SITE_HEADER": "Квест-марафон Admin",
+    "SITE_SYMBOL": "extension",
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": "Налаштування",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Налаштування сайту",
+                        "icon": "settings",
+                        "link": reverse_lazy("admin:core_sitesettings_changelist"),
+                    },
+                    {
+                        "title": "Статистика",
+                        "icon": "bar_chart",
+                        "link": reverse_lazy("admin:core_sitestats_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Контент сторінок",
+                "separator": True,
+                "items": [],  # filled below after imports
+            },
+            {
+                "title": "Списки контенту",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Картки «Про нас»",
+                        "icon": "view_carousel",
+                        "link": reverse_lazy("admin:pages_aboutcard_changelist"),
+                    },
+                    {
+                        "title": "FAQ пункти",
+                        "icon": "quiz",
+                        "link": reverse_lazy("admin:pages_faqitem_changelist"),
+                    },
+                    {
+                        "title": "Юридичні сторінки",
+                        "icon": "gavel",
+                        "link": reverse_lazy("admin:pages_legalpage_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Квест",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Кімнати (ключові слова)",
+                        "icon": "meeting_room",
+                        "link": reverse_lazy("admin:quest_questroom_changelist"),
+                    },
+                ],
+            },
+        ],
+    },
 }
+
+# Lazy-fill CMS sidebar from registry (avoids circular import at module load).
+def _unfold_sidebar_with_cms():
+    from src.core.site_content_registry import build_content_sidebar_items
+
+    for group in UNFOLD["SIDEBAR"]["navigation"]:
+        if group.get("title") == "Контент сторінок":
+            group["items"] = build_content_sidebar_items()
+            break
+
+
+_unfold_sidebar_with_cms()
 
 LOGGING = {
     "version": 1,
