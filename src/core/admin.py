@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 
 from src.core.admin_image_widgets import CmsImageFieldWidget
@@ -13,11 +12,14 @@ from src.core.models import SiteSettings, SiteStats
 class ReadableUnfoldFieldsMixin:
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         if db_field.get_internal_type() == "ImageField":
-            kwargs["widget"] = CmsImageFieldWidget
+            kwargs.setdefault("widget", CmsImageFieldWidget)
         formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
-        if formfield is not None and hasattr(formfield, "widget"):
-            if db_field.get_internal_type() != "ImageField":
-                apply_readable_widget(formfield.widget)
+        if (
+            formfield is not None
+            and hasattr(formfield, "widget")
+            and db_field.get_internal_type() != "ImageField"
+        ):
+            apply_readable_widget(formfield.widget)
         return formfield
 
 
@@ -64,7 +66,13 @@ class SiteSettingsAdmin(ReadableUnfoldFieldsMixin, SingletonModelAdminMixin, Mod
             "Контакти",
             {
                 "classes": ["tab"],
-                "fields": ("phone", "email", "telegram_url", "instagram_url", "facebook_url"),
+                "fields": (
+                    "phone",
+                    "email",
+                    "telegram_url",
+                    "instagram_url",
+                    "facebook_url",
+                ),
             },
         ),
         (
@@ -79,7 +87,7 @@ class SiteSettingsAdmin(ReadableUnfoldFieldsMixin, SingletonModelAdminMixin, Mod
 
     class Media:
         css = {"all": ["css/admin/site_content.css"]}
-        js = ["js/admin/locale_switcher.js"]
+        js = ["js/admin/locale_switcher.js", "js/admin/collection_formset.js"]
 
 
 register_site_content_section_admins()

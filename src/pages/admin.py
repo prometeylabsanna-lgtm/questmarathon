@@ -7,7 +7,7 @@ from src.pages.models import LegalPage
 
 @admin.register(LegalPage)
 class LegalPageAdmin(ModelAdmin):
-    list_display = ("slug", "title_uk", "is_published_ua", "updated_at")
+    list_display = ("slug", "title_uk", "is_published", "updated_at")
     list_filter = ("is_published",)
     search_fields = ("slug", "title_uk", "title_ru")
     prepopulated_fields = {"slug": ("title_uk",)}
@@ -32,27 +32,10 @@ class LegalPageAdmin(ModelAdmin):
         ),
     )
 
-    @admin.display(description="Опубліковано", boolean=True)
-    def is_published_ua(self, obj):
-        return obj.is_published
-
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         if db_field.name in ("body_uk", "body_ru"):
             kwargs["widget"] = TinyMCE(attrs={"cols": 80, "rows": 30})
-        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
-        labels = {
-            "slug": "URL-slug",
-            "is_published": "Опубліковано",
-            "title_uk": "Заголовок",
-            "title_ru": "Заголовок",
-            "updated_label_uk": "Мітка оновлення",
-            "updated_label_ru": "Мітка оновлення",
-            "body_uk": "Текст (HTML)",
-            "body_ru": "Текст (HTML)",
-        }
-        if formfield is not None and db_field.name in labels:
-            formfield.label = labels[db_field.name]
-        return formfield
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
 
     class Media:
         css = {"all": ["css/admin/site_content.css"]}

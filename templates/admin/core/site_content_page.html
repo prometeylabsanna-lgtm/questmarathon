@@ -5,6 +5,7 @@
 {{ block.super }}
 <link rel="stylesheet" href="{% static 'css/admin/site_content.css' %}">
 <script src="{% static 'js/admin/locale_switcher.js' %}" defer></script>
+<script src="{% static 'js/admin/collection_formset.js' %}" defer></script>
 <style>
   .site-content-editor__file .flex {
     color: var(--color-font-default-light, #e5e7eb);
@@ -73,41 +74,30 @@
     {% endfor %}
 
     {% if collection_formset %}
-      <fieldset class="site-content-editor__fieldset border border-base-200 dark:border-base-700 rounded-default shadow-sm dark:bg-base-900">
+      <fieldset
+        class="site-content-editor__fieldset border border-base-200 dark:border-base-700 rounded-default shadow-sm dark:bg-base-900"
+        data-collection-root
+      >
         <legend class="site-content-editor__legend text-font-important-light dark:text-font-important-dark">
           {% if section.collection == "about_cards" %}{% trans "Картки" %}{% else %}{% trans "Питання FAQ" %}{% endif %}
         </legend>
         {{ collection_formset.management_form }}
-        <div class="site-content-editor__collection">
+        <div class="site-content-editor__collection" data-collection-list>
           {% for cform in collection_formset %}
-            <div class="site-content-editor__card border border-base-200 dark:border-base-700 rounded-default">
-              {% for hidden in cform.hidden_fields %}{{ hidden }}{% endfor %}
-              <div class="site-content-editor__card-meta" data-locale-field="all">
-                {% if cform.instance.pk %}<span class="text-font-subtle-light dark:text-font-subtle-dark">#{{ cform.instance.pk }}</span>{% endif %}
-                {% if cform.is_active %}
-                  <label class="site-content-editor__check">{{ cform.is_active }} {{ cform.is_active.label }}</label>
-                {% endif %}
-                {% if cform.DELETE %}
-                  <label class="site-content-editor__check">{{ cform.DELETE }} {% trans "Видалити" %}</label>
-                {% endif %}
-              </div>
-              {% for field in cform.visible_fields %}
-                {% if field.name != "is_active" and field.name != "DELETE" %}
-                  <div
-                    class="site-content-editor__field"
-                    data-locale-field="{% if field.name|slice:'-3:' == '_ru' %}ru{% elif field.name|slice:'-3:' == '_uk' %}uk{% else %}all{% endif %}"
-                  >
-                    <label class="site-content-editor__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}<div class="site-content-editor__errors">{{ field.errors }}</div>{% endif %}
-                  </div>
-                {% endif %}
-              {% endfor %}
-              {% if cform.non_field_errors %}
-                <div class="site-content-editor__errors">{{ cform.non_field_errors }}</div>
-              {% endif %}
-            </div>
+            {% include "admin/core/includes/collection_card.html" with cform=cform %}
           {% endfor %}
+        </div>
+        <template data-collection-empty>
+          {% include "admin/core/includes/collection_card.html" with cform=collection_formset.empty_form %}
+        </template>
+        <div class="site-content-editor__collection-actions">
+          <button
+            type="button"
+            class="site-content-editor__add-btn border border-base-200 dark:border-base-700 hover:border-primary-500 dark:hover:bg-primary-500/10"
+            data-collection-add
+          >
+            {% if section.collection == "about_cards" %}{% trans "Додати картку" %}{% else %}{% trans "Додати питання" %}{% endif %}
+          </button>
         </div>
       </fieldset>
     {% endif %}

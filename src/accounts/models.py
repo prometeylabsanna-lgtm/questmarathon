@@ -12,21 +12,27 @@ class UserProfile(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="profile",
+        verbose_name="Користувач",
     )
     full_name = models.CharField("Ім'я", max_length=150)
     phone = models.CharField("Телефон", max_length=32)
     payment_status = models.CharField(
+        "Статус оплати",
         max_length=16,
         choices=PaymentStatus.choices,
         default=PaymentStatus.UNPAID,
         db_index=True,
     )
-    current_level = models.PositiveSmallIntegerField(default=0)
-    locale = models.CharField(max_length=5, default="uk")
-    consent_terms_at = models.DateTimeField(null=True, blank=True)
-    consent_age18_at = models.DateTimeField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    current_level = models.PositiveSmallIntegerField("Поточний рівень", default=0)
+    locale = models.CharField("Мова інтерфейсу", max_length=5, default="uk")
+    consent_terms_at = models.DateTimeField(
+        "Згода з угодою", null=True, blank=True
+    )
+    consent_age18_at = models.DateTimeField(
+        "Підтвердження 18+", null=True, blank=True
+    )
+    created_at = models.DateTimeField("Створено", auto_now_add=True)
+    updated_at = models.DateTimeField("Оновлено", auto_now=True)
 
     class Meta:
         verbose_name = "Профіль гравця"

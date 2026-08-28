@@ -9,25 +9,27 @@ class QuestRoom(models.Model):
         MP3 = "mp3", "Аудіо"
         MP4 = "mp4", "Відео"
 
-    order = models.PositiveSmallIntegerField(unique=True)
-    title_uk = models.CharField(max_length=255)
-    title_ru = models.CharField(max_length=255, blank=True)
-    body_uk = models.TextField(blank=True)
-    body_ru = models.TextField(blank=True)
-    media_file = models.FileField(upload_to="quest/", blank=True)
+    order = models.PositiveSmallIntegerField("Номер кімнати", unique=True)
+    title_uk = models.CharField("Назва (українською)", max_length=255)
+    title_ru = models.CharField("Назва (російською)", max_length=255, blank=True)
+    body_uk = models.TextField("Текст завдання (українською)", blank=True)
+    body_ru = models.TextField("Текст завдання (російською)", blank=True)
+    media_file = models.FileField("Файл медіа", upload_to="quest/", blank=True)
     media_type = models.CharField(
+        "Тип медіа",
         max_length=8,
         choices=MediaType.choices,
         default=MediaType.NONE,
         blank=True,
     )
     keyword_normalized = models.CharField(
+        "Ключове слово",
         max_length=128,
-        help_text="Одне ключове слово для uk і ru (зберігається нормалізованим).",
+        help_text="Одне слово для української та російської. Зберігається нормалізованим.",
     )
-    is_active = models.BooleanField(default=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField("Активна", default=True)
+    updated_at = models.DateTimeField("Оновлено", auto_now=True)
+    created_at = models.DateTimeField("Створено", auto_now_add=True)
 
     class Meta:
         verbose_name = "Кімната квесту"
@@ -35,7 +37,7 @@ class QuestRoom(models.Model):
         ordering = ["order"]
 
     def __str__(self) -> str:
-        return f"Room {self.order}: {self.title_uk}"
+        return f"Кімната {self.order}: {self.title_uk}"
 
     def save(self, *args, **kwargs):
         self.keyword_normalized = normalize_keyword(self.keyword_normalized)

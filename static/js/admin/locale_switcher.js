@@ -11,7 +11,6 @@
     if (!switcher) return;
 
     var buttons = switcher.querySelectorAll("[data-locale]");
-    var targets = root.querySelectorAll("[data-locale-field]");
 
     function apply(locale) {
       buttons.forEach(function (btn) {
@@ -19,7 +18,7 @@
         btn.classList.toggle("is-active", active);
         btn.setAttribute("aria-pressed", active ? "true" : "false");
       });
-      targets.forEach(function (el) {
+      root.querySelectorAll("[data-locale-field]").forEach(function (el) {
         var loc = el.getAttribute("data-locale-field");
         el.hidden = loc !== locale && loc !== "all";
       });

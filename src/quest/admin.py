@@ -53,23 +53,6 @@ class QuestRoomAdmin(ModelAdmin):
     def keyword_badge(self, obj):
         return obj.keyword_normalized or "—"
 
-    def formfield_for_dbfield(self, db_field, request, **kwargs):
-        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
-        labels = {
-            "order": "Номер кімнати",
-            "is_active": "Активна",
-            "keyword_normalized": "Ключове слово",
-            "title_uk": "Назва",
-            "title_ru": "Назва",
-            "body_uk": "Текст завдання",
-            "body_ru": "Текст завдання",
-            "media_file": "Файл медіа",
-            "media_type": "Тип медіа",
-        }
-        if formfield is not None and db_field.name in labels:
-            formfield.label = labels[db_field.name]
-        return formfield
-
     class Media:
         css = {"all": ["css/admin/site_content.css"]}
         js = ["js/admin/locale_switcher.js"]

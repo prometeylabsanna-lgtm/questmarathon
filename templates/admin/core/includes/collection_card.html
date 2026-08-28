@@ -1,0 +1,28 @@
+{% load i18n %}
+<div class="site-content-editor__card border border-base-200 dark:border-base-700 rounded-default">
+  {% for hidden in cform.hidden_fields %}{{ hidden }}{% endfor %}
+  <div class="site-content-editor__card-meta" data-locale-field="all">
+    {% if cform.instance.pk %}<span class="text-font-subtle-light dark:text-font-subtle-dark">#{{ cform.instance.pk }}</span>{% endif %}
+    {% if cform.is_active %}
+      <label class="site-content-editor__check">{{ cform.is_active }} {{ cform.is_active.label }}</label>
+    {% endif %}
+    {% if cform.DELETE %}
+      <label class="site-content-editor__check">{{ cform.DELETE }} {% trans "Видалити" %}</label>
+    {% endif %}
+  </div>
+  {% for field in cform.visible_fields %}
+    {% if field.name != "is_active" and field.name != "DELETE" %}
+      <div
+        class="site-content-editor__field"
+        data-locale-field="{% if field.name|slice:'-3:' == '_ru' %}ru{% elif field.name|slice:'-3:' == '_uk' %}uk{% else %}all{% endif %}"
+      >
+        <label class="site-content-editor__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="site-content-editor__errors">{{ field.errors }}</div>{% endif %}
+      </div>
+    {% endif %}
+  {% endfor %}
+  {% if cform.non_field_errors %}
+    <div class="site-content-editor__errors">{{ cform.non_field_errors }}</div>
+  {% endif %}
+</div>

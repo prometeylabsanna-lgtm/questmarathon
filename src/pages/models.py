@@ -5,16 +5,24 @@ from django.urls import reverse
 class LegalPage(models.Model):
     """Legal documents with TinyMCE HTML bodies (uk/ru share slug)."""
 
-    slug = models.SlugField(max_length=64, unique=True)
-    title_uk = models.CharField(max_length=255)
-    title_ru = models.CharField(max_length=255, blank=True)
-    body_uk = models.TextField(blank=True, help_text="HTML (TinyMCE)")
-    body_ru = models.TextField(blank=True, help_text="HTML (TinyMCE)")
-    updated_label_uk = models.CharField(max_length=255, blank=True)
-    updated_label_ru = models.CharField(max_length=255, blank=True)
-    is_published = models.BooleanField(default=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField("URL-slug", max_length=64, unique=True)
+    title_uk = models.CharField("Заголовок (українською)", max_length=255)
+    title_ru = models.CharField("Заголовок (російською)", max_length=255, blank=True)
+    body_uk = models.TextField(
+        "Текст (українською)", blank=True, help_text="HTML (редактор TinyMCE)"
+    )
+    body_ru = models.TextField(
+        "Текст (російською)", blank=True, help_text="HTML (редактор TinyMCE)"
+    )
+    updated_label_uk = models.CharField(
+        "Мітка оновлення (українською)", max_length=255, blank=True
+    )
+    updated_label_ru = models.CharField(
+        "Мітка оновлення (російською)", max_length=255, blank=True
+    )
+    is_published = models.BooleanField("Опубліковано", default=True)
+    updated_at = models.DateTimeField("Оновлено", auto_now=True)
+    created_at = models.DateTimeField("Створено", auto_now_add=True)
 
     class Meta:
         verbose_name = "Юридична сторінка"
@@ -44,17 +52,17 @@ class LegalPage(models.Model):
 
 
 class FAQItem(models.Model):
-    question_uk = models.CharField(max_length=255)
-    question_ru = models.CharField(max_length=255, blank=True)
-    answer_uk = models.TextField()
-    answer_ru = models.TextField(blank=True)
-    sort_order = models.PositiveSmallIntegerField(default=0)
-    is_active = models.BooleanField(default=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    question_uk = models.CharField("Питання (українською)", max_length=255)
+    question_ru = models.CharField("Питання (російською)", max_length=255, blank=True)
+    answer_uk = models.TextField("Відповідь (українською)")
+    answer_ru = models.TextField("Відповідь (російською)", blank=True)
+    sort_order = models.PositiveSmallIntegerField("Порядок", default=0)
+    is_active = models.BooleanField("Активний", default=True)
+    updated_at = models.DateTimeField("Оновлено", auto_now=True)
 
     class Meta:
-        verbose_name = "FAQ пункт"
-        verbose_name_plural = "FAQ пункти"
+        verbose_name = "Пункт FAQ"
+        verbose_name_plural = "Пункти FAQ"
         ordering = ["sort_order", "pk"]
 
     def __str__(self) -> str:
@@ -72,13 +80,13 @@ class FAQItem(models.Model):
 
 
 class AboutCard(models.Model):
-    title_uk = models.CharField(max_length=255)
-    title_ru = models.CharField(max_length=255, blank=True)
-    text_uk = models.TextField()
-    text_ru = models.TextField(blank=True)
-    sort_order = models.PositiveSmallIntegerField(default=0)
-    is_active = models.BooleanField(default=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    title_uk = models.CharField("Заголовок (українською)", max_length=255)
+    title_ru = models.CharField("Заголовок (російською)", max_length=255, blank=True)
+    text_uk = models.TextField("Текст (українською)")
+    text_ru = models.TextField("Текст (російською)", blank=True)
+    sort_order = models.PositiveSmallIntegerField("Порядок", default=0)
+    is_active = models.BooleanField("Активна", default=True)
+    updated_at = models.DateTimeField("Оновлено", auto_now=True)
 
     class Meta:
         verbose_name = "Картка «Про нас»"
@@ -106,13 +114,15 @@ class InfoPage(models.Model):
         UK = "uk", "Українська"
         RU = "ru", "Русский"
 
-    slug = models.SlugField(max_length=64)
-    locale = models.CharField(max_length=5, choices=Locale.choices, default=Locale.UK)
-    title = models.CharField(max_length=255)
-    body = models.TextField(blank=True)
-    is_published = models.BooleanField(default=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField("Slug", max_length=64)
+    locale = models.CharField(
+        "Мова", max_length=5, choices=Locale.choices, default=Locale.UK
+    )
+    title = models.CharField("Заголовок", max_length=255)
+    body = models.TextField("Текст", blank=True)
+    is_published = models.BooleanField("Опубліковано", default=True)
+    updated_at = models.DateTimeField("Оновлено", auto_now=True)
+    created_at = models.DateTimeField("Створено", auto_now_add=True)
 
     class Meta:
         verbose_name = "Інфосторінка (legacy)"

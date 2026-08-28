@@ -98,7 +98,7 @@ AboutCardFormSet = modelformset_factory(
     AboutCard,
     form=AboutCardForm,
     formset=OrderedBaseFormSet,
-    extra=1,
+    extra=0,
     can_delete=True,
 )
 
@@ -106,7 +106,7 @@ FAQItemFormSet = modelformset_factory(
     FAQItem,
     form=FAQItemForm,
     formset=OrderedBaseFormSet,
-    extra=1,
+    extra=0,
     can_delete=True,
 )
 

@@ -10,15 +10,17 @@ SITE_SETTINGS_CACHE_KEY = "core:site_settings_v1"
 class SiteStats(models.Model):
     """Singleton denormalized counter of paid participants."""
 
-    participants_count = models.PositiveIntegerField(default=0)
-    updated_at = models.DateTimeField(auto_now=True)
+    participants_count = models.PositiveIntegerField(
+        "Кількість учасників", default=0
+    )
+    updated_at = models.DateTimeField("Оновлено", auto_now=True)
 
     class Meta:
         verbose_name = "Статистика сайту"
         verbose_name_plural = "Статистика сайту"
 
     def __str__(self) -> str:
-        return f"Paid participants: {self.participants_count}"
+        return f"Учасників: {self.participants_count}"
 
     def save(self, *args, **kwargs):
         self.pk = 1
@@ -47,26 +49,42 @@ class SiteStats(models.Model):
 class SiteSettings(models.Model):
     """Singleton: branding, contacts, socials."""
 
-    site_name = models.CharField(max_length=128, default="Квест-марафон")
-    logo = models.ImageField(upload_to="branding/", blank=True)
-    favicon = models.ImageField(upload_to="branding/", blank=True)
-    apple_touch_icon = models.ImageField(upload_to="branding/", blank=True)
-    phone = models.CharField(max_length=32, blank=True, default="+38 (093) 000-11-22")
-    email = models.EmailField(blank=True, default="info@example.com")
+    site_name = models.CharField("Назва сайту", max_length=128, default="Квест-марафон")
+    logo = models.ImageField("Логотип", upload_to="branding/", blank=True)
+    favicon = models.ImageField("Favicon", upload_to="branding/", blank=True)
+    apple_touch_icon = models.ImageField(
+        "Іконка Apple Touch", upload_to="branding/", blank=True
+    )
+    phone = models.CharField(
+        "Телефон", max_length=32, blank=True, default="+38 (093) 000-11-22"
+    )
+    email = models.EmailField("Email", blank=True, default="info@example.com")
     address_uk = models.CharField(
-        max_length=255, blank=True, default="вул. Хрещатик, 1, м. Київ"
+        "Адреса (українською)",
+        max_length=255,
+        blank=True,
+        default="вул. Хрещатик, 1, м. Київ",
     )
     address_ru = models.CharField(
-        max_length=255, blank=True, default="ул. Крещатик, 1, г. Киев"
+        "Адреса (російською)",
+        max_length=255,
+        blank=True,
+        default="ул. Крещатик, 1, г. Киев",
     )
-    telegram_url = models.URLField(blank=True, default="https://t.me/kvestmarafon")
+    telegram_url = models.URLField(
+        "Посилання Telegram", blank=True, default="https://t.me/kvestmarafon"
+    )
     instagram_url = models.URLField(
-        blank=True, default="https://www.instagram.com/kvestmarafon/"
+        "Посилання Instagram",
+        blank=True,
+        default="https://www.instagram.com/kvestmarafon/",
     )
     facebook_url = models.URLField(
-        blank=True, default="https://www.facebook.com/kvestmarafon"
+        "Посилання Facebook",
+        blank=True,
+        default="https://www.facebook.com/kvestmarafon",
     )
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField("Оновлено", auto_now=True)
 
     class Meta:
         verbose_name = "Налаштування сайту"
@@ -121,20 +139,23 @@ class SiteBlock(models.Model):
         IMAGE = "image", "Фото"
         URL = "url", "Посилання"
 
-    page = models.CharField(max_length=32, choices=Page.choices)
-    key = models.CharField(max_length=64)
-    label = models.CharField(max_length=128, blank=True)
+    page = models.CharField("Сторінка", max_length=32, choices=Page.choices)
+    key = models.CharField("Ключ", max_length=64)
+    label = models.CharField("Підпис", max_length=128, blank=True)
     content_type = models.CharField(
-        max_length=16, choices=ContentType.choices, default=ContentType.TEXT
+        "Тип контенту",
+        max_length=16,
+        choices=ContentType.choices,
+        default=ContentType.TEXT,
     )
-    text_uk = models.TextField(blank=True)
-    text_ru = models.TextField(blank=True)
-    image = models.ImageField(upload_to="blocks/", blank=True)
-    link_url = models.CharField(max_length=512, blank=True)
-    link_label = models.CharField(max_length=128, blank=True)
-    sort_order = models.PositiveSmallIntegerField(default=0)
-    is_active = models.BooleanField(default=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    text_uk = models.TextField("Текст (українською)", blank=True)
+    text_ru = models.TextField("Текст (російською)", blank=True)
+    image = models.ImageField("Зображення", upload_to="blocks/", blank=True)
+    link_url = models.CharField("URL посилання", max_length=512, blank=True)
+    link_label = models.CharField("Текст посилання", max_length=128, blank=True)
+    sort_order = models.PositiveSmallIntegerField("Порядок", default=0)
+    is_active = models.BooleanField("Активний", default=True)
+    updated_at = models.DateTimeField("Оновлено", auto_now=True)
 
     class Meta:
         verbose_name = "Блок контенту"
@@ -163,14 +184,11 @@ class SiteBlock(models.Model):
         cache.delete(SITE_BLOCKS_CACHE_KEY)
 
 
-# --- CMS proxy sections (navigation slots; not separate tables) ---
-
-
 class HomeIntroSettings(SiteSettings):
     class Meta:
         proxy = True
-        verbose_name = "Головна — Intro"
-        verbose_name_plural = "Головна — Intro"
+        verbose_name = "Головна"
+        verbose_name_plural = "Головна"
 
 
 class SiteHeaderSettings(SiteSettings):
@@ -190,19 +208,19 @@ class SiteFooterSettings(SiteSettings):
 class AboutPageSettings(SiteSettings):
     class Meta:
         proxy = True
-        verbose_name = "Про нас — заголовки"
-        verbose_name_plural = "Про нас — заголовки"
+        verbose_name = "Про нас"
+        verbose_name_plural = "Про нас"
 
 
 class FaqPageSettings(SiteSettings):
     class Meta:
         proxy = True
-        verbose_name = "FAQ — заголовки"
-        verbose_name_plural = "FAQ — заголовки"
+        verbose_name = "FAQ"
+        verbose_name_plural = "FAQ"
 
 
 class ContactsPageSettings(SiteSettings):
     class Meta:
         proxy = True
-        verbose_name = "Контакти — тексти"
-        verbose_name_plural = "Контакти — тексти"
+        verbose_name = "Контакти"
+        verbose_name_plural = "Контакти"
