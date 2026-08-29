@@ -89,25 +89,55 @@ DATABASES = {
 }
 
 _database_url = config("DATABASE_URL", default="")
-if _database_url.startswith("postgres"):
-    # postgres://user:pass@host:5432/db?sslmode=require (Neon / Vercel)
+if _database_url:
     import urllib.parse as _urlparse
 
     _parsed = _urlparse.urlparse(_database_url)
-    _qs = _urlparse.parse_qs(_parsed.query)
-    _sslmode = (_qs.get("sslmode") or ["require"])[0]
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": _parsed.path.lstrip("/"),
-            "USER": _urlparse.unquote(_parsed.username or ""),
-            "PASSWORD": _urlparse.unquote(_parsed.password or ""),
-            "HOST": _parsed.hostname,
-            "PORT": _parsed.port or 5432,
-            "OPTIONS": {"sslmode": _sslmode},
-            "CONN_MAX_AGE": config("DB_CONN_MAX_AGE", default=0, cast=int),
+    _scheme = (_parsed.scheme or "").split("+")[0].lower()
+    _name = _parsed.path.lstrip("/")
+    _user = _urlparse.unquote(_parsed.username or "")
+    _password = _urlparse.unquote(_parsed.password or "")
+    _host = _parsed.hostname or ""
+    _conn_max_age = config("DB_CONN_MAX_AGE", default=0, cast=int)
+
+    if _scheme in ("postgres", "postgresql"):
+        # postgres://user:pass@host:5432/db?sslmode=require (Docker / Neon / staging)
+        _qs = _urlparse.parse_qs(_parsed.query)
+        _sslmode = (_qs.get("sslmode") or ["require"])[0]
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.postgresql",
+                "NAME": _name,
+                "USER": _user,
+                "PASSWORD": _password,
+                "HOST": _host,
+                "PORT": _parsed.port or 5432,
+                "OPTIONS": {"sslmode": _sslmode},
+                "CONN_MAX_AGE": _conn_max_age,
+            }
         }
-    }
+    elif _scheme == "mysql":
+        # mysql://user:pass@host:3306/db — Hosting Ukraine (MySQL 8.x)
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.mysql",
+                "NAME": _name,
+                "USER": _user,
+                "PASSWORD": _password,
+                "HOST": _host,
+                "PORT": _parsed.port or 3306,
+                "OPTIONS": {
+                    "charset": "utf8mb4",
+                    "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+                },
+                "CONN_MAX_AGE": _conn_max_age,
+            }
+        }
+    else:
+        raise ValueError(
+            f"Unsupported DATABASE_URL scheme {_parsed.scheme!r}. "
+            "Use postgres://, postgresql://, or mysql://"
+        )
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

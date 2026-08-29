@@ -1,8 +1,9 @@
 # Hosting Ukraine — Quest (www.kvest-marafon.com)
 
-Акаунт: `as626693` · тариф Бізнес 2G · Cloud PostgreSQL · Python 3.12 · Gunicorn.
+Акаунт: `as626693` · тариф Бізнес 2G · **MySQL** (у тарифі) · Python 3.12+ · Gunicorn.
 
-Канонічний хост: **www.kvest-marafon.com**.
+Канонічний хост: **www.kvest-marafon.com**.  
+Кореневий каталог сайту: `/home/as626693/kvest-marafon.com/www/`.
 
 ---
 
@@ -10,76 +11,74 @@
 
 ### Домен і SSL
 
-1. Прив’язати `kvest-marafon.com` і `www` до хостинг-акаунта.
-2. DNS (A/AAAA або NS у HU) на IP з панелі.
-3. SSL Let’s Encrypt для apex + www.
-4. Редірект apex → www.
+1. Сайт `www.kvest-marafon.com` прив’язаний.
+2. SSL Let’s Encrypt + редірект http → https.
+3. Редірект apex → www (за потреби).
 
 ### Сайт → проксування
 
-1. **Налаштування сайту** → веб-сервер **Проксування трафіку**.
-2. **Налаштування веб-застосунку** → записати локальний IP і порт (зазвичай `3000`).
-3. Ці значення → `HU_BIND_HOST` / `HU_BIND_PORT` у `.env`.
+1. **Налаштування сайту** → вкладка **Основні налаштування** → **Веб-сервер** → **Проксування трафіку** → Зберегти.
+2. **Налаштування веб-застосунку** → записати локальний IP і порт → `HU_BIND_HOST` / `HU_BIND_PORT`.
 
 ### Python
 
-1. **Налаштування хостинг-акаунта** → Python **3.12**.
-2. SSH: `source ~/.bashrc` → `python3.12 -V`.
+1. **Налаштування хостинг-акаунта** → Python **3.12+** (достатньо 3.14).
+2. SSH: `source ~/.bashrc` → `python -V`.
 
-### Cloud PostgreSQL
+### MySQL (у вартості хостингу)
 
-1. Замовити інстанс PostgreSQL **16**.
-2. Створити БД і користувача.
-3. **Безпека** → додати хостинг-акаунт `as626693`.
-4. Зібрати `DATABASE_URL`:
-   `postgresql://USER:PASSWORD@HOST:PORT/DBNAME?sslmode=require`
-5. Перевірка з SSH (якщо `require` падає — спробувати `prefer`).
+1. Ліве меню **MYSQL → Бази даних**.
+2. Створити базу (бажано **MySQL 8.x** — Django 5.2 не підтримує 5.7).
+3. Створити користувача, прив’язати до бази, зберегти пароль.
+4. Дані підключення (хост, порт, ім’я БД, логін) — з картки БД у панелі.
+5. Зібрати `DATABASE_URL`:
+   `mysql://USER:PASSWORD@HOST:3306/DBNAME`  
+   Якщо в паролі є спецсимволи (`@`, `#`, `%` тощо) — URL-encode їх.
+
+Cloud PostgreSQL **не потрібен**.
 
 ### Каталог сайту
 
-Код у корені сайту (шлях з панелі, напр. `~/kvest-marafon.com/`).  
-`media/` і `staticfiles/` мають бути writable.
+Код у `/home/as626693/kvest-marafon.com/www/` (шлях з панелі).  
+`media/` і `staticfiles/` writable.
 
 ---
 
 ## 2. Перший деплой (SSH)
 
 ```bash
-cd ~/kvest-marafon.com   # фактичний шлях сайту
+cd /home/as626693/kvest-marafon.com/www
 # git clone / rsync коду сюди
 
 cp deploy/hosting-ukraine/.env.production.example .env
-# відредагувати .env: SECRET_KEY, DATABASE_URL, HU_BIND_*, LiqPay, Resend
+# відредагувати .env: SECRET_KEY, DATABASE_URL (mysql://...), HU_BIND_*, LiqPay, Resend
 
-bash deploy/hosting-ukraine/bootstrap.sh
-# перший раз зі seed CMS/адміна:
-# SEED=1 bash deploy/hosting-ukraine/bootstrap.sh
+# якщо python = 3.14:
+PYTHON_BIN=python3.14 SEED=1 bash deploy/hosting-ukraine/bootstrap.sh
+# або: PYTHON_BIN=python SEED=1 bash deploy/hosting-ukraine/bootstrap.sh
 ```
 
 У панелі **Налаштування веб-застосунку**:
 
 | Поле | Значення |
 |------|----------|
-| Каталог запуску | корінь проєкту (де `manage.py`) |
+| Каталог запуску | `/home/as626693/kvest-marafon.com/www` |
 | Команда запуску | `bash deploy/hosting-ukraine/start.sh` |
 
-Зберегти → запустити. Логи — блок «Логи застосунку».
+Зберегти → запустити. Логи — «Логи застосунку».
 
 ---
 
 ## 3. Оновлення коду
 
 ```bash
-cd ~/kvest-marafon.com
+cd /home/as626693/kvest-marafon.com/www
 git pull
-bash deploy/hosting-ukraine/bootstrap.sh   # без SEED
+PYTHON_BIN=python bash deploy/hosting-ukraine/bootstrap.sh
 # у панелі: Перезапустити веб-застосунок
 ```
 
-`migrate` / `collectstatic` — у bootstrap; **не** в start-команді.  
-`seed_demo` — лише одноразово (`SEED=1`).
-
-Supervisor для веб-процесу не потрібен (рестарт через проксування HU).
+`SEED=1` — лише перший раз.
 
 ---
 
@@ -87,14 +86,11 @@ Supervisor для веб-процесу не потрібен (рестарт ч
 
 - [ ] DNS + SSL (www і apex)
 - [ ] Проксування; gunicorn на IP:порт з панелі
-- [ ] Cloud PG з `as626693`; migrate OK
+- [ ] MySQL 8.x; `migrate` OK
 - [ ] `https://www.kvest-marafon.com/api/v1/health/` → `{"status":"ok"}`
-- [ ] Адмінка /static/ (Unfold) і upload `/media/`
-- [ ] `ALLOWED_HOSTS` / `CSRF_TRUSTED_ORIGINS` — обидва хости
-- [ ] `PAYMENTS_DEV_BYPASS=False`; LiqPay URL на www
-- [ ] Resend + `DEFAULT_FROM_EMAIL`; SPF/DKIM за потреби
-- [ ] Адмін-пароль не дефолтний; `ADMIN_PASSWORD_FORCE=False`
-- [ ] Бекап Cloud PG + за потреби cron dump/media
+- [ ] Адмінка /static/ і upload `/media/`
+- [ ] `ALLOWED_HOSTS` / `CSRF_TRUSTED_ORIGINS`
+- [ ] LiqPay / Resend / адмін-пароль
 
 ---
 
@@ -104,4 +100,4 @@ Supervisor для веб-процесу не потрібен (рестарт ч
 |------|-------------|
 | `bootstrap.sh` | venv, pip, migrate, collectstatic (+ опційний seed) |
 | `start.sh` | gunicorn bind на `HU_BIND_HOST:HU_BIND_PORT` |
-| `.env.production.example` | шаблон `.env` на сервері |
+| `.env.production.example` | шаблон `.env` (MySQL) |
