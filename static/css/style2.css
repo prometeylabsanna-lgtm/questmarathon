@@ -81,9 +81,33 @@
   flex-shrink: 0;
 }
 
-.qm-footer__links { display: flex; gap: 18px; flex-wrap: wrap; }
+.qm-footer__links { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
 .qm-footer__link { color: var(--qm-muted); text-decoration: none; transition: color 0.15s ease; }
 .qm-footer__link:hover { color: var(--qm-accent); }
+.qm-footer__privacy-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.qm-footer__liqpay {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  line-height: 0;
+  opacity: 0.85;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.qm-footer__liqpay-img {
+  display: block;
+  width: auto;
+  height: 16px;
+  min-height: 12px;
+  max-height: 16px;
+}
 .qm-footer__copy { color: var(--qm-muted); }
 
 .qm-footer__meta {
@@ -140,6 +164,16 @@ a.qm-footer__credit:focus-visible {
     display: block;
     line-height: 1.35;
     overflow-wrap: anywhere;
+  }
+
+  .qm-footer__privacy-row {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .qm-footer__liqpay-img {
+    height: 14px;
+    max-height: 14px;
   }
 
   .qm-footer__meta {

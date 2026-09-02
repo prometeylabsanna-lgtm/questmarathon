@@ -1,8 +1,20 @@
-{% load i18n site_content %}
+{% load i18n static site_content %}
 <footer class="qm-footer">
   <nav class="qm-footer__links" aria-label="{% trans 'Юридичні посилання' %}">
     <a class="qm-footer__link" href="{% url 'pages:terms' %}">{% block_plain "site" "footer_link_terms" %}</a>
-    <a class="qm-footer__link" href="{% url 'pages:privacy' %}">{% block_plain "site" "footer_link_privacy" %}</a>
+    <div class="qm-footer__privacy-row">
+      <a class="qm-footer__link" href="{% url 'pages:privacy' %}">{% block_plain "site" "footer_link_privacy" %}</a>
+      <span class="qm-footer__liqpay" aria-hidden="true">
+        <img
+          class="qm-footer__liqpay-img"
+          src="{% static 'images/partners/logo-liqpay-mono.svg' %}"
+          alt=""
+          width="77"
+          height="16"
+          decoding="async"
+        >
+      </span>
+    </div>
   </nav>
   <div class="qm-footer__meta">
     <div class="qm-footer__copy">© {% now "Y" %} {% block_plain "site" "footer_copyright" %}</div>
