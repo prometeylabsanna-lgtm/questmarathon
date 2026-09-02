@@ -104,9 +104,8 @@
 .qm-footer__liqpay-img {
   display: block;
   width: auto;
-  height: 16px;
+  height: 12px;
   min-height: 12px;
-  max-height: 16px;
 }
 .qm-footer__copy { color: var(--qm-muted); }
 
@@ -169,11 +168,6 @@ a.qm-footer__credit:focus-visible {
   .qm-footer__privacy-row {
     width: 100%;
     gap: 10px;
-  }
-
-  .qm-footer__liqpay-img {
-    height: 14px;
-    max-height: 14px;
   }
 
   .qm-footer__meta {
