@@ -298,6 +298,11 @@ UNFOLD = {
                         "link": admin_path("core/contactspagesettings/"),
                     },
                     {
+                        "title": "Рейтинг",
+                        "icon": "leaderboard",
+                        "link": admin_path("core/ratingpagesettings/"),
+                    },
+                    {
                         "title": "Юридичні сторінки",
                         "icon": "gavel",
                         "link": admin_path("pages/legalpage/"),

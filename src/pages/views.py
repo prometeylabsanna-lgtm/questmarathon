@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.utils.translation import get_language, gettext as _
 
-from src.core.block_services import get_block_text, normalize_locale
+from src.core.block_services import get_block_file, get_block_text, normalize_locale
 from src.core.models import SiteSettings
 from src.pages.models import AboutCard, FAQItem, LegalPage
 
@@ -14,6 +14,26 @@ def home(request):
         "pages/home.html",
         {"page_title": _("Квест-марафон")},
     )
+
+
+def rating(request):
+    locale = normalize_locale(get_language())
+    file_block = get_block_file("rating", "rating_file")
+    rating_file_url = ""
+    rating_file_kind = ""
+    if file_block is not None:
+        rating_file_url = file_block.file.url
+        rating_file_kind = file_block.file_kind()
+
+    context = {
+        "page_title": get_block_text("rating", "page_title", locale=locale),
+        "page_lead": get_block_text("rating", "page_lead", locale=locale),
+        "empty_message": get_block_text("rating", "empty_message", locale=locale),
+        "rating_file_url": rating_file_url,
+        "rating_file_kind": rating_file_kind,
+        "rating_has_file": bool(rating_file_url and rating_file_kind),
+    }
+    return render(request, "pages/rating.html", context)
 
 
 def info_page(request, slug: str):

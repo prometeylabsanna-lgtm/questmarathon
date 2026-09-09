@@ -82,6 +82,20 @@ BLOCK_DEFAULTS: dict[tuple[str, str], dict[str, str]] = {
     ("contacts", "label_phone"): {"text_uk": "Телефон", "text_ru": "Телефон"},
     ("contacts", "label_email"): {"text_uk": "Email", "text_ru": "Email"},
     ("contacts", "label_address"): {"text_uk": "Адреса", "text_ru": "Адрес"},
+    # header rating nav
+    ("site", "header_nav_rating"): {"text_uk": "Рейтинг", "text_ru": "Рейтинг"},
+    ("site", "header_nav_rating_visible"): {"text_uk": "1", "text_ru": "1"},
+    # rating page
+    ("rating", "page_title"): {"text_uk": "Рейтинг", "text_ru": "Рейтинг"},
+    ("rating", "page_lead"): {
+        "text_uk": "Актуальний рейтинг учасників квест-марафону.",
+        "text_ru": "Актуальный рейтинг участников квест-марафона.",
+    },
+    ("rating", "empty_message"): {
+        "text_uk": "Рейтинг оновлюється. Будь ласка, завітайте пізніше.",
+        "text_ru": "Рейтинг обновляется. Пожалуйста, загляните позже.",
+    },
+    ("rating", "rating_file"): {},
 }
 
 BLOCK_LABELS: dict[tuple[str, str], str] = {
@@ -100,11 +114,13 @@ BLOCK_LABELS: dict[tuple[str, str], str] = {
     ("site", "header_nav_about"): "Пункт «Про нас»",
     ("site", "header_nav_contacts"): "Пункт «Контакти»",
     ("site", "header_nav_faq"): "Пункт «FAQ»",
+    ("site", "header_nav_rating"): "Пункт «Рейтинг»",
     ("site", "header_brand_name"): "Назва бренду",
     ("site", "header_nav_home_visible"): "Показувати «Головна»",
     ("site", "header_nav_about_visible"): "Показувати «Про нас»",
     ("site", "header_nav_contacts_visible"): "Показувати «Контакти»",
     ("site", "header_nav_faq_visible"): "Показувати «FAQ»",
+    ("site", "header_nav_rating_visible"): "Показувати «Рейтинг»",
     ("site", "footer_link_terms"): "Посилання «Угода»",
     ("site", "footer_link_privacy"): "Посилання «Конфіденційність»",
     ("site", "footer_copyright"): "Назва в copyright",
@@ -117,10 +133,15 @@ BLOCK_LABELS: dict[tuple[str, str], str] = {
     ("contacts", "label_phone"): "Підпис «Телефон»",
     ("contacts", "label_email"): "Підпис «Email»",
     ("contacts", "label_address"): "Підпис «Адреса»",
+    ("rating", "page_title"): "Заголовок сторінки",
+    ("rating", "page_lead"): "Підзаголовок",
+    ("rating", "empty_message"): "Повідомлення без файлу",
+    ("rating", "rating_file"): "Файл рейтингу (PDF / PNG / JPG)",
 }
 
 BLOCK_CONTENT_TYPES: dict[tuple[str, str], str] = {
     ("home", "preview_image"): "image",
+    ("rating", "rating_file"): "file",
 }
 
 INLINE_KEYS = frozenset(
@@ -133,6 +154,7 @@ INLINE_KEYS = frozenset(
         "header_nav_about",
         "header_nav_contacts",
         "header_nav_faq",
+        "header_nav_rating",
         "header_brand_name",
         "footer_link_terms",
         "footer_link_privacy",
@@ -152,6 +174,7 @@ MULTILINE_KEYS = frozenset(
         "rule_3",
         "rule_4",
         "page_lead",
+        "empty_message",
         "footer_credit",
     }
 )

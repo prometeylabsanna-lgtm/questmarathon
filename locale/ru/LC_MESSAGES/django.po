@@ -437,3 +437,27 @@ msgstr "Адрес"
 #: templates/pages/contacts.html
 msgid "Соцмережі"
 msgstr "Соцсети"
+
+#: templates/pages/rating.html
+msgid "Відкрити рейтинг на весь екран"
+msgstr "Открыть рейтинг на весь экран"
+
+#: templates/pages/rating.html
+msgid "Натисніть, щоб збільшити"
+msgstr "Нажмите, чтобы увеличить"
+
+#: templates/pages/rating.html
+msgid "Перегляд рейтингу"
+msgstr "Просмотр рейтинга"
+
+#: templates/pages/rating.html
+msgid "Закрити"
+msgstr "Закрыть"
+
+#: src/core/validators.py
+msgid "Дозволені формати: PDF, PNG, JPG, JPEG."
+msgstr "Разрешённые форматы: PDF, PNG, JPG, JPEG."
+
+#: src/core/validators.py
+msgid "Розмір файлу не може перевищувати 10 МБ."
+msgstr "Размер файла не может превышать 10 МБ."

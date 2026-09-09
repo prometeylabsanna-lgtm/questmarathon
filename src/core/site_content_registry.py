@@ -79,6 +79,8 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
             ("site", "header_nav_contacts_visible"),
             ("site", "header_nav_faq"),
             ("site", "header_nav_faq_visible"),
+            ("site", "header_nav_rating"),
+            ("site", "header_nav_rating_visible"),
         ),
         field_groups=(
             FieldGroup("Бренд", ("header_brand_name",)),
@@ -93,6 +95,8 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
                     "header_nav_contacts_visible",
                     "header_nav_faq",
                     "header_nav_faq_visible",
+                    "header_nav_rating",
+                    "header_nav_rating_visible",
                 ),
             ),
         ),
@@ -167,6 +171,26 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
         field_groups=(
             FieldGroup("Заголовки", ("page_title", "page_lead")),
             FieldGroup("Мітки полів", ("label_phone", "label_email", "label_address")),
+        ),
+    ),
+    ContentSection(
+        slug="main",
+        page_slug="rating",
+        title="Рейтинг",
+        sidebar_title="Рейтинг",
+        sidebar_icon="leaderboard",
+        preview_url="/rating/",
+        description="Заголовки та файл рейтингу (PDF або зображення, до 10 МБ).",
+        admin_model_name="ratingpagesettings",
+        blocks=(
+            ("rating", "page_title"),
+            ("rating", "page_lead"),
+            ("rating", "empty_message"),
+            ("rating", "rating_file"),
+        ),
+        field_groups=(
+            FieldGroup("Заголовки", ("page_title", "page_lead", "empty_message")),
+            FieldGroup("Файл", ("rating_file",)),
         ),
     ),
 )

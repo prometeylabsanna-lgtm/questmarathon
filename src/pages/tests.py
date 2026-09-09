@@ -150,3 +150,63 @@ class RegistryTests(TestCase):
         validate_registry()
         keys = all_registry_block_keys()
         self.assertEqual(len(keys), len(set(keys)))
+
+
+class RatingPageTests(TestCase):
+    def test_empty_state_message(self):
+        response = self.client.get(reverse("pages:rating"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "qm-rating__empty")
+        self.assertContains(response, "Рейтинг оновлюється")
+
+    def test_image_rating_renders_lightbox(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        from src.core.models import SiteBlock
+
+        png = (
+            b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01"
+            b"\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00"
+            b"\x00\x0cIDATx\x9cc\xf8\x0f\x00\x00\x01\x01\x00\x05\x18"
+            b"\xd8N\x00\x00\x00\x00IEND\xaeB`\x82"
+        )
+        uploaded = SimpleUploadedFile("rating.png", png, content_type="image/png")
+        SiteBlock.objects.create(
+            page=SiteBlock.Page.RATING,
+            key="rating_file",
+            content_type=SiteBlock.ContentType.FILE,
+            file=uploaded,
+            is_active=True,
+        )
+        response = self.client.get(reverse("pages:rating"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "qm-rating__zoom")
+        self.assertContains(response, "data-rating-lightbox")
+        self.assertNotContains(response, "qm-rating__empty")
+
+    def test_pdf_rating_embeds_viewer(self):
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        from src.core.models import SiteBlock
+
+        pdf = SimpleUploadedFile(
+            "rating.pdf",
+            b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n1 0 obj<<>>endobj\ntrailer<<>>\n%%EOF\n",
+            content_type="application/pdf",
+        )
+        SiteBlock.objects.create(
+            page=SiteBlock.Page.RATING,
+            key="rating_file",
+            content_type=SiteBlock.ContentType.FILE,
+            file=pdf,
+            is_active=True,
+        )
+        response = self.client.get(reverse("pages:rating"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "qm-rating__pdf")
+        self.assertContains(response, "<iframe", html=False)
+
+    def test_nav_includes_rating_link(self):
+        response = self.client.get(reverse("pages:home"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, reverse("pages:rating"))

@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from unfold.widgets import UnfoldBooleanWidget
 
-from src.core.admin_image_widgets import CmsImageFieldWidget
+from src.core.admin_image_widgets import CmsImageFieldWidget, CmsRatingFileFieldWidget
 from src.core.admin_page_collections import (
     build_about_card_formset,
     build_faq_item_formset,
@@ -29,6 +29,7 @@ from src.core.block_defaults import (
 )
 from src.core.models import SITE_BLOCKS_CACHE_KEY, SiteBlock, SiteSettings
 from src.core.site_content_registry import get_section
+from src.core.validators import validate_rating_file
 
 
 def ensure_block(page: str, key: str) -> SiteBlock:
@@ -109,6 +110,17 @@ class SitePageContentForm(forms.Form):
                     field.initial = block.image
                 self.fields[f"block__{page}__{key}__image"] = field
                 continue
+            if ctype == SiteBlock.ContentType.FILE or ctype == "file":
+                field = forms.FileField(
+                    required=False,
+                    label=label,
+                    widget=CmsRatingFileFieldWidget,
+                    validators=[validate_rating_file],
+                )
+                if block.file:
+                    field.initial = block.file
+                self.fields[f"block__{page}__{key}__file"] = field
+                continue
             if key in INLINE_KEYS:
                 widget_uk = CmsAdminTextInputWidget()
                 widget_ru = CmsAdminTextInputWidget()
@@ -159,6 +171,17 @@ class SitePageContentForm(forms.Form):
                     block.content_type = SiteBlock.ContentType.IMAGE
                     block.save(update_fields=["image", "content_type", "updated_at"])
                 continue
+            if ctype == "file" or ctype == SiteBlock.ContentType.FILE:
+                uploaded = cleaned.get(f"block__{page}__{key}__file")
+                if uploaded is False:
+                    block.clear_stored_file()
+                    block.content_type = SiteBlock.ContentType.FILE
+                    block.save(update_fields=["file", "content_type", "updated_at"])
+                elif uploaded:
+                    block.replace_stored_file(uploaded)
+                    block.content_type = SiteBlock.ContentType.FILE
+                    block.save(update_fields=["file", "content_type", "updated_at"])
+                continue
             uk = cleaned.get(f"block__{page}__{key}__text_uk", "")
             ru = cleaned.get(f"block__{page}__{key}__text_ru", "")
             block.text_uk = uk
@@ -191,7 +214,7 @@ def _grouped_fields(form: SitePageContentForm) -> list[dict]:
         rows = []
         for key in group.keys:
             page = form.section.page_slug
-            for suffix in ("visible", "image", "text_uk", "text_ru"):
+            for suffix in ("visible", "image", "file", "text_uk", "text_ru"):
                 name = f"block__{page}__{key}__{suffix}"
                 if name in form.fields:
                     rows.append(

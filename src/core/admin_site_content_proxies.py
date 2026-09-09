@@ -13,6 +13,7 @@ from src.core.models import (
     ContactsPageSettings,
     FaqPageSettings,
     HomeIntroSettings,
+    RatingPageSettings,
     SiteFooterSettings,
     SiteHeaderSettings,
     SiteSettings,
@@ -25,6 +26,7 @@ _SECTION_MODELS = (
     (AboutPageSettings, "about", "main"),
     (FaqPageSettings, "faq", "main"),
     (ContactsPageSettings, "contacts", "main"),
+    (RatingPageSettings, "rating", "main"),
 )
 
 

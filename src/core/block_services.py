@@ -71,9 +71,33 @@ def get_block_image_url(
     return ""
 
 
+def get_block_file_url(
+    page: str,
+    key: str,
+    site_blocks: dict[str, SiteBlock] | None = None,
+) -> str:
+    block = get_block(page, key, site_blocks=site_blocks)
+    if block and block.file:
+        return block.file.url
+    return ""
+
+
+def get_block_file(
+    page: str,
+    key: str,
+    site_blocks: dict[str, SiteBlock] | None = None,
+) -> SiteBlock | None:
+    block = get_block(page, key, site_blocks=site_blocks)
+    if block and block.file:
+        return block
+    return None
+
+
 # re-export for callers
 __all__ = [
     "get_block",
+    "get_block_file",
+    "get_block_file_url",
     "get_block_image_url",
     "get_block_text",
     "is_section_visible",

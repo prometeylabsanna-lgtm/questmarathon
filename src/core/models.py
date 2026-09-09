@@ -132,11 +132,13 @@ class SiteBlock(models.Model):
         ABOUT = "about", "Про нас"
         FAQ = "faq", "FAQ"
         CONTACTS = "contacts", "Контакти"
+        RATING = "rating", "Рейтинг"
         SITE = "site", "Сайт"
 
     class ContentType(models.TextChoices):
         TEXT = "text", "Текст"
         IMAGE = "image", "Фото"
+        FILE = "file", "Файл"
         URL = "url", "Посилання"
 
     page = models.CharField("Сторінка", max_length=32, choices=Page.choices)
@@ -151,6 +153,7 @@ class SiteBlock(models.Model):
     text_uk = models.TextField("Текст (українською)", blank=True)
     text_ru = models.TextField("Текст (російською)", blank=True)
     image = models.ImageField("Зображення", upload_to="blocks/", blank=True)
+    file = models.FileField("Файл", upload_to="blocks/files/", blank=True)
     link_url = models.CharField("URL посилання", max_length=512, blank=True)
     link_label = models.CharField("Текст посилання", max_length=128, blank=True)
     sort_order = models.PositiveSmallIntegerField("Порядок", default=0)
@@ -178,6 +181,23 @@ class SiteBlock(models.Model):
         if locale == "ru" and self.text_ru:
             return self.text_ru
         return self.text_uk
+
+    def file_kind(self) -> str:
+        from src.core.validators import rating_file_kind
+
+        if self.file:
+            return rating_file_kind(self.file.name)
+        return ""
+
+    def clear_stored_file(self) -> None:
+        if self.file:
+            self.file.delete(save=False)
+            self.file = ""
+
+    def replace_stored_file(self, uploaded) -> None:
+        if self.file:
+            self.file.delete(save=False)
+        self.file = uploaded
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -224,3 +244,10 @@ class ContactsPageSettings(SiteSettings):
         proxy = True
         verbose_name = "Контакти"
         verbose_name_plural = "Контакти"
+
+
+class RatingPageSettings(SiteSettings):
+    class Meta:
+        proxy = True
+        verbose_name = "Рейтинг"
+        verbose_name_plural = "Рейтинг"

@@ -27,3 +27,40 @@ class CmsImageFieldWidget(UnfoldAdminFileFieldWidget):
                 value.url,
             )
         return preview + super().render(name, value, attrs, renderer)
+
+
+class CmsRatingFileFieldWidget(UnfoldAdminFileFieldWidget):
+    """Clearable file widget for PDF / PNG / JPG rating uploads."""
+
+    def __init__(self, attrs=None):
+        attrs = dict(attrs or {})
+        attrs.setdefault(
+            "accept",
+            ".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg",
+        )
+        super().__init__(attrs=attrs)
+
+    def render(self, name, value, attrs=None, renderer=None):
+        if value and getattr(value, "url", None):
+            filename = getattr(value, "name", "") or value.url
+            short = filename.rsplit("/", 1)[-1]
+            hint = format_html(
+                '<div class="cms-file-preview" style="margin-bottom:0.75rem;">'
+                '<a href="{}" target="_blank" rel="noopener noreferrer" '
+                'class="text-primary-500 underline">{}</a>'
+                '<p class="text-font-subtle-light dark:text-font-subtle-dark" '
+                'style="margin:0.35rem 0 0;font-size:0.85rem;">'
+                "PDF, PNG, JPG, JPEG · до 10 МБ"
+                "</p>"
+                "</div>",
+                value.url,
+                short,
+            )
+        else:
+            hint = format_html(
+                '<p class="text-font-subtle-light dark:text-font-subtle-dark" '
+                'style="margin:0 0 0.75rem;font-size:0.85rem;">'
+                "PDF, PNG, JPG, JPEG · до 10 МБ"
+                "</p>"
+            )
+        return hint + super().render(name, value, attrs, renderer)

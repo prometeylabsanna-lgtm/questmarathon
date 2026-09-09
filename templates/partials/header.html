@@ -25,6 +25,7 @@
     {% section_visible "site" "header_nav_about_visible" as show_nav_about %}
     {% section_visible "site" "header_nav_contacts_visible" as show_nav_contacts %}
     {% section_visible "site" "header_nav_faq_visible" as show_nav_faq %}
+    {% section_visible "site" "header_nav_rating_visible" as show_nav_rating %}
     {% if show_nav_home %}
       <a class="qm-nav__link{% if request.resolver_match.namespace == 'pages' and request.resolver_match.url_name == 'home' %} qm-nav__link--active{% endif %}" href="{% url 'pages:home' %}">{% block_plain "site" "header_nav_home" %}</a>
     {% endif %}
@@ -36,6 +37,9 @@
     {% endif %}
     {% if show_nav_faq %}
       <a class="qm-nav__link{% if request.resolver_match.url_name == 'faq' %} qm-nav__link--active{% endif %}" href="{% url 'pages:faq' %}">{% block_plain "site" "header_nav_faq" %}</a>
+    {% endif %}
+    {% if show_nav_rating %}
+      <a class="qm-nav__link{% if request.resolver_match.url_name == 'rating' %} qm-nav__link--active{% endif %}" href="{% url 'pages:rating' %}">{% block_plain "site" "header_nav_rating" %}</a>
     {% endif %}
   </nav>
 
@@ -127,6 +131,9 @@
     {% endif %}
     {% if show_nav_faq %}
       <a class="qm-menu__link{% if request.resolver_match.url_name == 'faq' %} qm-menu__link--active{% endif %}" href="{% url 'pages:faq' %}">{% block_plain "site" "header_nav_faq" %}</a>
+    {% endif %}
+    {% if show_nav_rating %}
+      <a class="qm-menu__link{% if request.resolver_match.url_name == 'rating' %} qm-menu__link--active{% endif %}" href="{% url 'pages:rating' %}">{% block_plain "site" "header_nav_rating" %}</a>
     {% endif %}
     {% if user.is_authenticated %}
       <a class="qm-menu__link" href="{% url 'accounts:cabinet' %}">{% trans "Кабінет" %}</a>
