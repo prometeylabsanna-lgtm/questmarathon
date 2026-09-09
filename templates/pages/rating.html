@@ -1,42 +1,38 @@
 {% extends "base.html" %}
 {% load i18n static site_content %}
 
-{% block body_class %}{% if rating_file_kind == "image" or rating_file_kind == "pdf" %}qm-body--quest{% endif %}{% endblock %}
+{% block body_class %}{% if rating_file_kind == "image" or rating_file_kind == "pdf" %}qm-body--quest qm-body--rating-media{% endif %}{% endblock %}
 
 {% block extra_head %}
   {% if rating_file_kind != "image" and rating_file_kind != "pdf" %}
-    <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+    <link rel="stylesheet" href="{% static 'css/faq.css' %}?v=19">
   {% endif %}
-  <link rel="stylesheet" href="{% static 'css/rating.css' %}">
+  <link rel="stylesheet" href="{% static 'css/rating.css' %}?v=19">
 {% endblock %}
 
 {% block extra_js %}
   {% if rating_file_kind == "image" %}
-    <script src="{% static 'js/rating.js' %}" defer></script>
+    <script src="{% static 'js/rating.js' %}?v=19" defer></script>
   {% endif %}
 {% endblock %}
 
 {% block content %}
 {% if rating_has_file and rating_file_kind == "image" %}
-  <section class="qm-quest qm-rating-quest" aria-label="{% block_plain 'rating' 'page_title' %}">
-    <div class="qm-quest__frame">
-      <div class="qm-quest__media qm-rating-quest__media">
-        <button
-          type="button"
-          class="qm-rating-quest__zoom"
-          data-rating-lightbox
-          data-src="{{ rating_file_url }}"
-          aria-label="{% trans 'Відкрити рейтинг на весь екран' %}"
-        >
-          <img
-            class="qm-media-img qm-rating-quest__img"
-            src="{{ rating_file_url }}"
-            alt="{% block_plain 'rating' 'page_title' %}"
-            decoding="async"
-          >
-        </button>
-      </div>
-    </div>
+  <section class="qm-rating-stage" aria-label="{% block_plain 'rating' 'page_title' %}">
+    <button
+      type="button"
+      class="qm-rating-stage__zoom"
+      data-rating-lightbox
+      data-src="{{ rating_file_url }}"
+      aria-label="{% trans 'Відкрити рейтинг на весь екран' %}"
+    >
+      <img
+        class="qm-rating-stage__img"
+        src="{{ rating_file_url }}"
+        alt="{% block_plain 'rating' 'page_title' %}"
+        decoding="async"
+      >
+    </button>
   </section>
   <div
     class="qm-rating-lightbox"
@@ -59,16 +55,12 @@
     <img class="qm-rating-lightbox__img" src="" alt="" decoding="async">
   </div>
 {% elif rating_has_file and rating_file_kind == "pdf" %}
-  <section class="qm-quest qm-rating-quest" aria-label="{% block_plain 'rating' 'page_title' %}">
-    <div class="qm-quest__frame">
-      <div class="qm-quest__media qm-rating-quest__media">
-        <iframe
-          class="qm-media-frame qm-rating-quest__pdf"
-          src="{{ rating_file_url }}#view=FitH"
-          title="{% block_plain 'rating' 'page_title' %}"
-        ></iframe>
-      </div>
-    </div>
+  <section class="qm-rating-stage" aria-label="{% block_plain 'rating' 'page_title' %}">
+    <iframe
+      class="qm-rating-stage__pdf"
+      src="{{ rating_file_url }}#view=FitH"
+      title="{% block_plain 'rating' 'page_title' %}"
+    ></iframe>
   </section>
 {% else %}
   <article class="qm-frame qm-faq qm-rating">

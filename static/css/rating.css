@@ -1,16 +1,30 @@
-/* Rating — quest-room full-bleed media layout. */
+/* Rating media — edge-to-edge fill inside shell (no letterbox, no page scroll). */
 
-.qm-rating-quest__media {
-  padding: 0;
-  align-items: stretch;
+.qm-body--rating-media .qm-shell > .qm-footer {
+  display: none;
+}
+
+.qm-body--rating-media .qm-main {
   overflow: hidden;
 }
 
-.qm-rating-quest__zoom {
-  display: block;
+.qm-rating-stage {
+  position: relative;
   flex: 1;
   width: 100%;
+  min-width: 0;
   min-height: 0;
+  height: 100%;
+  align-self: stretch;
+  overflow: hidden;
+  background: #02050c;
+}
+
+.qm-rating-stage__zoom {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
   height: 100%;
   padding: 0;
   margin: 0;
@@ -22,24 +36,34 @@
   touch-action: manipulation;
 }
 
-.qm-rating-quest__zoom:focus-visible {
+.qm-rating-stage__zoom:focus-visible {
   outline: 2px solid var(--qm-cyan);
   outline-offset: -3px;
 }
 
-.qm-rating-quest__img,
-.qm-rating-quest__pdf {
+.qm-rating-stage__img {
+  position: absolute;
+  inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
-  min-height: 0;
-  flex: 1;
-  object-fit: contain;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
   object-position: center;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-.qm-rating-quest__pdf {
-  min-height: 180px;
-  background: transparent;
+.qm-rating-stage__pdf {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #02050c;
 }
 
 .qm-rating__empty {
@@ -120,17 +144,6 @@
 .qm-rating-lightbox__close:focus-visible {
   outline: 2px solid var(--qm-cyan);
   outline-offset: 2px;
-}
-
-@media (min-width: 768px) {
-  .qm-rating-quest__media {
-    padding: 0;
-  }
-
-  .qm-rating-quest__img,
-  .qm-rating-quest__pdf {
-    min-height: 0;
-  }
 }
 
 @media (max-width: 640px) {
