@@ -1,18 +1,77 @@
 {% extends "base.html" %}
 {% load i18n static site_content %}
 
+{% block body_class %}{% if rating_file_kind == "image" or rating_file_kind == "pdf" %}qm-body--quest{% endif %}{% endblock %}
+
 {% block extra_head %}
-  <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+  {% if rating_file_kind != "image" and rating_file_kind != "pdf" %}
+    <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+  {% endif %}
   <link rel="stylesheet" href="{% static 'css/rating.css' %}">
 {% endblock %}
 
 {% block extra_js %}
-  <script src="{% static 'js/rating.js' %}" defer></script>
+  {% if rating_file_kind == "image" %}
+    <script src="{% static 'js/rating.js' %}" defer></script>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
-<article class="qm-frame qm-faq qm-rating{% if rating_file_kind == 'image' %} qm-rating--media{% endif %}{% if rating_file_kind == 'pdf' %} qm-rating--pdf{% endif %}">
-  {% if rating_file_kind != "image" %}
+{% if rating_has_file and rating_file_kind == "image" %}
+  <section class="qm-quest qm-rating-quest" aria-label="{% block_plain 'rating' 'page_title' %}">
+    <div class="qm-quest__frame">
+      <div class="qm-quest__media qm-rating-quest__media">
+        <button
+          type="button"
+          class="qm-rating-quest__zoom"
+          data-rating-lightbox
+          data-src="{{ rating_file_url }}"
+          aria-label="{% trans 'Відкрити рейтинг на весь екран' %}"
+        >
+          <img
+            class="qm-media-img qm-rating-quest__img"
+            src="{{ rating_file_url }}"
+            alt="{% block_plain 'rating' 'page_title' %}"
+            decoding="async"
+          >
+        </button>
+      </div>
+    </div>
+  </section>
+  <div
+    class="qm-rating-lightbox"
+    id="qm-rating-lightbox"
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-label="{% trans 'Перегляд рейтингу' %}"
+  >
+    <button
+      type="button"
+      class="qm-rating-lightbox__close"
+      data-rating-lightbox-close
+      aria-label="{% trans 'Закрити' %}"
+    >
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+        <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <img class="qm-rating-lightbox__img" src="" alt="" decoding="async">
+  </div>
+{% elif rating_has_file and rating_file_kind == "pdf" %}
+  <section class="qm-quest qm-rating-quest" aria-label="{% block_plain 'rating' 'page_title' %}">
+    <div class="qm-quest__frame">
+      <div class="qm-quest__media qm-rating-quest__media">
+        <iframe
+          class="qm-media-frame qm-rating-quest__pdf"
+          src="{{ rating_file_url }}#view=FitH"
+          title="{% block_plain 'rating' 'page_title' %}"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+{% else %}
+  <article class="qm-frame qm-faq qm-rating">
     <header class="qm-faq__head">
       <h1 class="qm-title">{% block_plain "rating" "page_title" %}</h1>
       {% block_plain "rating" "page_lead" as page_lead %}
@@ -20,59 +79,9 @@
         <p class="qm-faq__lead">{{ page_lead }}</p>
       {% endif %}
     </header>
-  {% endif %}
-
-  <div class="qm-rating__body">
-    {% if rating_has_file and rating_file_kind == "image" %}
-      <figure class="qm-rating__figure">
-        <button
-          type="button"
-          class="qm-rating__zoom"
-          data-rating-lightbox
-          data-src="{{ rating_file_url }}"
-          aria-label="{% trans 'Відкрити рейтинг на весь екран' %}"
-        >
-          <img
-            class="qm-rating__img"
-            src="{{ rating_file_url }}"
-            alt="{% block_plain 'rating' 'page_title' %}"
-            decoding="async"
-          >
-        </button>
-      </figure>
-      <div
-        class="qm-rating-lightbox"
-        id="qm-rating-lightbox"
-        hidden
-        role="dialog"
-        aria-modal="true"
-        aria-label="{% trans 'Перегляд рейтингу' %}"
-      >
-        <button
-          type="button"
-          class="qm-rating-lightbox__close"
-          data-rating-lightbox-close
-          aria-label="{% trans 'Закрити' %}"
-        >
-          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
-            <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-          </svg>
-        </button>
-        <img class="qm-rating-lightbox__img" src="" alt="" decoding="async">
-      </div>
-    {% elif rating_has_file and rating_file_kind == "pdf" %}
-      <div class="qm-rating__pdf-wrap">
-        <iframe
-          class="qm-rating__pdf"
-          src="{{ rating_file_url }}#view=FitH"
-          title="{% block_plain 'rating' 'page_title' %}"
-        ></iframe>
-      </div>
-    {% else %}
-      <div class="qm-rating__empty" role="status">
-        <p class="qm-rating__empty-text">{% block_plain "rating" "empty_message" %}</p>
-      </div>
-    {% endif %}
-  </div>
-</article>
+    <div class="qm-rating__empty" role="status">
+      <p class="qm-rating__empty-text">{% block_plain "rating" "empty_message" %}</p>
+    </div>
+  </article>
+{% endif %}
 {% endblock %}

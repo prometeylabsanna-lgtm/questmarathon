@@ -182,9 +182,10 @@ class RatingPageTests(TestCase):
         )
         response = self.client.get(reverse("pages:rating"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "qm-rating__zoom")
+        self.assertContains(response, "qm-rating-quest__zoom")
         self.assertContains(response, "data-rating-lightbox")
-        self.assertContains(response, "qm-rating--media")
+        self.assertContains(response, "qm-rating-quest")
+        self.assertContains(response, "qm-media-img")
         self.assertNotContains(response, "qm-rating__empty")
         self.assertNotContains(response, "qm-faq__head")
         self.assertNotContains(response, "Натисніть, щоб збільшити")
@@ -208,7 +209,7 @@ class RatingPageTests(TestCase):
         )
         response = self.client.get(reverse("pages:rating"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "qm-rating__pdf")
+        self.assertContains(response, "qm-rating-quest__pdf")
         self.assertContains(response, "<iframe", html=False)
 
     def test_nav_includes_rating_link(self):
