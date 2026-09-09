@@ -5,14 +5,14 @@
 
 {% block extra_head %}
   {% if rating_file_kind != "image" and rating_file_kind != "pdf" %}
-    <link rel="stylesheet" href="{% static 'css/faq.css' %}?v=19">
+    <link rel="stylesheet" href="{% static 'css/faq.css' %}?v=20">
   {% endif %}
-  <link rel="stylesheet" href="{% static 'css/rating.css' %}?v=19">
+  <link rel="stylesheet" href="{% static 'css/rating.css' %}?v=20">
 {% endblock %}
 
 {% block extra_js %}
   {% if rating_file_kind == "image" %}
-    <script src="{% static 'js/rating.js' %}?v=19" defer></script>
+    <script src="{% static 'js/rating.js' %}?v=20" defer></script>
   {% endif %}
 {% endblock %}
 

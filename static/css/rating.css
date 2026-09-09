@@ -1,9 +1,5 @@
 /* Rating media — edge-to-edge fill inside shell (no letterbox, no page scroll). */
 
-.qm-body--rating-media .qm-shell > .qm-footer {
-  display: none;
-}
-
 .qm-body--rating-media .qm-main {
   overflow: hidden;
 }
