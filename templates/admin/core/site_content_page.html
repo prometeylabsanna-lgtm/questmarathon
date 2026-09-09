@@ -57,7 +57,7 @@
         <div class="site-content-editor__fields">
           {% for row in group.rows %}
             <div
-              class="site-content-editor__field{% if 'image' in row.field.name or row.field.name.endswith '__file' %} site-content-editor__file{% endif %}"
+              class="site-content-editor__field{% if 'image' in row.field.name or '__file' in row.field.name %} site-content-editor__file{% endif %}"
               data-locale-field="{{ row.locale }}"
             >
               <label class="site-content-editor__label text-font-important-light dark:text-font-important-dark" for="{{ row.field.id_for_label }}">
