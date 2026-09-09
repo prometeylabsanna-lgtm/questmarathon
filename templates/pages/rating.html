@@ -11,14 +11,16 @@
 {% endblock %}
 
 {% block content %}
-<article class="qm-frame qm-faq qm-rating">
-  <header class="qm-faq__head">
-    <h1 class="qm-title">{% block_plain "rating" "page_title" %}</h1>
-    {% block_plain "rating" "page_lead" as page_lead %}
-    {% if page_lead %}
-      <p class="qm-faq__lead">{{ page_lead }}</p>
-    {% endif %}
-  </header>
+<article class="qm-frame qm-faq qm-rating{% if rating_file_kind == 'image' %} qm-rating--media{% endif %}{% if rating_file_kind == 'pdf' %} qm-rating--pdf{% endif %}">
+  {% if rating_file_kind != "image" %}
+    <header class="qm-faq__head">
+      <h1 class="qm-title">{% block_plain "rating" "page_title" %}</h1>
+      {% block_plain "rating" "page_lead" as page_lead %}
+      {% if page_lead %}
+        <p class="qm-faq__lead">{{ page_lead }}</p>
+      {% endif %}
+    </header>
+  {% endif %}
 
   <div class="qm-rating__body">
     {% if rating_has_file and rating_file_kind == "image" %}
@@ -35,10 +37,8 @@
             src="{{ rating_file_url }}"
             alt="{% block_plain 'rating' 'page_title' %}"
             decoding="async"
-            loading="lazy"
           >
         </button>
-        <figcaption class="qm-rating__hint">{% trans "Натисніть, щоб збільшити" %}</figcaption>
       </figure>
       <div
         class="qm-rating-lightbox"

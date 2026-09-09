@@ -158,6 +158,8 @@ class RatingPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "qm-rating__empty")
         self.assertContains(response, "Рейтинг оновлюється")
+        self.assertContains(response, "qm-faq__head")
+        self.assertContains(response, "Актуальний рейтинг учасників")
 
     def test_image_rating_renders_lightbox(self):
         from django.core.files.uploadedfile import SimpleUploadedFile
@@ -182,7 +184,10 @@ class RatingPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "qm-rating__zoom")
         self.assertContains(response, "data-rating-lightbox")
+        self.assertContains(response, "qm-rating--media")
         self.assertNotContains(response, "qm-rating__empty")
+        self.assertNotContains(response, "qm-faq__head")
+        self.assertNotContains(response, "Натисніть, щоб збільшити")
 
     def test_pdf_rating_embeds_viewer(self):
         from django.core.files.uploadedfile import SimpleUploadedFile
