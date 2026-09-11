@@ -30,15 +30,4 @@
             </label>
         </div>
     </div>
-
-    {% if widget.attrs.accept == 'image/*' and widget.is_initial %}
-        <div class="h-[38px] ml-3 relative w-[38px]">
-            <div class="absolute border flex font-medium h-full items-center left-0 rounded-default justify-center shadow-xs text-base-400 top-0 w-full z-10 dark:bg-base-900 dark:border-base-700 dark:text-base-500">
-                ?
-            </div>
-
-            <a href="{{ widget.value.url }}" target="_blank" class="bg-center bg-cover bg-no-repeat block h-[38px] overflow-hidden relative rounded-default w-[38px] z-20" style="background-image: url('{{ widget.value.url }}')">
-            </a>
-        </div>
-    {% endif %}
 </div>
