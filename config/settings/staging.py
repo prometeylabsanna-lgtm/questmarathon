@@ -1,5 +1,3 @@
-"""Vercel test / staging. Prod later → ADM Tools (config.settings.production)."""
-
 from decouple import Csv, config
 
 from .base import *  # noqa: F403
@@ -29,7 +27,6 @@ CSRF_TRUSTED_ORIGINS = config(
     cast=Csv(),
 )
 
-# Test deploy: no LiqPay / Resend yet
 PAYMENTS_DEV_BYPASS = config("PAYMENTS_DEV_BYPASS", default=True, cast=bool)
 
 EMAIL_BACKEND = config(

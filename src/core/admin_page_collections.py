@@ -1,5 +1,3 @@
-"""ModelFormSets for About cards / FAQ items inside CMS page sections."""
-
 from __future__ import annotations
 
 from django import forms

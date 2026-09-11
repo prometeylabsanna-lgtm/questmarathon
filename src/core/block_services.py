@@ -1,11 +1,9 @@
-"""Helpers for reading SiteBlock values with cache + defaults."""
-
 from __future__ import annotations
 
 from django.core.cache import cache
 from django.utils.translation import get_language
 
-from src.core.block_defaults import default_for, is_visibility_key
+from src.core.block_defaults import default_for
 from src.core.models import SITE_BLOCKS_CACHE_KEY, SITE_BLOCKS_CACHE_TTL, SiteBlock
 
 
@@ -71,17 +69,6 @@ def get_block_image_url(
     return ""
 
 
-def get_block_file_url(
-    page: str,
-    key: str,
-    site_blocks: dict[str, SiteBlock] | None = None,
-) -> str:
-    block = get_block(page, key, site_blocks=site_blocks)
-    if block and block.file:
-        return block.file.url
-    return ""
-
-
 def get_block_file(
     page: str,
     key: str,
@@ -93,15 +80,12 @@ def get_block_file(
     return None
 
 
-# re-export for callers
 __all__ = [
     "get_block",
     "get_block_file",
-    "get_block_file_url",
     "get_block_image_url",
     "get_block_text",
     "is_section_visible",
-    "is_visibility_key",
     "load_site_blocks",
     "normalize_locale",
 ]

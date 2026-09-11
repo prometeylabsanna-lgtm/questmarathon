@@ -1,10 +1,6 @@
-"""Registry of CMS content sections for Unfold sidebar + forms."""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
-
-from django.conf import settings
 
 
 @dataclass(frozen=True)
@@ -212,27 +208,6 @@ def all_registry_block_keys() -> list[tuple[str, str]]:
                 seen.add(pair)
                 keys.append(pair)
     return keys
-
-
-def iter_section_blocks(section: ContentSection) -> list[tuple[str, str]]:
-    return list(section.blocks)
-
-
-def _admin_link(model_name: str) -> str:
-    # Plain str — Vercel JSON-encodes UNFOLD settings; reverse_lazy breaks deploy.
-    prefix = f"/{getattr(settings, 'ADMIN_URL', 'kvest-cms/').strip('/')}/"
-    return f"{prefix}core/{model_name}/"
-
-
-def build_content_sidebar_items() -> list[dict]:
-    return [
-        {
-            "title": section.sidebar_title or section.title,
-            "icon": section.sidebar_icon,
-            "link": _admin_link(section.admin_model_name),
-        }
-        for section in CONTENT_SECTIONS
-    ]
 
 
 def validate_registry() -> None:

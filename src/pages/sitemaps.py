@@ -14,17 +14,14 @@ class StaticViewSitemap(Sitemap):
             "pages:about",
             "pages:faq",
             "pages:contacts",
-            "pages:terms",
-            "pages:privacy",
+            "pages:rating",
         ]
 
     def location(self, item):
         return reverse(item)
 
 
-class InfoPageSitemap(Sitemap):
-    """Legal pages sitemap (name kept for urls.py compatibility)."""
-
+class LegalPageSitemap(Sitemap):
     changefreq = "monthly"
     priority = 0.6
 

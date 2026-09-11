@@ -1,5 +1,3 @@
-"""Dynamic CMS section form + change view for SiteBlock proxies."""
-
 from __future__ import annotations
 
 from django import forms

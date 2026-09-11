@@ -18,7 +18,6 @@ _ADMIN_PREFIX = f"/{ADMIN_URL.strip('/')}/"
 
 
 def admin_path(model_path: str) -> str:
-    """Build absolute admin changelist path, e.g. admin_path('core/sitesettings/')."""
     return f"{_ADMIN_PREFIX}{model_path.lstrip('/')}"
 
 
@@ -59,7 +58,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "config.urls"
 
-# So project templates/ override Unfold/Django form widgets (file upload UA labels).
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 TEMPLATES = [
@@ -199,7 +197,6 @@ CONTENT_SECURITY_POLICY = {
         "form-action": ("'self'", "https://www.liqpay.ua"),
         "frame-ancestors": ("'none'",),
     },
-    # Admin is staff-only; Unfold Alpine + TinyMCE need eval/inline.
     "EXCLUDE_URL_PREFIXES": (_ADMIN_PREFIX,),
 }
 

@@ -1,5 +1,3 @@
-"""Seed SiteBlock.image from static fallbacks (idempotent, no overwrite)."""
-
 from __future__ import annotations
 
 from pathlib import Path
@@ -12,7 +10,6 @@ from src.core.models import SiteBlock
 
 
 def seed_block_fallback_images() -> int:
-    """Copy static fallbacks into SiteBlock.image when the field is empty."""
     seeded = 0
     for (page, key), static_rel in BLOCK_IMAGE_FALLBACKS.items():
         if seed_one_block_image(page, key):
@@ -21,7 +18,6 @@ def seed_block_fallback_images() -> int:
 
 
 def seed_one_block_image(page: str, key: str) -> bool:
-    """Seed one block image from BLOCK_IMAGE_FALLBACKS. Returns True if written."""
     static_rel = BLOCK_IMAGE_FALLBACKS.get((page, key))
     if not static_rel:
         return False

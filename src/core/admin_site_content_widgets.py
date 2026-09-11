@@ -1,5 +1,3 @@
-"""Dark-readable CMS form widgets (no bg-white)."""
-
 from __future__ import annotations
 
 from django.contrib.admin.widgets import AdminTextareaWidget, AdminTextInputWidget
@@ -20,6 +18,7 @@ _FORCE_CLASSES = (
     "text-base-100",
     "border-base-700",
     "placeholder-base-400",
+    "max-w-full",
 )
 
 
@@ -54,11 +53,11 @@ class CmsAdminTextareaWidget(AdminTextareaWidget):
         existing = attrs.get("class", "")
         merged = cms_control_classes(list(TEXTAREA_CLASSES) + existing.split())
         attrs["class"] = " ".join(merged)
+        attrs["cols"] = "1"
         super().__init__(attrs=attrs)
 
 
 def apply_readable_widget(widget) -> None:
-    """Mutate widget.attrs for SiteSettings dark readability."""
     from django.forms.widgets import CheckboxInput, FileInput, Select
 
     if isinstance(widget, (CheckboxInput, Select, FileInput)):

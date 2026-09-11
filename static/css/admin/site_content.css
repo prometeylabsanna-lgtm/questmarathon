@@ -1,7 +1,9 @@
 /* CMS section editor — layout only (no input colors) */
 
 .site-content-editor {
+  width: 100%;
   max-width: 52rem;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -45,7 +47,11 @@
 .site-content-editor__fieldset {
   padding: 1rem 1.25rem 1.25rem;
   margin: 0;
+  width: 100%;
+  max-width: 100%;
   min-inline-size: 0;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .site-content-editor__legend {
@@ -153,14 +159,102 @@
 .cms-img-preview img {
   max-height: 120px;
   width: auto;
+  max-width: 100%;
+}
+
+.site-content-editor input[type="text"],
+.site-content-editor input[type="url"],
+.site-content-editor input[type="email"],
+.site-content-editor textarea,
+.site-content-editor select {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.site-content-editor textarea {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.site-content-editor__field,
+.site-content-editor__fields,
+.site-content-editor__file,
+.site-content-editor form {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .site-content-editor__head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .site-content-editor__head-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .site-content-editor__preview {
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    white-space: normal;
+    box-sizing: border-box;
+  }
+
+  .locale-switcher {
+    align-self: flex-start;
+  }
+
+  .site-content-editor__file .flex,
+  .site-content-editor__file .flex.flex-row {
+    flex-wrap: wrap;
+    max-width: 100%;
+    min-width: 0;
+    gap: 0.5rem;
+  }
+
+  .site-content-editor__card {
+    min-width: 0;
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 767px) {
   .site-content-editor__fieldset {
-    padding: 0.875rem 1rem 1rem;
+    padding: 0.75rem 0.85rem 0.95rem;
   }
 
   .site-content-editor__head {
-    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .site-content-editor input[type="text"],
+  .site-content-editor input[type="url"],
+  .site-content-editor input[type="email"],
+  .site-content-editor textarea,
+  .site-content-editor select {
+    font-size: 16px;
+  }
+
+  .site-content-editor__actions button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .site-content-editor__add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .site-content-editor__fieldset {
+    padding: 0.9rem 1rem 1.1rem;
   }
 }

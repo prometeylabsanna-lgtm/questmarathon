@@ -1,5 +1,3 @@
-"""Image preview widget + locale-aware field helpers for admin."""
-
 from __future__ import annotations
 
 from django.utils.html import format_html
@@ -7,8 +5,6 @@ from unfold.widgets import UnfoldAdminFileFieldWidget
 
 
 class CmsImageFieldWidget(UnfoldAdminFileFieldWidget):
-    """File widget with current image preview above the control."""
-
     def __init__(self, attrs=None, fallback_url: str | None = None):
         attrs = dict(attrs or {})
         attrs.setdefault("accept", "image/*")
@@ -49,8 +45,6 @@ class CmsImageFieldWidget(UnfoldAdminFileFieldWidget):
 
 
 class CmsRatingFileFieldWidget(UnfoldAdminFileFieldWidget):
-    """Clearable file widget for PDF / PNG / JPG rating uploads."""
-
     def __init__(self, attrs=None):
         attrs = dict(attrs or {})
         attrs.setdefault(

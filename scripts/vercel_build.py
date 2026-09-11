@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Vercel build hook: migrate + seed. Requires env vars at Build time."""
 from __future__ import annotations
 
 import os

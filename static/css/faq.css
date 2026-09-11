@@ -147,19 +147,6 @@
   color: var(--qm-accent);
 }
 
-.qm-faq__a--pad {
-  padding: 16px;
-}
-
-.qm-faq__item--static {
-  border-color: var(--qm-cyan-soft);
-  background: linear-gradient(
-    180deg,
-    rgba(58, 82, 122, 0.42) 0%,
-    rgba(6, 11, 24, 0.94) 100%
-  );
-}
-
 .qm-contact-row,
 a.qm-contact-row {
   display: flex;
@@ -280,10 +267,6 @@ a.qm-contact-row:focus-visible {
   .qm-faq__a {
     padding: 0 18px 18px;
     font-size: 15px;
-  }
-
-  .qm-faq__a--pad {
-    padding: 18px;
   }
 
   .qm-contact-row,

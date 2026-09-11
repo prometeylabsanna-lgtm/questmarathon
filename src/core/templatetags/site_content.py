@@ -65,10 +65,3 @@ def block_image(
         attrs.append(f'height="{escape(height)}"')
     attrs.append('decoding="async"')
     return mark_safe(f"<img {' '.join(attrs)}>")
-
-
-@register.simple_tag(takes_context=True)
-def block_html(context, page: str, key: str, fallback: str = ""):
-    """Trusted staff HTML from SiteBlock (use sparingly)."""
-    text = block_plain(context, page, key, fallback=fallback)
-    return mark_safe(text)

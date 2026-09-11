@@ -18,6 +18,7 @@ class SiteContentAdminTests(TestCase):
         response = self.client.get(url, follow=True)
         self.assertEqual(response.status_code, 200)
         content = response.content.decode()
+        self.assertIn("css/admin/layout.css", content)
         self.assertIn("bg-base-900", content)
         self.assertIn("text-base-100", content)
         self.assertIn("block__home__intro_tagline__text_uk", content)

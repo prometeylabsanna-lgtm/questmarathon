@@ -1,8 +1,4 @@
-"""Project package root.
-
-PyMySQL provides a MySQLdb-compatible API for Hosting Ukraine (no libmysqlclient).
-"""
-
+# Hosting Ukraine: немає libmysqlclient — PyMySQL як MySQLdb.
 try:
     import pymysql
 

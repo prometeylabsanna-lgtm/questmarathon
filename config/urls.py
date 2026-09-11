@@ -7,11 +7,11 @@ from django.views.generic import RedirectView, TemplateView
 from django.views.static import serve
 
 from src.core.views import health
-from src.pages.sitemaps import InfoPageSitemap, StaticViewSitemap
+from src.pages.sitemaps import LegalPageSitemap, StaticViewSitemap
 
 sitemaps = {
     "static": StaticViewSitemap,
-    "info": InfoPageSitemap,
+    "legal": LegalPageSitemap,
 }
 
 urlpatterns = [

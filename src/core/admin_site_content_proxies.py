@@ -1,5 +1,3 @@
-"""Register proxy ModelAdmins for each CMS ContentSection."""
-
 from __future__ import annotations
 
 from django.contrib import admin

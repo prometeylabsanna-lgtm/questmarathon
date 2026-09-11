@@ -1,5 +1,3 @@
-"""Convert plain-text legal docs to simple HTML paragraphs for TinyMCE seed."""
-
 from __future__ import annotations
 
 import html
@@ -8,7 +6,6 @@ from src.pages.legal import SECTION_RE, UPDATED_RE
 
 
 def plain_legal_to_html(body: str) -> tuple[str, str]:
-    """Return (updated_label, html_body)."""
     updated = ""
     parts: list[str] = []
     current_heading = ""
@@ -38,13 +35,3 @@ def plain_legal_to_html(body: str) -> tuple[str, str]:
 
     flush()
     return updated, "\n".join(parts)
-
-
-def extract_updated_label(body: str) -> str:
-    for raw in body.strip().splitlines():
-        line = raw.strip()
-        if UPDATED_RE.match(line):
-            return line
-        if line:
-            break
-    return ""

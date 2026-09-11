@@ -1,5 +1,3 @@
-"""Ukrainian dropdown filters for Unfold changelist (top bar)."""
-
 from __future__ import annotations
 
 from collections.abc import Generator
@@ -13,8 +11,6 @@ from unfold.contrib.filters.admin.mixins import DropdownMixin, ValueMixin
 
 
 class UkChoicesDropdownFilter(ChoicesDropdownFilter):
-    """Choices dropdown: label = field title, default option «Всі»."""
-
     title_ua: str | None = None
 
     def __init__(self, field, request, params, model, model_admin, field_path):
@@ -37,8 +33,6 @@ class UkChoicesDropdownFilter(ChoicesDropdownFilter):
 
 
 class UkBooleanDropdownFilter(ValueMixin, DropdownMixin, admin.BooleanFieldListFilter):
-    """Boolean as select: Всі / Так / Ні."""
-
     title_ua: str | None = None
 
     def __init__(self, field, request, params, model, model_admin, field_path):

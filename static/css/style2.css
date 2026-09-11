@@ -430,15 +430,6 @@ a.qm-footer__credit:focus-visible {
   padding-bottom: 0;
 }
 
-.qm-prose .qm-body-text {
-  color: var(--qm-muted);
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-  word-wrap: break-word;
-  max-width: 100%;
-  min-width: 0;
-}
-
 @media (min-width: 768px) {
   .qm-room-list {
     padding: 4px 18px;

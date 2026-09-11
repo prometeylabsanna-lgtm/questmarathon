@@ -3,6 +3,7 @@ from django.utils.translation import get_language, gettext as _
 
 from src.core.block_services import get_block_file, get_block_text, normalize_locale
 from src.core.models import SiteSettings
+from src.pages.faq import is_faq_email_answer
 from src.pages.models import AboutCard, FAQItem, LegalPage
 
 INFO_SLUGS = ("about", "faq", "contacts", "terms", "privacy")
@@ -63,12 +64,11 @@ def info_page(request, slug: str):
         faq_items = []
         for item in items:
             answer = item.answer_for(locale)
-            compact = answer.replace(" ", "")
             faq_items.append(
                 {
                     "question": item.question_for(locale),
                     "answer": answer,
-                    "is_email": "@" in compact and "\n" not in answer and " " not in answer,
+                    "is_email": is_faq_email_answer(answer),
                 }
             )
         context = {
