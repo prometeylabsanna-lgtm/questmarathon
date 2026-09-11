@@ -1,19 +1,15 @@
-from pathlib import Path
-
 from decouple import config
 from django.contrib.auth import get_user_model
-from django.contrib.staticfiles.finders import find
-from django.core.files import File
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from src.core.block_defaults import (
     BLOCK_CONTENT_TYPES,
     BLOCK_DEFAULTS,
-    BLOCK_IMAGE_FALLBACKS,
     BLOCK_LABELS,
     is_visibility_key,
 )
+from src.core.block_image_seed import seed_block_fallback_images
 from src.core.models import SiteBlock, SiteSettings, SiteStats
 from src.core.site_content_registry import all_registry_block_keys, validate_registry
 from src.pages.faq import parse_faq_items
@@ -73,32 +69,6 @@ ROOMS = [
     (4, "Кімната 4", "Комната 4", "ключ4"),
     (5, "Кімната 5", "Комната 5", "ключ5"),
 ]
-
-
-def seed_block_fallback_images() -> int:
-    """Copy static fallbacks into SiteBlock.image when the field is empty."""
-    seeded = 0
-    for (page, key), static_rel in BLOCK_IMAGE_FALLBACKS.items():
-        block, _ = SiteBlock.objects.get_or_create(
-            page=page,
-            key=key,
-            defaults={
-                "label": BLOCK_LABELS.get((page, key), key),
-                "content_type": SiteBlock.ContentType.IMAGE,
-            },
-        )
-        if block.image:
-            continue
-        abs_path = find(static_rel)
-        if not abs_path:
-            continue
-        filename = Path(static_rel).name
-        with open(abs_path, "rb") as fh:
-            block.image.save(filename, File(fh), save=False)
-        block.content_type = SiteBlock.ContentType.IMAGE
-        block.save(update_fields=["image", "content_type", "updated_at"])
-        seeded += 1
-    return seeded
 
 
 def seed_site_blocks() -> tuple[int, int]:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from django import forms
 from django.contrib import messages
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.cache import cache
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -22,11 +23,13 @@ from src.core.admin_site_content_widgets import (
 from src.core.block_defaults import (
     BLOCK_CONTENT_TYPES,
     BLOCK_DEFAULTS,
+    BLOCK_IMAGE_FALLBACKS,
     BLOCK_LABELS,
     INLINE_KEYS,
     MULTILINE_KEYS,
     is_visibility_key,
 )
+from src.core.block_image_seed import seed_one_block_image
 from src.core.models import SITE_BLOCKS_CACHE_KEY, SiteBlock, SiteSettings
 from src.core.site_content_registry import get_section
 from src.core.validators import validate_rating_file
@@ -101,10 +104,14 @@ class SitePageContentForm(forms.Form):
                 )
                 continue
             if ctype == SiteBlock.ContentType.IMAGE or ctype == "image":
+                fallback_rel = BLOCK_IMAGE_FALLBACKS.get((page, key), "")
+                fallback_url = (
+                    staticfiles_storage.url(fallback_rel) if fallback_rel else ""
+                )
                 field = forms.ImageField(
                     required=False,
                     label=label,
-                    widget=CmsImageFieldWidget,
+                    widget=CmsImageFieldWidget(fallback_url=fallback_url or None),
                 )
                 if block.image:
                     field.initial = block.image
@@ -178,6 +185,8 @@ class SitePageContentForm(forms.Form):
                     block.image = image
                     block.content_type = SiteBlock.ContentType.IMAGE
                     block.save(update_fields=["image", "content_type", "updated_at"])
+                elif not block.image:
+                    seed_one_block_image(page, key)
                 continue
             if ctype == "file" or ctype == SiteBlock.ContentType.FILE:
                 uploaded = cleaned.get(f"block__{page}__{key}__file")
