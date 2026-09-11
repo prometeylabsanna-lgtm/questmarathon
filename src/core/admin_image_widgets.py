@@ -15,18 +15,19 @@ class CmsImageFieldWidget(UnfoldAdminFileFieldWidget):
         super().__init__(attrs=attrs)
 
     def render(self, name, value, attrs=None, renderer=None):
-        preview = ""
-        if value and getattr(value, "url", None):
-            preview = format_html(
-                '<div class="cms-img-preview">'
-                '<img src="{}" alt="Прев’ю" width="240" height="120" '
-                'style="max-height:120px;width:auto;object-fit:contain;'
-                "display:block;margin-bottom:0.75rem;border-radius:0.375rem;"
-                'background:#111827;padding:0.5rem;">'
-                "</div>",
-                value.url,
-            )
-        return preview + super().render(name, value, attrs, renderer)
+        widget_html = super().render(name, value, attrs, renderer)
+        if not (value and getattr(value, "url", None)):
+            return widget_html
+        preview = format_html(
+            '<div class="cms-img-preview">'
+            '<img src="{}" alt="Прев’ю" width="240" height="120" '
+            'style="max-height:120px;width:auto;object-fit:contain;'
+            "display:block;margin-bottom:0.75rem;border-radius:0.375rem;"
+            'background:#111827;padding:0.5rem;">'
+            "</div>",
+            value.url,
+        )
+        return format_html("{}{}", preview, widget_html)
 
 
 class CmsRatingFileFieldWidget(UnfoldAdminFileFieldWidget):
@@ -41,6 +42,7 @@ class CmsRatingFileFieldWidget(UnfoldAdminFileFieldWidget):
         super().__init__(attrs=attrs)
 
     def render(self, name, value, attrs=None, renderer=None):
+        widget_html = super().render(name, value, attrs, renderer)
         if value and getattr(value, "url", None):
             filename = getattr(value, "name", "") or value.url
             short = filename.rsplit("/", 1)[-1]
@@ -63,4 +65,4 @@ class CmsRatingFileFieldWidget(UnfoldAdminFileFieldWidget):
                 "PDF, PNG, JPG, JPEG · до 10 МБ"
                 "</p>"
             )
-        return hint + super().render(name, value, attrs, renderer)
+        return format_html("{}{}", hint, widget_html)

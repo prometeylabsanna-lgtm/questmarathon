@@ -166,7 +166,15 @@ class SitePageContentForm(forms.Form):
                 continue
             if ctype == "image" or ctype == SiteBlock.ContentType.IMAGE:
                 image = cleaned.get(f"block__{page}__{key}__image")
-                if image:
+                if image is False:
+                    if block.image:
+                        block.image.delete(save=False)
+                        block.image = ""
+                        block.content_type = SiteBlock.ContentType.IMAGE
+                        block.save(
+                            update_fields=["image", "content_type", "updated_at"]
+                        )
+                elif image:
                     block.image = image
                     block.content_type = SiteBlock.ContentType.IMAGE
                     block.save(update_fields=["image", "content_type", "updated_at"])
