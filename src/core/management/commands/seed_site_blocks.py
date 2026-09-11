@@ -9,5 +9,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         validate_registry()
-        created = seed_site_blocks()
-        self.stdout.write(self.style.SUCCESS(f"Created {created} SiteBlock rows"))
+        created, images = seed_site_blocks()
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Created {created} SiteBlock rows, seeded {images} images"
+            )
+        )

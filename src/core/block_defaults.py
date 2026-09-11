@@ -144,6 +144,11 @@ BLOCK_CONTENT_TYPES: dict[tuple[str, str], str] = {
     ("rating", "rating_file"): "file",
 }
 
+# Static path → seed into SiteBlock.image when empty (idempotent, no overwrite).
+BLOCK_IMAGE_FALLBACKS: dict[tuple[str, str], str] = {
+    ("home", "preview_image"): "images/home-preview.jpg",
+}
+
 INLINE_KEYS = frozenset(
     {
         "rules_heading",
