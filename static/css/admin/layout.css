@@ -60,6 +60,7 @@ html {
     min-height: 4rem;
     flex-wrap: wrap;
     align-items: flex-start;
+    overflow: visible;
   }
 
   #header-inner,
@@ -69,6 +70,7 @@ html {
     min-width: 0;
     max-width: 100%;
     height: auto;
+    overflow: visible;
   }
 
   #header-inner .ml-auto,
@@ -129,10 +131,18 @@ html {
     font-size: 16px;
   }
 
+  /* Keep theme/user icons top-right so dropdowns (-right-2) stay on-screen. */
+  #header-inner,
+  #header-inner > .flex {
+    flex-wrap: nowrap;
+  }
+
   #header-inner .ml-auto {
-    width: 100%;
-    margin-left: 0;
-    justify-content: flex-start;
+    width: auto;
+    max-width: none;
+    margin-left: auto;
+    flex-shrink: 0;
+    justify-content: flex-end;
   }
 
   #header-inner .object-tools,
