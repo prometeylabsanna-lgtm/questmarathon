@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 from src.core.models import SiteSettings
 
 STATIC_LOGO = "images/logo-quest-marathon.png"
-FILENAME = "logo-quest-marathon.png"
+FILENAME = "logo-km-vertical.png"
 
 
 class Command(BaseCommand):
@@ -20,9 +20,11 @@ class Command(BaseCommand):
             return
 
         settings = SiteSettings.get_solo()
+        if settings.logo:
+            settings.logo.delete(save=False)
         with open(abs_path, "rb") as fh:
             settings.logo.save(FILENAME, File(fh), save=True)
 
         self.stdout.write(
-            self.style.SUCCESS(f"SiteSettings.logo ← {Path(abs_path).name}")
+            self.style.SUCCESS(f"SiteSettings.logo ← {settings.logo.name}")
         )

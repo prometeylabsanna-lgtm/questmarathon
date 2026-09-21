@@ -3,9 +3,9 @@
   <a href="{% url 'pages:home' %}" class="qm-header__brand" aria-label="{% block_plain 'site' 'header_brand_name' %}">
     <span class="qm-logo">
       {% if site_settings.logo %}
-        <img src="{{ site_settings.logo.url }}" alt="" class="qm-logo__img" width="360" height="692" decoding="async" fetchpriority="high">
+        <img src="{{ site_settings.logo.url }}?v=15" alt="" class="qm-logo__img" width="360" height="692" decoding="async" fetchpriority="high">
       {% else %}
-        <img src="{% static 'images/logo-quest-marathon.png' %}?v=14" alt="" class="qm-logo__img" width="360" height="692" decoding="async" fetchpriority="high">
+        <img src="{% static 'images/logo-quest-marathon.png' %}?v=15" alt="" class="qm-logo__img" width="360" height="692" decoding="async" fetchpriority="high">
       {% endif %}
     </span>
     <span class="qm-brand-name">
