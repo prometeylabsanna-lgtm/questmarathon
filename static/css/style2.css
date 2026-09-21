@@ -465,9 +465,8 @@ a.qm-footer__credit:focus-visible {
   }
 
   .qm-logo__img {
-    width: auto;
-    height: 100%;
-    max-width: 100%;
+    width: 100%;
+    height: auto;
     max-height: 52px;
   }
 

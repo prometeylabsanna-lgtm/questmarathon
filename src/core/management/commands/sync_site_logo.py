@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from django.contrib.staticfiles.finders import find
 from django.core.files import File
 from django.core.management.base import BaseCommand
@@ -7,7 +5,7 @@ from django.core.management.base import BaseCommand
 from src.core.models import SiteSettings
 
 STATIC_LOGO = "images/logo-quest-marathon.png"
-FILENAME = "logo-km-vertical.png"
+FILENAME = "logo-km-horizontal.png"
 
 
 class Command(BaseCommand):
