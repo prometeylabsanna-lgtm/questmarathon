@@ -15,16 +15,17 @@ from src.core.models import (
     SiteFooterSettings,
     SiteHeaderSettings,
 )
+from src.core.site_content_registry import CONTENT_SECTIONS
 
-_SECTION_MODELS = (
-    (HomeIntroSettings, "home", "intro"),
-    (SiteHeaderSettings, "site", "header"),
-    (SiteFooterSettings, "site", "footer"),
-    (AboutPageSettings, "about", "main"),
-    (FaqPageSettings, "faq", "main"),
-    (ContactsPageSettings, "contacts", "main"),
-    (RatingPageSettings, "rating", "main"),
-)
+SECTION_PROXY_MODELS = {
+    "homeintrosettings": HomeIntroSettings,
+    "siteheadersettings": SiteHeaderSettings,
+    "sitefootersettings": SiteFooterSettings,
+    "aboutpagesettings": AboutPageSettings,
+    "faqpagesettings": FaqPageSettings,
+    "contactspagesettings": ContactsPageSettings,
+    "ratingpagesettings": RatingPageSettings,
+}
 
 
 class SingletonModelAdminMixin:
@@ -55,13 +56,22 @@ class SiteContentSectionAdmin(SingletonModelAdminMixin, ModelAdmin):
 
 
 def register_site_content_section_admins() -> None:
-    for model, page_slug, section_slug in _SECTION_MODELS:
+    missing = [
+        section.admin_model_name
+        for section in CONTENT_SECTIONS
+        if section.admin_model_name not in SECTION_PROXY_MODELS
+    ]
+    if missing:
+        raise ValueError(f"No proxy model for CMS sections: {missing}")
+
+    for section in CONTENT_SECTIONS:
+        model = SECTION_PROXY_MODELS[section.admin_model_name]
         if model in admin.site._registry:
             continue
 
         admin_class = type(
             f"{model.__name__}Admin",
             (SiteContentSectionAdmin,),
-            {"page_slug": page_slug, "section_slug": section_slug},
+            {"page_slug": section.page_slug, "section_slug": section.slug},
         )
         admin.site.register(model, admin_class)

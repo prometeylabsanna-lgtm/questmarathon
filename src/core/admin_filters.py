@@ -78,9 +78,27 @@ class PaymentStatusProfileFilter(UkChoicesDropdownFilter):
     title_ua = "Статус оплати"
 
 
-class LocaleFilter(DropdownFilter):
+class UkLabelDropdownFilter(DropdownFilter):
+    form_label: str = ""
+
+    def choices(self, changelist: ChangeList) -> tuple[dict[str, Any], ...]:
+        return (
+            {
+                "form": self.form_class(
+                    label=self.form_label or str(self.title),
+                    name=self.parameter_name,
+                    choices=[("", "Всі"), *self.lookup_choices],
+                    data={self.parameter_name: self.value() or ""},
+                    multiple=False,
+                ),
+            },
+        )
+
+
+class LocaleFilter(UkLabelDropdownFilter):
     title = _("Мова")
     parameter_name = "locale"
+    form_label = "Мова"
 
     def lookups(self, request, model_admin):
         return (
@@ -93,23 +111,11 @@ class LocaleFilter(DropdownFilter):
             return queryset.filter(locale=self.value())
         return queryset
 
-    def choices(self, changelist: ChangeList) -> tuple[dict[str, Any], ...]:
-        return (
-            {
-                "form": self.form_class(
-                    label="Мова",
-                    name=self.parameter_name,
-                    choices=[("", "Всі"), *self.lookup_choices],
-                    data={self.parameter_name: self.value() or ""},
-                    multiple=False,
-                ),
-            },
-        )
 
-
-class ProviderFilter(DropdownFilter):
+class ProviderFilter(UkLabelDropdownFilter):
     title = _("Провайдер")
     parameter_name = "provider"
+    form_label = "Провайдер"
 
     def lookups(self, request, model_admin):
         qs = model_admin.get_queryset(request)
@@ -124,16 +130,3 @@ class ProviderFilter(DropdownFilter):
         if self.value():
             return queryset.filter(provider=self.value())
         return queryset
-
-    def choices(self, changelist: ChangeList) -> tuple[dict[str, Any], ...]:
-        return (
-            {
-                "form": self.form_class(
-                    label="Провайдер",
-                    name=self.parameter_name,
-                    choices=[("", "Всі"), *self.lookup_choices],
-                    data={self.parameter_name: self.value() or ""},
-                    multiple=False,
-                ),
-            },
-        )

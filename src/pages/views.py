@@ -6,7 +6,9 @@ from src.core.models import SiteSettings
 from src.pages.faq import is_faq_email_answer
 from src.pages.models import AboutCard, FAQItem, LegalPage
 
-INFO_SLUGS = ("about", "faq", "contacts", "terms", "privacy")
+
+def _locale() -> str:
+    return normalize_locale(get_language())
 
 
 def home(request):
@@ -18,7 +20,7 @@ def home(request):
 
 
 def rating(request):
-    locale = normalize_locale(get_language())
+    locale = _locale()
     file_block = get_block_file("rating", "rating_file")
     rating_file_url = ""
     rating_file_kind = ""
@@ -26,73 +28,84 @@ def rating(request):
         rating_file_url = file_block.file.url
         rating_file_kind = file_block.file_kind()
 
+    return render(
+        request,
+        "pages/rating.html",
+        {
+            "page_title": get_block_text("rating", "page_title", locale=locale),
+            "rating_file_url": rating_file_url,
+            "rating_file_kind": rating_file_kind,
+            "rating_has_file": bool(rating_file_url and rating_file_kind),
+        },
+    )
+
+
+def legal_page(request, slug: str):
+    locale = _locale()
+    page = get_object_or_404(LegalPage, slug=slug, is_published=True)
     context = {
-        "page_title": get_block_text("rating", "page_title", locale=locale),
-        "rating_file_url": rating_file_url,
-        "rating_file_kind": rating_file_kind,
-        "rating_has_file": bool(rating_file_url and rating_file_kind),
+        "page": page,
+        "page_title": page.title_for(locale),
+        "page_lead": page.updated_label_for(locale),
+        "legal_body": page.body_for(locale),
     }
-    return render(request, "pages/rating.html", context)
+    if slug == "terms":
+        context["legal_alt_url"] = "pages:privacy"
+        context["legal_alt_label"] = _("Політика конфіденційності")
+    else:
+        context["legal_alt_url"] = "pages:terms"
+        context["legal_alt_label"] = _("Користувацька угода")
+    return render(request, "pages/legal.html", context)
 
 
-def info_page(request, slug: str):
-    if slug not in INFO_SLUGS:
-        return render(request, "errors/404.html", status=404)
-
-    locale = normalize_locale(get_language())
-
-    if slug in ("terms", "privacy"):
-        page = get_object_or_404(LegalPage, slug=slug, is_published=True)
-        context = {
-            "page": page,
-            "page_title": page.title_for(locale),
-            "page_lead": page.updated_label_for(locale),
-            "legal_body": page.body_for(locale),
-        }
-        if slug == "terms":
-            context["legal_alt_url"] = "pages:privacy"
-            context["legal_alt_label"] = _("Політика конфіденційності")
-        else:
-            context["legal_alt_url"] = "pages:terms"
-            context["legal_alt_label"] = _("Користувацька угода")
-        return render(request, "pages/legal.html", context)
-
-    if slug == "faq":
-        items = FAQItem.objects.filter(is_active=True)
-        faq_items = []
-        for item in items:
-            answer = item.answer_for(locale)
-            faq_items.append(
-                {
-                    "question": item.question_for(locale),
-                    "answer": answer,
-                    "is_email": is_faq_email_answer(answer),
-                }
-            )
-        context = {
+def faq_page(request):
+    locale = _locale()
+    faq_items = []
+    for item in FAQItem.objects.filter(is_active=True):
+        answer = item.answer_for(locale)
+        faq_items.append(
+            {
+                "question": item.question_for(locale),
+                "answer": answer,
+                "is_email": is_faq_email_answer(answer),
+            }
+        )
+    return render(
+        request,
+        "pages/accordion.html",
+        {
             "page_title": get_block_text("faq", "page_title", locale=locale),
             "faq_items": faq_items,
-        }
-        return render(request, "pages/accordion.html", context)
+        },
+    )
 
-    if slug == "about":
-        cards = AboutCard.objects.filter(is_active=True)
-        about_cards = [
-            {
-                "question": card.title_for(locale),
-                "answer": card.text_for(locale),
-            }
-            for card in cards
-        ]
-        context = {
+
+def about_page(request):
+    locale = _locale()
+    about_cards = [
+        {
+            "question": card.title_for(locale),
+            "answer": card.text_for(locale),
+        }
+        for card in AboutCard.objects.filter(is_active=True)
+    ]
+    return render(
+        request,
+        "pages/about.html",
+        {
             "page_title": get_block_text("about", "page_title", locale=locale),
             "about_cards": about_cards,
-        }
-        return render(request, "pages/about.html", context)
+        },
+    )
 
-    if slug == "contacts":
-        settings_obj = SiteSettings.get_solo()
-        context = {
+
+def contacts_page(request):
+    locale = _locale()
+    settings_obj = SiteSettings.get_solo()
+    return render(
+        request,
+        "pages/contacts.html",
+        {
             "page_title": get_block_text("contacts", "page_title", locale=locale),
             "contact": {
                 "phone": settings_obj.phone,
@@ -101,7 +114,5 @@ def info_page(request, slug: str):
                 "address": settings_obj.address_for(locale),
                 "socials": settings_obj.socials(),
             },
-        }
-        return render(request, "pages/contacts.html", context)
-
-    return render(request, "errors/404.html", status=404)
+        },
+    )

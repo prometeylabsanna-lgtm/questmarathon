@@ -1,0 +1,16 @@
+{% load site_content %}
+{% if show_nav_home %}
+  <a class="{{ link_class }}{% if request.resolver_match.namespace == 'pages' and request.resolver_match.url_name == 'home' %} {{ link_class }}--active{% endif %}" href="{% url 'pages:home' %}">{% block_plain "site" "header_nav_home" %}</a>
+{% endif %}
+{% if show_nav_about %}
+  <a class="{{ link_class }}{% if request.resolver_match.url_name == 'about' %} {{ link_class }}--active{% endif %}" href="{% url 'pages:about' %}">{% block_plain "site" "header_nav_about" %}</a>
+{% endif %}
+{% if show_nav_contacts %}
+  <a class="{{ link_class }}{% if request.resolver_match.url_name == 'contacts' %} {{ link_class }}--active{% endif %}" href="{% url 'pages:contacts' %}">{% block_plain "site" "header_nav_contacts" %}</a>
+{% endif %}
+{% if show_nav_faq %}
+  <a class="{{ link_class }}{% if request.resolver_match.url_name == 'faq' %} {{ link_class }}--active{% endif %}" href="{% url 'pages:faq' %}">{% block_plain "site" "header_nav_faq" %}</a>
+{% endif %}
+{% if show_nav_rating %}
+  <a class="{{ link_class }}{% if request.resolver_match.url_name == 'rating' %} {{ link_class }}--active{% endif %}" href="{% url 'pages:rating' %}">{% block_plain "site" "header_nav_rating" %}</a>
+{% endif %}

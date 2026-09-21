@@ -2,7 +2,12 @@ from django.test import TestCase
 from django.urls import reverse
 
 from src.core.models import SiteSettings
-from src.core.site_content_registry import all_registry_block_keys, validate_registry
+from src.core.site_content_registry import (
+    CONTENT_SECTIONS,
+    all_registry_block_keys,
+    build_unfold_sidebar_navigation,
+    validate_registry,
+)
 from src.pages.faq import parse_faq_items
 from src.pages.legal import parse_legal_document
 from src.pages.legal_html import plain_legal_to_html
@@ -150,6 +155,24 @@ class RegistryTests(TestCase):
         validate_registry()
         keys = all_registry_block_keys()
         self.assertEqual(len(keys), len(set(keys)))
+
+    def test_unfold_sidebar_covers_registry_sections(self):
+        from django.conf import settings
+
+        from config.settings.base import admin_path
+
+        navigation = build_unfold_sidebar_navigation(admin_path)
+        self.assertEqual(settings.UNFOLD["SIDEBAR"]["navigation"], navigation)
+        self.assertEqual(
+            [group["title"] for group in navigation],
+            ["Налаштування", "Головна", "Шапка і підвал", "Сторінки", "Квест"],
+        )
+        links = [item["link"] for group in navigation for item in group["items"]]
+        for section in CONTENT_SECTIONS:
+            self.assertTrue(
+                any(section.admin_model_name in link for link in links),
+                msg=section.admin_model_name,
+            )
 
 
 class RatingPageTests(TestCase):

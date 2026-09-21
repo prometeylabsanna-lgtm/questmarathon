@@ -15,6 +15,7 @@ class ContentSection:
     page_slug: str
     title: str
     blocks: tuple[tuple[str, str], ...]
+    sidebar_group: str = "Сторінки"
     sidebar_title: str = ""
     sidebar_icon: str = "edit_note"
     preview_url: str = "/"
@@ -30,7 +31,8 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
         slug="intro",
         page_slug="home",
         title="Головна",
-        sidebar_title="Головна",
+        sidebar_group="Головна",
+        sidebar_title="Контент головної",
         sidebar_icon="home",
         preview_url="/",
         description="Слоган, правила, прев’ю та кнопки на головній.",
@@ -60,6 +62,7 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
         slug="header",
         page_slug="site",
         title="Шапка сайту",
+        sidebar_group="Шапка і підвал",
         sidebar_title="Шапка",
         sidebar_icon="menu",
         preview_url="/",
@@ -101,6 +104,7 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
         slug="footer",
         page_slug="site",
         title="Підвал сайту",
+        sidebar_group="Шапка і підвал",
         sidebar_title="Підвал",
         sidebar_icon="vertical_align_bottom",
         preview_url="/",
@@ -126,6 +130,7 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
         slug="main",
         page_slug="about",
         title="Про нас",
+        sidebar_group="Сторінки",
         sidebar_title="Про нас",
         sidebar_icon="info",
         preview_url="/about/",
@@ -139,6 +144,7 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
         slug="main",
         page_slug="faq",
         title="FAQ",
+        sidebar_group="Сторінки",
         sidebar_title="FAQ",
         sidebar_icon="help",
         preview_url="/faq/",
@@ -152,6 +158,7 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
         slug="main",
         page_slug="contacts",
         title="Контакти",
+        sidebar_group="Сторінки",
         sidebar_title="Контакти",
         sidebar_icon="call",
         preview_url="/contacts/",
@@ -173,6 +180,7 @@ CONTENT_SECTIONS: tuple[ContentSection, ...] = (
         slug="main",
         page_slug="rating",
         title="Рейтинг",
+        sidebar_group="Сторінки",
         sidebar_title="Рейтинг",
         sidebar_icon="leaderboard",
         preview_url="/rating/",
@@ -211,6 +219,8 @@ def all_registry_block_keys() -> list[tuple[str, str]]:
 
 
 def validate_registry() -> None:
+    from src.core.block_defaults import BLOCK_LABELS
+
     names = [s.admin_model_name for s in CONTENT_SECTIONS]
     if len(names) != len(set(names)):
         raise ValueError("Duplicate admin_model_name in CONTENT_SECTIONS")
@@ -218,9 +228,61 @@ def validate_registry() -> None:
     if len(keys) != len(set(keys)):
         raise ValueError("Duplicate (page, key) in CONTENT_SECTIONS")
     for section in CONTENT_SECTIONS:
+        if not section.admin_model_name:
+            raise ValueError(f"Missing admin_model_name for {section.page_slug}.{section.slug}")
         if section.visibility_key:
             pair = (section.page_slug, section.visibility_key)
             if pair not in section.blocks:
                 raise ValueError(
                     f"visibility_key {pair} missing from section {section.admin_model_name}"
                 )
+    for pair in keys:
+        if pair not in BLOCK_LABELS:
+            raise ValueError(f"Registry key {pair} missing from BLOCK_LABELS")
+
+
+def _sidebar_item(title: str, icon: str, link: str) -> dict[str, str]:
+    return {"title": title, "icon": icon, "link": link}
+
+
+def _sidebar_group(title: str, items: list[dict[str, str]]) -> dict:
+    return {"title": title, "separator": True, "items": items}
+
+
+def build_unfold_sidebar_navigation(admin_path) -> list[dict]:
+    navigation = [
+        _sidebar_group(
+            "Налаштування",
+            [
+                _sidebar_item("Налаштування сайту", "settings", admin_path("core/sitesettings/")),
+                _sidebar_item("Статистика", "bar_chart", admin_path("core/sitestats/")),
+            ],
+        )
+    ]
+    grouped: dict[str, list[dict[str, str]]] = {}
+    order: list[str] = []
+    for section in CONTENT_SECTIONS:
+        group = section.sidebar_group
+        if group not in grouped:
+            grouped[group] = []
+            order.append(group)
+        grouped[group].append(
+            _sidebar_item(
+                section.sidebar_title or section.title,
+                section.sidebar_icon,
+                admin_path(f"core/{section.admin_model_name}/"),
+            )
+        )
+    if "Сторінки" in grouped:
+        grouped["Сторінки"].append(
+            _sidebar_item("Юридичні сторінки", "gavel", admin_path("pages/legalpage/"))
+        )
+    for group_title in order:
+        navigation.append(_sidebar_group(group_title, grouped[group_title]))
+    navigation.append(
+        _sidebar_group(
+            "Квест",
+            [_sidebar_item("Кімнати", "meeting_room", admin_path("quest/questroom/"))],
+        )
+    )
+    return navigation

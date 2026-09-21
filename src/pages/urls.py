@@ -6,10 +6,10 @@ app_name = "pages"
 
 urlpatterns = [
     path("", views.home, name="home"),
-    path("about/", views.info_page, {"slug": "about"}, name="about"),
-    path("faq/", views.info_page, {"slug": "faq"}, name="faq"),
-    path("contacts/", views.info_page, {"slug": "contacts"}, name="contacts"),
+    path("about/", views.about_page, name="about"),
+    path("faq/", views.faq_page, name="faq"),
+    path("contacts/", views.contacts_page, name="contacts"),
     path("rating/", views.rating, name="rating"),
-    path("terms/", views.info_page, {"slug": "terms"}, name="terms"),
-    path("privacy/", views.info_page, {"slug": "privacy"}, name="privacy"),
+    path("terms/", views.legal_page, {"slug": "terms"}, name="terms"),
+    path("privacy/", views.legal_page, {"slug": "privacy"}, name="privacy"),
 ]

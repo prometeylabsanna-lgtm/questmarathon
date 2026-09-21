@@ -7,7 +7,7 @@ from django.views.decorators.http import require_http_methods
 
 from src.accounts.models import UserProfile
 from src.core.i18n import activate_ui_language
-from src.quest.models import QuestRoom, normalize_keyword
+from src.quest.models import QUEST_ROOM_COUNT, QuestRoom, normalize_keyword
 
 
 def _can_access_room(profile: UserProfile, room_order: int) -> bool:
@@ -18,7 +18,7 @@ def _can_access_room(profile: UserProfile, room_order: int) -> bool:
 
 @login_required
 def room(request, n: int):
-    if n < 1 or n > 5:
+    if n < 1 or n > QUEST_ROOM_COUNT:
         return redirect("accounts:cabinet")
     profile = UserProfile.for_user(request.user)
     if not profile.is_paid:
@@ -48,7 +48,7 @@ def room(request, n: int):
 
 @login_required
 def room_media(request, n: int):
-    if n < 1 or n > 5:
+    if n < 1 or n > QUEST_ROOM_COUNT:
         raise Http404()
     profile = UserProfile.for_user(request.user)
     if not request.user.is_staff and (
@@ -91,7 +91,7 @@ def check_keyword(request, n: int):
         profile.current_level = n
         profile.save(update_fields=["current_level", "updated_at"])
 
-    if n < 5:
+    if n < QUEST_ROOM_COUNT:
         redirect_url = reverse("quest:room", kwargs={"n": n + 1})
         response = render(
             request,

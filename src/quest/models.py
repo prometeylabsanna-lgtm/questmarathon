@@ -1,5 +1,7 @@
 from django.db import models
 
+QUEST_ROOM_COUNT = 5
+
 
 class QuestRoom(models.Model):
     class MediaType(models.TextChoices):

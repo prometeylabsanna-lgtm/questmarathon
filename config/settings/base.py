@@ -209,6 +209,8 @@ TINYMCE_DEFAULT_CONFIG = {
     "skin": "oxide",
 }
 
+from src.core.site_content_registry import build_unfold_sidebar_navigation
+
 UNFOLD = {
     "SITE_TITLE": "Квест-марафон",
     "SITE_HEADER": "Квест-марафон",
@@ -231,93 +233,7 @@ UNFOLD = {
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": False,
-        "navigation": [
-            {
-                "title": "Налаштування",
-                "separator": True,
-                "items": [
-                    {
-                        "title": "Налаштування сайту",
-                        "icon": "settings",
-                        "link": admin_path("core/sitesettings/"),
-                    },
-                    {
-                        "title": "Статистика",
-                        "icon": "bar_chart",
-                        "link": admin_path("core/sitestats/"),
-                    },
-                ],
-            },
-            {
-                "title": "Головна",
-                "separator": True,
-                "items": [
-                    {
-                        "title": "Контент головної",
-                        "icon": "home",
-                        "link": admin_path("core/homeintrosettings/"),
-                    },
-                ],
-            },
-            {
-                "title": "Шапка і підвал",
-                "separator": True,
-                "items": [
-                    {
-                        "title": "Шапка",
-                        "icon": "menu",
-                        "link": admin_path("core/siteheadersettings/"),
-                    },
-                    {
-                        "title": "Підвал",
-                        "icon": "vertical_align_bottom",
-                        "link": admin_path("core/sitefootersettings/"),
-                    },
-                ],
-            },
-            {
-                "title": "Сторінки",
-                "separator": True,
-                "items": [
-                    {
-                        "title": "Про нас",
-                        "icon": "info",
-                        "link": admin_path("core/aboutpagesettings/"),
-                    },
-                    {
-                        "title": "FAQ",
-                        "icon": "help",
-                        "link": admin_path("core/faqpagesettings/"),
-                    },
-                    {
-                        "title": "Контакти",
-                        "icon": "call",
-                        "link": admin_path("core/contactspagesettings/"),
-                    },
-                    {
-                        "title": "Рейтинг",
-                        "icon": "leaderboard",
-                        "link": admin_path("core/ratingpagesettings/"),
-                    },
-                    {
-                        "title": "Юридичні сторінки",
-                        "icon": "gavel",
-                        "link": admin_path("pages/legalpage/"),
-                    },
-                ],
-            },
-            {
-                "title": "Квест",
-                "separator": True,
-                "items": [
-                    {
-                        "title": "Кімнати",
-                        "icon": "meeting_room",
-                        "link": admin_path("quest/questroom/"),
-                    },
-                ],
-            },
-        ],
+        "navigation": build_unfold_sidebar_navigation(admin_path),
     },
 }
 

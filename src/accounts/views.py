@@ -21,6 +21,7 @@ from src.accounts.forms import (
 )
 from src.accounts.models import UserProfile
 from src.core.i18n import activate_ui_language
+from src.quest.models import QUEST_ROOM_COUNT
 
 
 class PageTitleMixin:
@@ -73,12 +74,12 @@ def register(request):
 def _cabinet_rooms(profile: UserProfile) -> list[dict]:
     level = profile.current_level
     rooms = []
-    for n in range(1, 6):
+    for n in range(1, QUEST_ROOM_COUNT + 1):
         if n <= level:
             state = "done"
             status_label = _("Пройдено")
             url = reverse("quest:room", kwargs={"n": n})
-        elif n == level + 1 and level < 5:
+        elif n == level + 1 and level < QUEST_ROOM_COUNT:
             state = "current"
             status_label = _("Поточна")
             url = reverse("quest:room", kwargs={"n": n})
@@ -102,7 +103,7 @@ def _cabinet_game_cta(profile: UserProfile) -> tuple[str, str]:
     level = profile.current_level
     if level <= 0:
         return _("Почати гру"), reverse("quest:room", kwargs={"n": 1})
-    if level >= 5:
+    if level >= QUEST_ROOM_COUNT:
         return _("Переглянути кімнати"), reverse("quest:room", kwargs={"n": 1})
     return _("Продовжити гру"), reverse("quest:room", kwargs={"n": level + 1})
 
