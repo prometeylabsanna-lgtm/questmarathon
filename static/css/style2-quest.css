@@ -13,18 +13,6 @@
   overflow: hidden;
 }
 
-.qm-quest__title {
-  margin: 0;
-  padding: 4px 20px 0;
-  font-family: var(--qm-font-display);
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.38);
-  flex-shrink: 0;
-  overflow-wrap: anywhere;
-}
-
 .qm-quest__frame {
   flex: 1;
   min-height: 0;
@@ -48,11 +36,6 @@
   -webkit-overflow-scrolling: touch;
   padding: 12px 20px 0;
   gap: 12px;
-}
-
-.qm-file-tags--quest {
-  margin-top: 0;
-  flex-shrink: 0;
 }
 
 .qm-quest__bar {
@@ -197,13 +180,6 @@
   pointer-events: none;
 }
 
-.qm-media-placeholder__label {
-  font-family: var(--qm-font-head);
-  font-size: 16px;
-  letter-spacing: 0.2em;
-  color: rgba(255, 255, 255, 0.28);
-}
-
 .qm-keyword-result {
   min-height: 0;
   text-align: center;
@@ -211,12 +187,6 @@
 }
 
 @media (min-width: 768px) {
-  .qm-quest__title {
-    font-size: 28px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
   .qm-quest__media {
     padding: 16px 20px 0;
   }
@@ -292,11 +262,6 @@
     flex: 0 0 160px;
   }
 
-  .qm-file-tags--quest {
-    justify-content: flex-start;
-    align-self: flex-start;
-  }
-
   .qm-media-img,
   .qm-media-frame,
   .qm-media-video,
@@ -311,12 +276,6 @@
 }
 
 @media (min-width: 1024px) {
-  .qm-quest__title {
-    font-size: 32px;
-    padding-left: 32px;
-    padding-right: 32px;
-  }
-
   .qm-quest__media {
     padding-left: 32px;
     padding-right: 32px;

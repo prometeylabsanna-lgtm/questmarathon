@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<article class="qm-frame qm-faq qm-auth">
+  {% block auth_body %}{% endblock %}
+</article>
+{% endblock %}

@@ -1,13 +1,7 @@
-{% extends "base.html" %}
+{% extends "payments/pay_base.html" %}
 {% load i18n static %}
 
-{% block extra_head %}
-  <link rel="stylesheet" href="{% static 'css/faq.css' %}">
-  <link rel="stylesheet" href="{% static 'css/payments.css' %}">
-{% endblock %}
-
-{% block content %}
-<article class="qm-frame qm-faq qm-pay">
+{% block pay_body %}
   <header class="qm-faq__head">
     <h1 class="qm-title">{% trans "Оплата" %}</h1>
     <p class="qm-faq__lead">{% trans "Зараз відкриється захищена сторінка оплати." %}</p>
@@ -25,7 +19,6 @@
 
     <a class="qm-btn qm-btn--ghost qm-btn--block" href="{% url 'accounts:cabinet' %}">{% trans "До кабінету" %}</a>
   </div>
-</article>
 {% endblock %}
 
 {% block extra_js %}

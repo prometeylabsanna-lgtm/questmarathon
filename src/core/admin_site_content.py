@@ -20,7 +20,6 @@ from src.core.admin_site_content_widgets import (
 )
 from src.core.block_defaults import (
     BLOCK_CONTENT_TYPES,
-    BLOCK_DEFAULTS,
     BLOCK_IMAGE_FALLBACKS,
     BLOCK_LABELS,
     INLINE_KEYS,
@@ -28,26 +27,10 @@ from src.core.block_defaults import (
     is_visibility_key,
 )
 from src.core.block_image_seed import seed_one_block_image
+from src.core.block_services import ensure_block
 from src.core.models import SITE_BLOCKS_CACHE_KEY, SiteBlock, SiteSettings
 from src.core.site_content_registry import get_section
 from src.core.validators import validate_rating_file
-
-
-def ensure_block(page: str, key: str) -> SiteBlock:
-    defaults = BLOCK_DEFAULTS.get((page, key), {})
-    ctype = BLOCK_CONTENT_TYPES.get((page, key), SiteBlock.ContentType.TEXT)
-    label = BLOCK_LABELS.get((page, key), key)
-    obj, _ = SiteBlock.objects.get_or_create(
-        page=page,
-        key=key,
-        defaults={
-            "label": label,
-            "content_type": ctype,
-            "text_uk": defaults.get("text_uk", "1" if is_visibility_key(key) else ""),
-            "text_ru": defaults.get("text_ru", "1" if is_visibility_key(key) else ""),
-        },
-    )
-    return obj
 
 
 def load_section_blocks(page_slug: str, section_slug: str) -> dict[str, SiteBlock]:
@@ -56,7 +39,8 @@ def load_section_blocks(page_slug: str, section_slug: str) -> dict[str, SiteBloc
         return {}
     result: dict[str, SiteBlock] = {}
     for page, key in section.blocks:
-        result[key] = ensure_block(page, key)
+        block, _ = ensure_block(page, key)
+        result[key] = block
     return result
 
 

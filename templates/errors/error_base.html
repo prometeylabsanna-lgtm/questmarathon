@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/errors.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="qm-frame qm-error" aria-labelledby="qm-error-title">
+  <p class="qm-error__code" aria-hidden="true">{% block error_code %}{% endblock %}</p>
+  <h1 id="qm-error-title" class="qm-error__title">{% block error_title %}{% endblock %}</h1>
+  <p class="qm-error__text">{% block error_text %}{% endblock %}</p>
+  <a class="qm-btn qm-btn--primary qm-error__btn" href="{% url 'pages:home' %}">{% trans "На головну" %}</a>
+</section>
+{% endblock %}

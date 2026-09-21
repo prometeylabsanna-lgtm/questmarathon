@@ -27,7 +27,6 @@ def site_globals(request):
 
     path = request.get_full_path()
     return {
-        "participants_count": count,
         "counter_display": f"{count:07d}",
         "language_urls": {
             code: path_for_language(path, code) for code, _name in settings.LANGUAGES

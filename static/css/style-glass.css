@@ -207,12 +207,6 @@
   color: var(--qm-text);
 }
 
-.qm-counter__label {
-  color: var(--qm-cyan);
-  opacity: 0.85;
-  margin-top: 2px;
-}
-
 .qm-rules-list {
   list-style: none;
   padding: 0;
@@ -245,19 +239,6 @@
 .qm-rules-list__text {
   flex: 1;
   min-width: 0;
-}
-
-.qm-file-tag {
-  color: rgba(200, 230, 255, 0.85);
-  border-color: var(--qm-cyan-soft);
-  border-radius: 999px;
-}
-
-.qm-file-tag--active {
-  color: var(--qm-text);
-  border-color: var(--qm-cyan);
-  box-shadow: 0 0 12px rgba(94, 200, 255, 0.35);
-  background: rgba(94, 200, 255, 0.1);
 }
 
 .qm-btn--outline {
@@ -476,23 +457,6 @@
     flex: 1 1 0;
     width: auto;
     min-width: 0;
-  }
-
-  .qm-file-tags {
-    justify-content: center;
-  }
-
-  .qm-file-tag {
-    width: 68px;
-    min-width: 68px;
-    height: 34px;
-    min-height: 34px;
-    flex: 0 0 68px;
-  }
-
-  .qm-file-tags {
-    flex-wrap: nowrap;
-    justify-content: center;
   }
 
   .qm-room-list {

@@ -1,16 +1,13 @@
-{% extends "base.html" %}
-{% load i18n static %}
+{% extends "payments/pay_base.html" %}
+{% load i18n %}
 
-{% block extra_head %}
-  <link rel="stylesheet" href="{% static 'css/faq.css' %}">
-  <link rel="stylesheet" href="{% static 'css/payments.css' %}">
+{% block pay_extra_head %}
   {% if not profile.is_paid %}
     <meta http-equiv="refresh" content="5">
   {% endif %}
 {% endblock %}
 
-{% block content %}
-<article class="qm-frame qm-faq qm-pay">
+{% block pay_body %}
   <header class="qm-faq__head">
     <h1 class="qm-title">{% trans "Статус оплати" %}</h1>
     {% if profile.is_paid %}
@@ -29,5 +26,4 @@
 
     <a class="qm-btn qm-btn--ghost qm-btn--block" href="{% url 'accounts:cabinet' %}">{% trans "До кабінету" %}</a>
   </div>
-</article>
 {% endblock %}

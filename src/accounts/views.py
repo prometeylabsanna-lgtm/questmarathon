@@ -10,7 +10,7 @@ from django.contrib.auth.views import (
 )
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.utils.translation import get_language, gettext as _
+from django.utils.translation import get_language, gettext as _, gettext_lazy as _lazy
 from django.views.decorators.http import require_http_methods
 
 from src.accounts.forms import (
@@ -23,10 +23,20 @@ from src.accounts.models import UserProfile
 from src.core.i18n import activate_ui_language
 
 
-class QuestLoginView(LoginView):
+class PageTitleMixin:
+    page_title = ""
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = self.page_title
+        return context
+
+
+class QuestLoginView(PageTitleMixin, LoginView):
     template_name = "accounts/login.html"
     authentication_form = EmailAuthenticationForm
     redirect_authenticated_user = True
+    page_title = _lazy("Вхід")
 
     def dispatch(self, request, *args, **kwargs):
         activate_ui_language(request)
@@ -34,11 +44,6 @@ class QuestLoginView(LoginView):
 
     def get_success_url(self):
         return reverse_lazy("accounts:cabinet")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = _("Вхід")
-        return context
 
 
 class QuestLogoutView(LogoutView):
@@ -121,43 +126,27 @@ def cabinet(request):
     return render(request, "accounts/cabinet.html", context)
 
 
-class QuestPasswordResetView(PasswordResetView):
+class QuestPasswordResetView(PageTitleMixin, PasswordResetView):
     template_name = "accounts/password_reset.html"
     email_template_name = "accounts/email/password_reset_email.txt"
     subject_template_name = "accounts/email/password_reset_subject.txt"
     form_class = QuestPasswordResetForm
     success_url = reverse_lazy("accounts:password_reset_done")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = _("Відновлення пароля")
-        return context
+    page_title = _lazy("Відновлення пароля")
 
 
-class QuestPasswordResetDoneView(PasswordResetDoneView):
+class QuestPasswordResetDoneView(PageTitleMixin, PasswordResetDoneView):
     template_name = "accounts/password_reset_done.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = _("Лист надіслано")
-        return context
+    page_title = _lazy("Лист надіслано")
 
 
-class QuestPasswordResetConfirmView(PasswordResetConfirmView):
+class QuestPasswordResetConfirmView(PageTitleMixin, PasswordResetConfirmView):
     template_name = "accounts/password_reset_confirm.html"
     form_class = QuestSetPasswordForm
     success_url = reverse_lazy("accounts:password_reset_complete")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = _("Новий пароль")
-        return context
+    page_title = _lazy("Новий пароль")
 
 
-class QuestPasswordResetCompleteView(PasswordResetCompleteView):
+class QuestPasswordResetCompleteView(PageTitleMixin, PasswordResetCompleteView):
     template_name = "accounts/password_reset_complete.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = _("Пароль змінено")
-        return context
+    page_title = _lazy("Пароль змінено")

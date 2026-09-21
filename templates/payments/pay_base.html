@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+  <link rel="stylesheet" href="{% static 'css/payments.css' %}">
+  {% block pay_extra_head %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<article class="qm-frame qm-faq qm-pay">
+  {% block pay_body %}{% endblock %}
+</article>
+{% endblock %}

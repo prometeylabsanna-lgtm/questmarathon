@@ -3,14 +3,9 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from src.core.block_defaults import (
-    BLOCK_CONTENT_TYPES,
-    BLOCK_DEFAULTS,
-    BLOCK_LABELS,
-    is_visibility_key,
-)
 from src.core.block_image_seed import seed_block_fallback_images
-from src.core.models import SiteBlock, SiteSettings, SiteStats
+from src.core.block_services import ensure_block
+from src.core.models import SiteSettings, SiteStats
 from src.core.site_content_registry import all_registry_block_keys, validate_registry
 from src.pages.faq import parse_faq_items
 from src.pages.legal_html import plain_legal_to_html
@@ -74,23 +69,7 @@ ROOMS = [
 def seed_site_blocks() -> tuple[int, int]:
     created = 0
     for page, key in all_registry_block_keys():
-        defaults = BLOCK_DEFAULTS.get((page, key), {})
-        ctype = BLOCK_CONTENT_TYPES.get((page, key), SiteBlock.ContentType.TEXT)
-        label = BLOCK_LABELS.get((page, key), key)
-        _, was_created = SiteBlock.objects.get_or_create(
-            page=page,
-            key=key,
-            defaults={
-                "label": label,
-                "content_type": ctype,
-                "text_uk": defaults.get(
-                    "text_uk", "1" if is_visibility_key(key) else ""
-                ),
-                "text_ru": defaults.get(
-                    "text_ru", "1" if is_visibility_key(key) else ""
-                ),
-            },
-        )
+        _, was_created = ensure_block(page, key)
         if was_created:
             created += 1
     images = seed_block_fallback_images()

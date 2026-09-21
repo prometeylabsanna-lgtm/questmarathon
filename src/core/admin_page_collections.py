@@ -10,7 +10,19 @@ from src.core.admin_site_content_widgets import (
 from src.pages.models import AboutCard, FAQItem
 
 
-class AboutCardForm(forms.ModelForm):
+class BlankUkDeletesMixin:
+    blank_uk_field = ""
+
+    def clean(self):
+        cleaned = super().clean()
+        if not self.instance.pk and not (cleaned.get(self.blank_uk_field) or "").strip():
+            cleaned["DELETE"] = True
+        return cleaned
+
+
+class AboutCardForm(BlankUkDeletesMixin, forms.ModelForm):
+    blank_uk_field = "title_uk"
+
     class Meta:
         model = AboutCard
         fields = (
@@ -37,14 +49,10 @@ class AboutCardForm(forms.ModelForm):
             "text_ru": "Текст",
         }
 
-    def clean(self):
-        cleaned = super().clean()
-        if not self.instance.pk and not (cleaned.get("title_uk") or "").strip():
-            cleaned["DELETE"] = True
-        return cleaned
 
+class FAQItemForm(BlankUkDeletesMixin, forms.ModelForm):
+    blank_uk_field = "question_uk"
 
-class FAQItemForm(forms.ModelForm):
     class Meta:
         model = FAQItem
         fields = (
@@ -70,12 +78,6 @@ class FAQItemForm(forms.ModelForm):
             "question_ru": "Питання",
             "answer_ru": "Відповідь",
         }
-
-    def clean(self):
-        cleaned = super().clean()
-        if not self.instance.pk and not (cleaned.get("question_uk") or "").strip():
-            cleaned["DELETE"] = True
-        return cleaned
 
 
 class OrderedBaseFormSet(BaseModelFormSet):

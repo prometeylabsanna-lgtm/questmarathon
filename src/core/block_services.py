@@ -3,7 +3,13 @@ from __future__ import annotations
 from django.core.cache import cache
 from django.utils.translation import get_language
 
-from src.core.block_defaults import default_for
+from src.core.block_defaults import (
+    BLOCK_CONTENT_TYPES,
+    BLOCK_DEFAULTS,
+    BLOCK_LABELS,
+    default_for,
+    is_visibility_key,
+)
 from src.core.models import SITE_BLOCKS_CACHE_KEY, SITE_BLOCKS_CACHE_TTL, SiteBlock
 
 
@@ -80,7 +86,25 @@ def get_block_file(
     return None
 
 
+def ensure_block(page: str, key: str) -> tuple[SiteBlock, bool]:
+    defaults = BLOCK_DEFAULTS.get((page, key), {})
+    ctype = BLOCK_CONTENT_TYPES.get((page, key), SiteBlock.ContentType.TEXT)
+    label = BLOCK_LABELS.get((page, key), key)
+    visibility_fallback = "1" if is_visibility_key(key) else ""
+    return SiteBlock.objects.get_or_create(
+        page=page,
+        key=key,
+        defaults={
+            "label": label,
+            "content_type": ctype,
+            "text_uk": defaults.get("text_uk", visibility_fallback),
+            "text_ru": defaults.get("text_ru", visibility_fallback),
+        },
+    )
+
+
 __all__ = [
+    "ensure_block",
     "get_block",
     "get_block_file",
     "get_block_image_url",

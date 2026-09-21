@@ -1,15 +1,6 @@
-{% extends "base.html" %}
-{% load i18n static %}
+{% extends "errors/error_base.html" %}
+{% load i18n %}
 
-{% block extra_head %}
-  <link rel="stylesheet" href="{% static 'css/errors.css' %}">
-{% endblock %}
-
-{% block content %}
-<section class="qm-frame qm-error" aria-labelledby="qm-error-title">
-  <p class="qm-error__code" aria-hidden="true">500</p>
-  <h1 id="qm-error-title" class="qm-error__title">{% trans "Сталася помилка сервера" %}</h1>
-  <p class="qm-error__text">{% trans "Спробуйте пізніше або поверніться на головну." %}</p>
-  <a class="qm-btn qm-btn--primary qm-error__btn" href="{% url 'pages:home' %}">{% trans "На головну" %}</a>
-</section>
-{% endblock %}
+{% block error_code %}500{% endblock %}
+{% block error_title %}{% trans "Сталася помилка сервера" %}{% endblock %}
+{% block error_text %}{% trans "Спробуйте пізніше або поверніться на головну." %}{% endblock %}

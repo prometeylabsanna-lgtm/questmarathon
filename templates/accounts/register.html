@@ -1,13 +1,7 @@
-{% extends "base.html" %}
-{% load i18n static %}
+{% extends "accounts/auth_base.html" %}
+{% load i18n %}
 
-{% block extra_head %}
-  <link rel="stylesheet" href="{% static 'css/faq.css' %}">
-  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-{% endblock %}
-
-{% block content %}
-<article class="qm-frame qm-faq qm-auth">
+{% block auth_body %}
   <div class="qm-faq__panel">
     <h1 class="qm-title">{% trans "Реєстрація" %}</h1>
     <form method="post" class="qm-form" novalidate>
@@ -46,5 +40,4 @@
     {% trans "Вже є акаунт?" %}
     <a href="{% url 'accounts:login' %}">{% trans "Увійти" %}</a>
   </p>
-</article>
 {% endblock %}

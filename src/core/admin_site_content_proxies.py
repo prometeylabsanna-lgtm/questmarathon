@@ -14,7 +14,6 @@ from src.core.models import (
     RatingPageSettings,
     SiteFooterSettings,
     SiteHeaderSettings,
-    SiteSettings,
 )
 
 _SECTION_MODELS = (
@@ -28,15 +27,15 @@ _SECTION_MODELS = (
 )
 
 
-class SingletonSettingsAdmin(ModelAdmin):
+class SingletonModelAdminMixin:
     def has_add_permission(self, request):
-        return not SiteSettings.objects.exists()
+        return not self.model.objects.exists()
 
     def has_delete_permission(self, request, obj=None):
         return False
 
     def changelist_view(self, request, extra_context=None):
-        obj, _ = SiteSettings.objects.get_or_create(pk=1)
+        obj, _ = self.model.objects.get_or_create(pk=1)
         return HttpResponseRedirect(
             reverse(
                 f"admin:{self.model._meta.app_label}_{self.model._meta.model_name}_change",
@@ -45,7 +44,7 @@ class SingletonSettingsAdmin(ModelAdmin):
         )
 
 
-class SiteContentSectionAdmin(SingletonSettingsAdmin):
+class SiteContentSectionAdmin(SingletonModelAdminMixin, ModelAdmin):
     page_slug: str = ""
     section_slug: str = ""
 
