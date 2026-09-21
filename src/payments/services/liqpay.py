@@ -79,7 +79,7 @@ class LiqPayService:
             "order_id": order_id,
             "result_url": result_url,
             "server_url": server_url,
-            "sandbox": 1 if getattr(settings, "LIQPAY_SANDBOX", False) else 0,
+            "sandbox": 1 if settings.LIQPAY_SANDBOX else 0,
         }
         data_b64 = self._encode(payload)
         return {
@@ -89,11 +89,19 @@ class LiqPayService:
         }
 
 
+def liqpay_keys() -> tuple[str, str]:
+    public = str(getattr(settings, "LIQPAY_PUBLIC_KEY", "") or "").strip()
+    private = str(getattr(settings, "LIQPAY_PRIVATE_KEY", "") or "").strip()
+    return public, private
+
+
 def liqpay_configured() -> bool:
-    return bool(settings.LIQPAY_PUBLIC_KEY and settings.LIQPAY_PRIVATE_KEY)
+    public, private = liqpay_keys()
+    return bool(public and private)
 
 
 def get_liqpay_service() -> LiqPayService | None:
-    if not liqpay_configured():
+    public, private = liqpay_keys()
+    if not public or not private:
         return None
-    return LiqPayService(settings.LIQPAY_PUBLIC_KEY, settings.LIQPAY_PRIVATE_KEY)
+    return LiqPayService(public, private)

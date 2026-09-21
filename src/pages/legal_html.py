@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import html
+import re
 
-from src.pages.legal import SECTION_RE, UPDATED_RE
+SECTION_RE = re.compile(r"^(\d+)\.\s+(?!\d).+")
+UPDATED_RE = re.compile(r"^(Останнє оновлення|Последнее обновление):", re.IGNORECASE)
 
 
 def plain_legal_to_html(body: str) -> tuple[str, str]:

@@ -4,7 +4,6 @@ from django.db import models
 
 class Payment(models.Model):
     class Status(models.TextChoices):
-        CREATED = "created", "Створено"
         PENDING = "pending", "Очікує"
         SUCCESS = "success", "Успішно"
         FAILURE = "failure", "Помилка"
@@ -27,7 +26,7 @@ class Payment(models.Model):
         "Статус",
         max_length=16,
         choices=Status.choices,
-        default=Status.CREATED,
+        default=Status.PENDING,
         db_index=True,
     )
     idempotency_key = models.CharField(

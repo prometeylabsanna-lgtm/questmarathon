@@ -9,7 +9,6 @@ from src.core.site_content_registry import (
     validate_registry,
 )
 from src.pages.faq import parse_faq_items
-from src.pages.legal import parse_legal_document
 from src.pages.legal_html import plain_legal_to_html
 from src.pages.models import AboutCard, FAQItem, LegalPage
 
@@ -74,7 +73,7 @@ class AboutContactsTests(TestCase):
         self.assertContains(response, "facebook.com/kvestmarafon")
 
 
-class ParseLegalDocumentTests(TestCase):
+class PlainLegalToHtmlTests(TestCase):
     def test_splits_updated_and_sections(self):
         body = (
             "Останнє оновлення: 19 серпня 2026 р.\n"
@@ -89,13 +88,13 @@ class ParseLegalDocumentTests(TestCase):
             "\n"
             "2.1. Доступ до квесту."
         )
-        parsed = parse_legal_document(body)
-        self.assertEqual(parsed["updated"], "Останнє оновлення: 19 серпня 2026 р.")
-        self.assertEqual(len(parsed["items"]), 2)
-        self.assertEqual(parsed["items"][0]["question"], "1. Загальні положення")
-        self.assertIn("1.1. Перший пункт.", parsed["items"][0]["answer"])
-        self.assertIn("1.2. Другий пункт.", parsed["items"][0]["answer"])
-        self.assertEqual(parsed["items"][1]["question"], "2. Предмет Угоди")
+        updated, html = plain_legal_to_html(body)
+        self.assertEqual(updated, "Останнє оновлення: 19 серпня 2026 р.")
+        self.assertIn("<h2>1. Загальні положення</h2>", html)
+        self.assertIn("<p>1.1. Перший пункт.</p>", html)
+        self.assertIn("<p>1.2. Другий пункт.</p>", html)
+        self.assertIn("<h2>2. Предмет Угоди</h2>", html)
+        self.assertIn("<p>2.1. Доступ до квесту.</p>", html)
 
 
 class LegalPageTests(TestCase):

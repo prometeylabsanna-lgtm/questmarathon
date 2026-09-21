@@ -106,32 +106,3 @@ class AboutCard(models.Model):
             return self.text_ru
         return self.text_uk
 
-
-class InfoPage(models.Model):
-    """Legacy model — kept for data migration; prefer LegalPage / SiteBlock / FAQ."""
-
-    class Locale(models.TextChoices):
-        UK = "uk", "Українська"
-        RU = "ru", "Русский"
-
-    slug = models.SlugField("Slug", max_length=64)
-    locale = models.CharField(
-        "Мова", max_length=5, choices=Locale.choices, default=Locale.UK
-    )
-    title = models.CharField("Заголовок", max_length=255)
-    body = models.TextField("Текст", blank=True)
-    is_published = models.BooleanField("Опубліковано", default=True)
-    updated_at = models.DateTimeField("Оновлено", auto_now=True)
-    created_at = models.DateTimeField("Створено", auto_now_add=True)
-
-    class Meta:
-        verbose_name = "Інфосторінка (legacy)"
-        verbose_name_plural = "Інфосторінки (legacy)"
-        unique_together = ("slug", "locale")
-        ordering = ["slug", "locale"]
-
-    def __str__(self) -> str:
-        return f"{self.slug} [{self.locale}]"
-
-    def get_absolute_url(self) -> str:
-        return reverse(f"pages:{self.slug}")

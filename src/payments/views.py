@@ -30,6 +30,12 @@ def _quest_amount() -> Decimal:
     return quantize_amount(settings.QUEST_PRICE)
 
 
+def _dev_bypass_enabled() -> bool:
+    if not getattr(settings, "PAYMENTS_DEV_BYPASS", False):
+        return False
+    return not liqpay_configured()
+
+
 @login_required
 @require_http_methods(["GET", "POST"])
 def payment_start(request):
@@ -38,7 +44,7 @@ def payment_start(request):
         return redirect("quest:room", n=1)
 
     if request.method == "POST" and request.POST.get("action") == "dev_bypass":
-        if settings.PAYMENTS_DEV_BYPASS:
+        if _dev_bypass_enabled():
             with transaction.atomic():
                 Payment.objects.create(
                     user=request.user,
@@ -50,7 +56,8 @@ def payment_start(request):
                 )
                 profile.mark_paid()
             return redirect("quest:room", n=1)
-        return redirect("accounts:cabinet")
+        if not liqpay_configured():
+            return redirect("accounts:cabinet")
 
     if not liqpay_configured():
         return render(
@@ -60,7 +67,7 @@ def payment_start(request):
                 "page_title": _("Оплата"),
                 "profile": profile,
                 "not_configured": True,
-                "dev_bypass": settings.PAYMENTS_DEV_BYPASS,
+                "dev_bypass": _dev_bypass_enabled(),
             },
         )
 

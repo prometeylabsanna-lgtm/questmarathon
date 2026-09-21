@@ -451,10 +451,10 @@ a.qm-header__brand:hover {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 100%;
-  height: auto;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
   max-height: 42px;
-  max-width: none;
   object-fit: contain;
   display: block;
   -webkit-transform: translate(-50%, -50%);

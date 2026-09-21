@@ -139,7 +139,6 @@ class SiteBlock(models.Model):
         TEXT = "text", "Текст"
         IMAGE = "image", "Фото"
         FILE = "file", "Файл"
-        URL = "url", "Посилання"
 
     page = models.CharField("Сторінка", max_length=32, choices=Page.choices)
     key = models.CharField("Ключ", max_length=64)
@@ -154,8 +153,6 @@ class SiteBlock(models.Model):
     text_ru = models.TextField("Текст (російською)", blank=True)
     image = models.ImageField("Зображення", upload_to="blocks/", blank=True)
     file = models.FileField("Файл", upload_to="blocks/files/", blank=True)
-    link_url = models.CharField("URL посилання", max_length=512, blank=True)
-    link_label = models.CharField("Текст посилання", max_length=128, blank=True)
     sort_order = models.PositiveSmallIntegerField("Порядок", default=0)
     is_active = models.BooleanField("Активний", default=True)
     updated_at = models.DateTimeField("Оновлено", auto_now=True)

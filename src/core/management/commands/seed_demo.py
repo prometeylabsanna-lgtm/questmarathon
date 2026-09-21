@@ -10,7 +10,7 @@ from src.core.site_content_registry import all_registry_block_keys, validate_reg
 from src.pages.faq import parse_faq_items
 from src.pages.legal_html import plain_legal_to_html
 from src.pages.legal_texts import PRIVACY_RU, PRIVACY_UK, TERMS_RU, TERMS_UK
-from src.pages.models import AboutCard, FAQItem, InfoPage, LegalPage
+from src.pages.models import AboutCard, FAQItem, LegalPage
 from src.quest.models import QuestRoom
 
 ABOUT_UK = (
@@ -137,64 +137,6 @@ def seed_about_cards() -> None:
         )
 
 
-def migrate_infopage_if_needed() -> None:
-    """One-shot: fill CMS from legacy InfoPage when CMS tables empty."""
-    if not LegalPage.objects.exists() and InfoPage.objects.filter(slug="terms").exists():
-        for slug in ("terms", "privacy"):
-            uk = InfoPage.objects.filter(slug=slug, locale="uk").first()
-            ru = InfoPage.objects.filter(slug=slug, locale="ru").first()
-            if not uk:
-                continue
-            updated_uk, html_uk = plain_legal_to_html(uk.body)
-            updated_ru, html_ru = ("", "")
-            if ru:
-                updated_ru, html_ru = plain_legal_to_html(ru.body)
-            LegalPage.objects.get_or_create(
-                slug=slug,
-                defaults={
-                    "title_uk": uk.title,
-                    "title_ru": ru.title if ru else "",
-                    "body_uk": html_uk,
-                    "body_ru": html_ru,
-                    "updated_label_uk": updated_uk,
-                    "updated_label_ru": updated_ru,
-                    "is_published": uk.is_published,
-                },
-            )
-
-    if not FAQItem.objects.exists():
-        uk = InfoPage.objects.filter(slug="faq", locale="uk").first()
-        ru = InfoPage.objects.filter(slug="faq", locale="ru").first()
-        if uk:
-            uk_items = parse_faq_items(uk.body)
-            ru_items = parse_faq_items(ru.body) if ru else []
-            for idx, item in enumerate(uk_items):
-                r = ru_items[idx] if idx < len(ru_items) else {"question": "", "answer": ""}
-                FAQItem.objects.create(
-                    question_uk=item["question"],
-                    answer_uk=item["answer"],
-                    question_ru=r["question"],
-                    answer_ru=r["answer"],
-                    sort_order=idx,
-                )
-
-    if not AboutCard.objects.exists():
-        uk = InfoPage.objects.filter(slug="about", locale="uk").first()
-        ru = InfoPage.objects.filter(slug="about", locale="ru").first()
-        if uk:
-            uk_items = parse_faq_items(uk.body)
-            ru_items = parse_faq_items(ru.body) if ru else []
-            for idx, item in enumerate(uk_items):
-                r = ru_items[idx] if idx < len(ru_items) else {"question": "", "answer": ""}
-                AboutCard.objects.create(
-                    title_uk=item["question"],
-                    text_uk=item["answer"],
-                    title_ru=r["question"],
-                    text_ru=r["answer"],
-                    sort_order=idx,
-                )
-
-
 def seed_staff_user(stdout=None) -> str:
     """
     Create staff superuser from env if missing.
@@ -255,7 +197,6 @@ class Command(BaseCommand):
         n, images = seed_site_blocks()
         self.stdout.write(f"site blocks created: {n}, images seeded: {images}")
 
-        migrate_infopage_if_needed()
         seed_legal_from_texts()
         seed_faq()
         seed_about_cards()

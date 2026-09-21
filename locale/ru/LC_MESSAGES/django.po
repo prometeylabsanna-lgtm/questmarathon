@@ -381,11 +381,11 @@ msgstr "Оплачено"
 msgid "Карткові дані обробляє LiqPay, а не Організатор."
 msgstr "Карточные данные обрабатывает LiqPay, а не Организатор."
 
-#: templates/payments/start.html:17
+#: templates/payments/start.html:14
 msgid "LiqPay ще не підключено (немає ключів у .env)."
 msgstr "LiqPay ещё не подключён (нет ключей в .env)."
 
-#: templates/payments/start.html:22
+#: templates/payments/start.html:19
 msgid "Симулювати оплату (тест)"
 msgstr "Симулировать оплату (тест)"
 
